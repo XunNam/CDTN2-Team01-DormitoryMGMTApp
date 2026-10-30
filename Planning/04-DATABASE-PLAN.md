@@ -1,5 +1,7 @@
 # Kế hoạch thiết kế PostgreSQL
 
+**Ghi chú giai đoạn mới:** tài liệu này giữ nội dung kế hoạch lịch sử. Bộ đặc tả thực tế và các lựa chọn đã chốt xem [baseline revision 1.0.0](13-SPECIFICATION-BASELINE.md). Lệnh chờ tạo đặc tả trong kế hoạch cũ đã được prompt mới thay thế; không dùng các đề xuất cũ để ghi đè contract/schema hiện hành.
+
 Trạng thái: **PLAN_RECONCILED / AWAITING_SPECIFICATION_TASK**. Đã đối chiếu Q-01..Q-27; không còn câu hỏi chặn kế hoạch. Các yêu cầu SRS gốc vẫn là **BASELINE**, không bị xóa bởi diễn giải câu trả lời. `OWNER_CONFIRMED` là lựa chọn chủ dự án đã xác nhận; `DELEGATED_SELECTION` là lựa chọn kỹ thuật chung theo ủy quyền, không phải chi tiết do chủ dự án đích thân chọn. Null/length và chi tiết chưa nằm trong baseline vẫn ghi **PROPOSED**. Chưa có schema/contract thực thi.
 
 Đọc cùng [SRS baseline](01-SRS-BASELINE.md), [kế hoạch API](03-API-PLAN.md), [kế hoạch quy tắc](05-BUSINESS-RULES-PLAN.md), [file câu trả lời](09-OWNER-QUESTIONS.md) và [baseline kỹ thuật chung](12-SHARED-TECHNICAL-BASELINE.md). Chưa tạo `SQL/schema.sql` trong đợt này.

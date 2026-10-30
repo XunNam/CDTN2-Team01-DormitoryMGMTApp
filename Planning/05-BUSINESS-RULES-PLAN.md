@@ -1,5 +1,7 @@
 # Kế hoạch biên soạn Business Rules
 
+**Ghi chú giai đoạn mới:** tài liệu này giữ nội dung kế hoạch lịch sử. Bộ đặc tả thực tế và các lựa chọn đã chốt xem [baseline revision 1.0.0](13-SPECIFICATION-BASELINE.md). Lệnh chờ tạo đặc tả trong kế hoạch cũ đã được prompt mới thay thế; không dùng các đề xuất cũ để ghi đè contract/schema hiện hành.
+
 Trạng thái: **PLAN_RECONCILED / AWAITING_SPECIFICATION_TASK**. Đã đối chiếu Q-01..Q-27, không còn câu hỏi chặn kế hoạch. Giữ đủ FR/QT/AC gốc của SRS; lựa chọn chủ dự án đã xác nhận ghi `OWNER_CONFIRMED`, lựa chọn kỹ thuật theo ủy quyền ghi `DELEGATED_SELECTION`. Cách tổ chức tài liệu và chi tiết chưa được baseline chốt vẫn là **PROPOSED**. Đây là kế hoạch biên soạn, chưa phải bộ contract/quy tắc thực thi đã tạo.
 
 Nguồn chính: [SRS bản gốc](Source/SRS_v2.pdf), trang 7-17 và 20-21. Đọc cùng [kế hoạch API](03-API-PLAN.md), [kế hoạch dữ liệu](04-DATABASE-PLAN.md), [câu trả lời](09-OWNER-QUESTIONS.md), [sổ quyết định](10-DECISIONS-AND-HANDOFF.md) và [baseline kỹ thuật](12-SHARED-TECHNICAL-BASELINE.md).

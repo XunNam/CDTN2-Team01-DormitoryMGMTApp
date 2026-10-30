@@ -1,0 +1,1584 @@
+{
+  "revision": "1.0.0",
+  "schemas": {
+    "StudentProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "studentCode": {
+          "type": "string",
+          "pattern": "^[A-Z0-9][A-Z0-9_-]{0,31}$"
+        },
+        "fullName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 150
+        },
+        "gender": {
+          "type": "string",
+          "enum": [
+            "MALE",
+            "FEMALE"
+          ]
+        },
+        "className": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "faculty": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "phone": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^\\+?[0-9]{7,20}$"
+        },
+        "email": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "email",
+          "maxLength": 254
+        },
+        "dateOfBirth": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        },
+        "permanentAddress": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "studentCode",
+        "fullName",
+        "gender",
+        "className",
+        "faculty",
+        "phone",
+        "email",
+        "dateOfBirth",
+        "permanentAddress",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Building": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "code": {
+          "type": "string",
+          "pattern": "^[A-Z0-9][A-Z0-9_-]{0,31}$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 150
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "code",
+        "name",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Room": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "buildingId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "buildingCode": {
+          "type": "string",
+          "pattern": "^[A-Z0-9][A-Z0-9_-]{0,31}$"
+        },
+        "buildingName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 150
+        },
+        "code": {
+          "type": "string",
+          "pattern": "^[A-Z0-9][A-Z0-9_-]{0,31}$"
+        },
+        "capacity": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10000
+        },
+        "gender": {
+          "type": "string",
+          "enum": [
+            "MALE",
+            "FEMALE"
+          ]
+        },
+        "feeVnd": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]{0,18})$",
+          "description": "VND nguyên đồng, giá trị <=9223372036854775807; không ép sang Number."
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "ACTIVE",
+            "INACTIVE"
+          ]
+        },
+        "allocatedPlaces": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "availablePlaces": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "buildingId",
+        "buildingCode",
+        "buildingName",
+        "code",
+        "capacity",
+        "gender",
+        "feeVnd",
+        "status",
+        "allocatedPlaces",
+        "availablePlaces",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Application": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "studentId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "preferredRoomId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "periodId": {
+          "type": "integer",
+          "const": 1
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "PENDING",
+            "APPROVED",
+            "REJECTED"
+          ]
+        },
+        "rejectionReason": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "reviewedBy": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uuid"
+        },
+        "reviewedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "studentId",
+        "preferredRoomId",
+        "periodId",
+        "status",
+        "rejectionReason",
+        "reviewedBy",
+        "reviewedAt",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Residence": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "applicationId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "studentId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "roomId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "ALLOCATED",
+            "CHECKED_IN",
+            "ENDED",
+            "CANCELLED"
+          ]
+        },
+        "allocatedBy": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "allocatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "checkInDate": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        },
+        "checkedInBy": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uuid"
+        },
+        "checkedInAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "checkOutDate": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        },
+        "checkedOutBy": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uuid"
+        },
+        "checkedOutAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "cancellationReason": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "cancelledBy": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uuid"
+        },
+        "cancelledAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "applicationId",
+        "studentId",
+        "roomId",
+        "status",
+        "allocatedBy",
+        "allocatedAt",
+        "checkInDate",
+        "checkedInBy",
+        "checkedInAt",
+        "checkOutDate",
+        "checkedOutBy",
+        "checkedOutAt",
+        "cancellationReason",
+        "cancelledBy",
+        "cancelledAt"
+      ]
+    },
+    "Receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "residenceId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "amountVnd": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]{0,18})$",
+          "description": "VND nguyên đồng, giá trị <=9223372036854775807; không ép sang Number."
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "UNPAID",
+            "PAID"
+          ]
+        },
+        "createdBy": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "paymentDate": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        },
+        "paidBy": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uuid"
+        },
+        "paidAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "residenceId",
+        "amountVnd",
+        "status",
+        "createdBy",
+        "createdAt",
+        "paymentDate",
+        "paidBy",
+        "paidAt"
+      ]
+    },
+    "Account": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "actorKind": {
+          "type": "string",
+          "enum": [
+            "STUDENT",
+            "STAFF"
+          ]
+        },
+        "role": {
+          "type": "string",
+          "enum": [
+            "SV",
+            "BQL",
+            "ADMIN"
+          ]
+        },
+        "identifier": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 50
+        },
+        "displayName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 150
+        },
+        "studentId": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uuid"
+        },
+        "isLocked": {
+          "type": "boolean"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "actorKind",
+        "role",
+        "identifier",
+        "displayName",
+        "studentId",
+        "isLocked",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "RegistrationPeriod": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "integer",
+          "const": 1
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "OPEN",
+            "CLOSED"
+          ]
+        },
+        "updatedBy": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uuid"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "status",
+        "updatedBy",
+        "updatedAt"
+      ]
+    },
+    "Identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "actorKind": {
+          "type": "string",
+          "enum": [
+            "STUDENT",
+            "STAFF"
+          ]
+        },
+        "accountId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "role": {
+          "type": "string",
+          "enum": [
+            "SV",
+            "BQL",
+            "ADMIN"
+          ]
+        },
+        "identifier": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 50
+        },
+        "displayName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 150
+        },
+        "studentId": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uuid"
+        }
+      },
+      "required": [
+        "actorKind",
+        "accountId",
+        "role",
+        "identifier",
+        "displayName",
+        "studentId"
+      ]
+    },
+    "CsrfToken": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "csrfToken": {
+          "type": "string",
+          "minLength": 64,
+          "maxLength": 64,
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      },
+      "required": [
+        "csrfToken"
+      ]
+    },
+    "ProfileCandidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "studentCode": {
+          "type": "string",
+          "pattern": "^[A-Z0-9][A-Z0-9_-]{0,31}$"
+        },
+        "fullName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 150
+        },
+        "hasAccount": {
+          "type": "boolean",
+          "const": false
+        }
+      },
+      "required": [
+        "id",
+        "studentCode",
+        "fullName",
+        "hasAccount"
+      ]
+    },
+    "Statistics": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "totalRooms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "availablePlaces": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "currentResidents": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unpaidReceipts": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "totalRooms",
+        "availablePlaces",
+        "currentResidents",
+        "unpaidReceipts"
+      ]
+    },
+    "ApprovalResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "application": {
+          "$ref": "#/components/schemas/Application"
+        },
+        "residence": {
+          "$ref": "#/components/schemas/Residence"
+        }
+      },
+      "required": [
+        "application",
+        "residence"
+      ]
+    },
+    "LoginRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "accountType": {
+          "type": "string",
+          "enum": [
+            "STUDENT",
+            "STAFF"
+          ]
+        },
+        "identifier": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 50
+        },
+        "password": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 128,
+          "description": "Không trim; tối đa128 Unicode code points; băm Argon2id, không trả/log."
+        }
+      },
+      "required": [
+        "accountType",
+        "identifier",
+        "password"
+      ]
+    },
+    "ChangePasswordRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "currentPassword": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 128,
+          "description": "Không trim; tối đa128 Unicode code points; băm Argon2id, không trả/log."
+        },
+        "newPassword": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 128,
+          "description": "Không trim; tối đa128 Unicode code points; băm Argon2id, không trả/log."
+        }
+      },
+      "required": [
+        "currentPassword",
+        "newPassword"
+      ]
+    },
+    "ProfileCreate": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "studentCode": {
+          "type": "string",
+          "pattern": "^[A-Z0-9][A-Z0-9_-]{0,31}$"
+        },
+        "fullName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 150
+        },
+        "gender": {
+          "type": "string",
+          "enum": [
+            "MALE",
+            "FEMALE"
+          ]
+        },
+        "className": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "faculty": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "phone": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^\\+?[0-9]{7,20}$"
+        },
+        "email": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "email",
+          "maxLength": 254
+        },
+        "dateOfBirth": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        },
+        "permanentAddress": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1,
+          "maxLength": 500
+        }
+      },
+      "required": [
+        "studentCode",
+        "fullName",
+        "gender",
+        "className",
+        "faculty"
+      ]
+    },
+    "ProfilePatch": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "fullName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 150
+        },
+        "gender": {
+          "type": "string",
+          "enum": [
+            "MALE",
+            "FEMALE"
+          ]
+        },
+        "className": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "faculty": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "phone": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^\\+?[0-9]{7,20}$"
+        },
+        "email": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "email",
+          "maxLength": 254
+        },
+        "dateOfBirth": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        },
+        "permanentAddress": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1,
+          "maxLength": 500
+        }
+      },
+      "required": [],
+      "minProperties": 1
+    },
+    "ContactPatch": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "phone": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^\\+?[0-9]{7,20}$"
+        },
+        "email": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "email",
+          "maxLength": 254
+        }
+      },
+      "required": [],
+      "minProperties": 1
+    },
+    "BuildingCreate": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "type": "string",
+          "pattern": "^[A-Z0-9][A-Z0-9_-]{0,31}$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 150
+        }
+      },
+      "required": [
+        "code",
+        "name"
+      ]
+    },
+    "BuildingPatch": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 150
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "RoomCreate": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "buildingId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "code": {
+          "type": "string",
+          "pattern": "^[A-Z0-9][A-Z0-9_-]{0,31}$"
+        },
+        "capacity": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10000
+        },
+        "gender": {
+          "type": "string",
+          "enum": [
+            "MALE",
+            "FEMALE"
+          ]
+        },
+        "feeVnd": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]{0,18})$",
+          "description": "VND nguyên đồng, giá trị <=9223372036854775807; không ép sang Number."
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "ACTIVE",
+            "INACTIVE"
+          ]
+        }
+      },
+      "required": [
+        "buildingId",
+        "code",
+        "capacity",
+        "gender",
+        "feeVnd",
+        "status"
+      ]
+    },
+    "RoomPatch": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "capacity": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10000
+        },
+        "gender": {
+          "type": "string",
+          "enum": [
+            "MALE",
+            "FEMALE"
+          ]
+        },
+        "feeVnd": {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]{0,18})$",
+          "description": "VND nguyên đồng, giá trị <=9223372036854775807; không ép sang Number."
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "ACTIVE",
+            "INACTIVE"
+          ]
+        }
+      },
+      "required": [],
+      "minProperties": 1
+    },
+    "ApplicationCreate": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "preferredRoomId": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "required": [
+        "preferredRoomId"
+      ]
+    },
+    "ApplicationApprove": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "roomId": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "required": [
+        "roomId"
+      ]
+    },
+    "ApplicationReject": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        }
+      },
+      "required": [
+        "reason"
+      ]
+    },
+    "PeriodPatch": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "OPEN",
+            "CLOSED"
+          ]
+        }
+      },
+      "required": [
+        "status"
+      ]
+    },
+    "CheckIn": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "checkInDate": {
+          "type": "string",
+          "format": "date"
+        }
+      },
+      "required": [
+        "checkInDate"
+      ]
+    },
+    "CheckOut": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "checkOutDate": {
+          "type": "string",
+          "format": "date"
+        }
+      },
+      "required": [
+        "checkOutDate"
+      ]
+    },
+    "CancelAllocation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        }
+      },
+      "required": [
+        "reason"
+      ]
+    },
+    "ReceiptCreate": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "residenceId": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "required": [
+        "residenceId"
+      ]
+    },
+    "ReceiptPay": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "paymentDate": {
+          "type": "string",
+          "format": "date"
+        }
+      },
+      "required": [
+        "paymentDate"
+      ]
+    },
+    "AccountLock": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "isLocked": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "isLocked"
+      ]
+    },
+    "AccountCreate": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "accountType": {
+              "type": "string",
+              "const": "STUDENT"
+            },
+            "studentId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "role": {
+              "type": "string",
+              "const": "SV"
+            },
+            "password": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 128,
+              "description": "Không trim; tối đa128 Unicode code points; băm Argon2id, không trả/log."
+            }
+          },
+          "required": [
+            "accountType",
+            "studentId",
+            "role",
+            "password"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "accountType": {
+              "type": "string",
+              "const": "STAFF"
+            },
+            "username": {
+              "type": "string",
+              "pattern": "^[a-z0-9][a-z0-9._-]{2,49}$"
+            },
+            "displayName": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 150
+            },
+            "role": {
+              "type": "string",
+              "enum": [
+                "BQL",
+                "ADMIN"
+              ]
+            },
+            "password": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 128,
+              "description": "Không trim; tối đa128 Unicode code points; băm Argon2id, không trả/log."
+            }
+          },
+          "required": [
+            "accountType",
+            "username",
+            "displayName",
+            "role",
+            "password"
+          ]
+        }
+      ]
+    },
+    "Empty": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {},
+      "required": []
+    },
+    "Error": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "error": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "type": "string",
+              "enum": [
+                "AUTH_REQUIRED",
+                "SESSION_EXPIRED",
+                "ACCOUNT_LOCKED",
+                "INVALID_CREDENTIALS",
+                "FORBIDDEN",
+                "CSRF_INVALID",
+                "ORIGIN_FORBIDDEN",
+                "NOT_FOUND",
+                "DUPLICATE_STUDENT_CODE",
+                "DUPLICATE_BUILDING_CODE",
+                "DUPLICATE_ROOM_CODE",
+                "DUPLICATE_USERNAME",
+                "ACCOUNT_ALREADY_EXISTS",
+                "PERIOD_CLOSED",
+                "PENDING_APPLICATION_EXISTS",
+                "ACTIVE_RESIDENCE_EXISTS",
+                "ROOM_INACTIVE",
+                "ROOM_FULL",
+                "GENDER_MISMATCH",
+                "CAPACITY_BELOW_OCCUPANCY",
+                "ROOM_OCCUPIED",
+                "INVALID_STATE",
+                "RECEIPT_ALREADY_EXISTS",
+                "VALIDATION_ERROR",
+                "PASSWORD_INCORRECT",
+                "PASSWORD_UNCHANGED",
+                "INVALID_JSON",
+                "PAYLOAD_TOO_LARGE",
+                "UNSUPPORTED_MEDIA_TYPE",
+                "INTERNAL_ERROR",
+                "SERVICE_UNAVAILABLE"
+              ]
+            },
+            "message": {
+              "type": "string"
+            },
+            "details": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "field": {
+                    "type": "string"
+                  },
+                  "message": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "field",
+                  "message"
+                ]
+              }
+            }
+          },
+          "required": [
+            "code",
+            "message"
+          ]
+        }
+      },
+      "required": [
+        "error"
+      ]
+    },
+    "PageQuery": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1
+        },
+        "pageSize": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 20
+        }
+      },
+      "required": []
+    },
+    "StudentProfileQuery": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1
+        },
+        "pageSize": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 20
+        },
+        "q": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "gender": {
+          "type": "string",
+          "enum": [
+            "MALE",
+            "FEMALE"
+          ]
+        }
+      },
+      "required": []
+    },
+    "BuildingQuery": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1
+        },
+        "pageSize": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 20
+        },
+        "q": {
+          "type": "string",
+          "maxLength": 100
+        }
+      },
+      "required": []
+    },
+    "RoomQuery": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1
+        },
+        "pageSize": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 20
+        },
+        "q": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "buildingId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "gender": {
+          "type": "string",
+          "enum": [
+            "MALE",
+            "FEMALE"
+          ]
+        },
+        "hasAvailability": {
+          "type": "boolean"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "ACTIVE",
+            "INACTIVE"
+          ]
+        }
+      },
+      "required": []
+    },
+    "ApplicationQuery": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1
+        },
+        "pageSize": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 20
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "PENDING",
+            "APPROVED",
+            "REJECTED"
+          ]
+        },
+        "studentId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "preferredRoomId": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "required": []
+    },
+    "ResidenceQuery": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1
+        },
+        "pageSize": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 20
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "ALLOCATED",
+            "CHECKED_IN",
+            "ENDED",
+            "CANCELLED"
+          ]
+        },
+        "studentId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "roomId": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "required": []
+    },
+    "ReceiptQuery": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1
+        },
+        "pageSize": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 20
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "UNPAID",
+            "PAID"
+          ]
+        },
+        "studentId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "residenceId": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "required": []
+    },
+    "AccountQuery": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1
+        },
+        "pageSize": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 20
+        },
+        "q": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "actorKind": {
+          "type": "string",
+          "enum": [
+            "STUDENT",
+            "STAFF"
+          ]
+        },
+        "role": {
+          "type": "string",
+          "enum": [
+            "SV",
+            "BQL",
+            "ADMIN"
+          ]
+        },
+        "isLocked": {
+          "type": "boolean"
+        }
+      },
+      "required": []
+    },
+    "CandidateQuery": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "page": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1
+        },
+        "pageSize": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 20
+        },
+        "q": {
+          "type": "string",
+          "maxLength": 100
+        }
+      },
+      "required": []
+    }
+  }
+}

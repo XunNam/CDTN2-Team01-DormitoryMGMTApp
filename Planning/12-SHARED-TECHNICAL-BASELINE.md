@@ -1,5 +1,7 @@
 # Chuẩn kỹ thuật dùng chung cho bước tạo đặc tả
 
+**Ghi chú giai đoạn mới:** tài liệu này giữ nội dung kế hoạch lịch sử. Bộ đặc tả thực tế và các lựa chọn đã chốt xem [baseline revision 1.0.0](13-SPECIFICATION-BASELINE.md). Lệnh chờ tạo đặc tả trong kế hoạch cũ đã được prompt mới thay thế; không dùng các đề xuất cũ để ghi đè contract/schema hiện hành.
+
 Trạng thái: **DELEGATED_SELECTION** cho lựa chọn kỹ thuật của AI trong phạm vi Q-05/Q-20/Q-24; các giới hạn chủ dự án chọn có nhãn OWNER_CONFIRMED và nguồn tương ứng. Đây là chuẩn để hoàn thiện bộ kế hoạch và soạn đặc tả ở đợt sau, chưa phải contract operation/DDL/code đã tạo.
 
 Không nói chủ dự án đã đích thân chọn UUID, Argon2id hay từng HTTP status. Các lựa chọn đó được AI ghi rõ để mọi thành viên không tự chọn khác nhau. Thay đổi chuẩn đi qua decision log và kiểm tra consumer.

@@ -1,5 +1,7 @@
 # Kế hoạch xây dựng API contract
 
+**Ghi chú giai đoạn mới:** tài liệu này giữ nội dung kế hoạch lịch sử. Bộ đặc tả thực tế và các lựa chọn đã chốt xem [baseline revision 1.0.0](13-SPECIFICATION-BASELINE.md). Lệnh chờ tạo đặc tả trong kế hoạch cũ đã được prompt mới thay thế; không dùng các đề xuất cũ để ghi đè contract/schema hiện hành.
+
 Trạng thái: **PLAN_RECONCILED / AWAITING_SPECIFICATION_TASK**. Đã đối chiếu Q-01 đến Q-24 và câu trả lời làm rõ Q-25 đến Q-27. Các mã `API-*` là mã đầu việc; chưa phải operationId hay route chính thức. Đợt này chỉ cập nhật kế hoạch, không tạo contract HTTP, DDL hoặc code.
 
 Nguồn: SRS trang 4-17, 19-21; FR-01 đến FR-08, NFR-01 đến NFR-03; câu trả lời Q-01 đến Q-24 và nội dung Q-25 đến Q-27 tại [bản rà câu trả lời](11-ANSWER-REVIEW.md). Quyết định nằm trong [sổ quyết định](10-DECISIONS-AND-HANDOFF.md), lựa chọn kỹ thuật chung tại [baseline kỹ thuật](12-SHARED-TECHNICAL-BASELINE.md). Q-25 đến Q-27 giữ băm mật khẩu, đầy đủ FR-01/02 và kiểm tra role/ownership/khóa tại API; không sửa baseline SRS để làm biến mất xung đột.

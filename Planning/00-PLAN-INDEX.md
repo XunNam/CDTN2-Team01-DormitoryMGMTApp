@@ -1,5 +1,7 @@
 # Kế hoạch tổng thể và cách sử dụng
 
+**Ghi chú giai đoạn mới:** tài liệu này giữ nội dung kế hoạch lịch sử. Bộ đặc tả thực tế và các lựa chọn đã chốt xem [baseline revision 1.0.0](13-SPECIFICATION-BASELINE.md). Lệnh chờ tạo đặc tả trong kế hoạch cũ đã được prompt mới thay thế; không dùng các đề xuất cũ để ghi đè contract/schema hiện hành.
+
 Trạng thái: **PLAN_RECONCILED / AWAITING_SPECIFICATION_TASK**. Ngày lập gốc 30/10/2026; múi giờ nghiệp vụ Việt Nam `Asia/Ho_Chi_Minh`. Nhóm gồm Bùi Thế Anh, Trần Quốc Vương, Nguyễn Đỗ Tuấn Kiệt và Trần Tuấn Kiệt; vai trò thực tế tại file 06.
 
 ## 1. Mục tiêu của đợt hiện tại

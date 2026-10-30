@@ -1,5 +1,7 @@
 # Kế hoạch phối hợp 4 thành viên và các AI
 
+**Ghi chú giai đoạn mới:** tài liệu này giữ nội dung kế hoạch lịch sử. Bộ đặc tả thực tế và các lựa chọn đã chốt xem [baseline revision 1.0.0](13-SPECIFICATION-BASELINE.md). Lệnh chờ tạo đặc tả trong kế hoạch cũ đã được prompt mới thay thế; không dùng các đề xuất cũ để ghi đè contract/schema hiện hành.
+
 **Trạng thái: `PLAN_RECONCILED`.** Kế hoạch được cập nhật theo câu trả lời Q-01..Q-24 và xác nhận tiếp theo Q-25..Q-27. Danh tính, vai trò phối hợp và các mốc ngày đã được chủ dự án cung cấp; phân công từng gói API và lịch chi tiết bên dưới vẫn là `PROPOSED`. Lượt này chỉ hoàn thiện kế hoạch, chưa tạo contract, DDL hoặc ứng dụng.
 
 **Điều đã xác nhận:** nhóm có 4 người; dùng chung repository; frontend dùng Next.js, API dùng Express.js và database dùng PostgreSQL 18.6 theo quyết định đã ghi. Bùi Thế Anh làm frontend, điều phối, giữ ownership, review và tích hợp thủ công. Ba thành viên còn lại làm API được giao trên máy riêng. Cuối dự án đóng gói bằng Docker; môi trường triển khai web/máy chủ ảo chưa xác định. Mọi AI tuân thủ giới hạn Git tại [AGENTS gốc](../AGENTS.md).

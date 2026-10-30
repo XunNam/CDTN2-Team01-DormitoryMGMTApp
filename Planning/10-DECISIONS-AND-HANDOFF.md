@@ -2,6 +2,10 @@
 
 Trạng thái: **PLAN_RECONCILED / AWAITING_SPECIFICATION_TASK**. Đã đọc 24 câu trả lời và nhận thêm ba xác nhận Q-25..Q-27. Lượt hiện tại hoàn thiện bộ kế hoạch; chưa tạo API contract operation, DDL hoặc ứng dụng. Nguồn trả lời nguyên gốc được giữ trong file 09, các làm rõ trong file 11, chuẩn kỹ thuật do AI chọn trong file 12.
 
+## Cập nhật sang bộ đặc tả
+
+Prompt mới đã cho phép tạo API Contract thật, schema và khung backend. DEC-022..027 được ghi tại [baseline mới](13-SPECIFICATION-BASELINE.md); nội dung phía dưới giữ lịch sử đợt kế hoạch.
+
 ## 1. Thứ tự áp dụng nguồn
 
 1. Prompt hiện tại và xác nhận Q-25..Q-27 trong chat có hiệu lực hơn phần trả lời cũ bị thay thế.

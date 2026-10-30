@@ -1,0 +1,307 @@
+{
+  "StudentProfile": {
+    "id": "00000000-0000-4000-8000-000000000001",
+    "studentCode": "SV001",
+    "fullName": "Sinh viên mẫu",
+    "gender": "MALE",
+    "className": "K29",
+    "faculty": "CNTT",
+    "phone": "0900000000",
+    "email": null,
+    "dateOfBirth": null,
+    "permanentAddress": null,
+    "createdAt": "2026-10-30T03:00:00Z",
+    "updatedAt": "2026-10-30T03:00:00Z"
+  },
+  "Building": {
+    "id": "00000000-0000-4000-8000-000000000001",
+    "code": "A",
+    "name": "Tòa A",
+    "createdAt": "2026-10-30T03:00:00Z",
+    "updatedAt": "2026-10-30T03:00:00Z"
+  },
+  "Room": {
+    "id": "00000000-0000-4000-8000-000000000001",
+    "buildingId": "00000000-0000-4000-8000-000000000001",
+    "buildingCode": "A",
+    "buildingName": "Tòa A",
+    "code": "A101",
+    "capacity": 6,
+    "gender": "MALE",
+    "feeVnd": "1000000",
+    "status": "ACTIVE",
+    "allocatedPlaces": 0,
+    "availablePlaces": 6,
+    "createdAt": "2026-10-30T03:00:00Z",
+    "updatedAt": "2026-10-30T03:00:00Z"
+  },
+  "Application": {
+    "id": "00000000-0000-4000-8000-000000000001",
+    "studentId": "00000000-0000-4000-8000-000000000001",
+    "preferredRoomId": "00000000-0000-4000-8000-000000000001",
+    "periodId": 1,
+    "status": "PENDING",
+    "rejectionReason": null,
+    "reviewedBy": null,
+    "reviewedAt": null,
+    "createdAt": "2026-10-30T03:00:00Z",
+    "updatedAt": "2026-10-30T03:00:00Z"
+  },
+  "Residence": {
+    "id": "00000000-0000-4000-8000-000000000001",
+    "applicationId": "00000000-0000-4000-8000-000000000001",
+    "studentId": "00000000-0000-4000-8000-000000000001",
+    "roomId": "00000000-0000-4000-8000-000000000001",
+    "status": "ALLOCATED",
+    "allocatedBy": "00000000-0000-4000-8000-000000000001",
+    "allocatedAt": "2026-10-30T03:00:00Z",
+    "checkInDate": null,
+    "checkedInBy": null,
+    "checkedInAt": null,
+    "checkOutDate": null,
+    "checkedOutBy": null,
+    "checkedOutAt": null,
+    "cancellationReason": null,
+    "cancelledBy": null,
+    "cancelledAt": null
+  },
+  "Receipt": {
+    "id": "00000000-0000-4000-8000-000000000001",
+    "residenceId": "00000000-0000-4000-8000-000000000001",
+    "amountVnd": "1000000",
+    "status": "UNPAID",
+    "createdBy": "00000000-0000-4000-8000-000000000001",
+    "createdAt": "2026-10-30T03:00:00Z",
+    "paymentDate": null,
+    "paidBy": null,
+    "paidAt": null
+  },
+  "Account": {
+    "id": "00000000-0000-4000-8000-000000000001",
+    "actorKind": "STUDENT",
+    "role": "SV",
+    "identifier": "SV001",
+    "displayName": "Sinh viên mẫu",
+    "studentId": "00000000-0000-4000-8000-000000000001",
+    "isLocked": false,
+    "createdAt": "2026-10-30T03:00:00Z",
+    "updatedAt": "2026-10-30T03:00:00Z"
+  },
+  "RegistrationPeriod": {
+    "id": 1,
+    "status": "CLOSED",
+    "updatedBy": null,
+    "updatedAt": "2026-10-30T03:00:00Z"
+  },
+  "Identity": {
+    "actorKind": "STUDENT",
+    "accountId": "00000000-0000-4000-8000-000000000001",
+    "role": "SV",
+    "identifier": "SV001",
+    "displayName": "Sinh viên mẫu",
+    "studentId": "00000000-0000-4000-8000-000000000001"
+  },
+  "CsrfToken": {
+    "csrfToken": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "ProfileCandidate": {
+    "id": "00000000-0000-4000-8000-000000000001",
+    "studentCode": "SV001",
+    "fullName": "Sinh viên mẫu",
+    "hasAccount": false
+  },
+  "Statistics": {
+    "totalRooms": 0,
+    "availablePlaces": 0,
+    "currentResidents": 0,
+    "unpaidReceipts": 0
+  },
+  "ApprovalResult": {
+    "application": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "studentId": "00000000-0000-4000-8000-000000000001",
+      "preferredRoomId": "00000000-0000-4000-8000-000000000001",
+      "periodId": 1,
+      "status": "APPROVED",
+      "rejectionReason": null,
+      "reviewedBy": "00000000-0000-4000-8000-000000000001",
+      "reviewedAt": "2026-10-30T03:00:00Z",
+      "createdAt": "2026-10-30T03:00:00Z",
+      "updatedAt": "2026-10-30T03:00:00Z"
+    },
+    "residence": {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "applicationId": "00000000-0000-4000-8000-000000000001",
+      "studentId": "00000000-0000-4000-8000-000000000001",
+      "roomId": "00000000-0000-4000-8000-000000000001",
+      "status": "ALLOCATED",
+      "allocatedBy": "00000000-0000-4000-8000-000000000001",
+      "allocatedAt": "2026-10-30T03:00:00Z",
+      "checkInDate": null,
+      "checkedInBy": null,
+      "checkedInAt": null,
+      "checkOutDate": null,
+      "checkedOutBy": null,
+      "checkedOutAt": null,
+      "cancellationReason": null,
+      "cancelledBy": null,
+      "cancelledAt": null
+    }
+  },
+  "LoginRequest": {
+    "accountType": "STUDENT",
+    "identifier": "SV001",
+    "password": "DemoOnly#2026"
+  },
+  "ChangePasswordRequest": {
+    "currentPassword": "DemoOnly#2026",
+    "newPassword": "ChangedDemo#2026"
+  },
+  "ProfileCreate": {
+    "studentCode": "DEMO",
+    "fullName": "Dữ liệu mẫu",
+    "gender": "MALE",
+    "className": "Dữ liệu mẫu",
+    "faculty": "Dữ liệu mẫu",
+    "phone": "0900000000",
+    "email": null,
+    "dateOfBirth": null,
+    "permanentAddress": null
+  },
+  "ProfilePatch": {
+    "fullName": "Dữ liệu mẫu",
+    "gender": "MALE",
+    "className": "Dữ liệu mẫu",
+    "faculty": "Dữ liệu mẫu",
+    "phone": "0900000000",
+    "email": null,
+    "dateOfBirth": null,
+    "permanentAddress": null
+  },
+  "ContactPatch": {
+    "phone": "0900000000",
+    "email": null
+  },
+  "BuildingCreate": {
+    "code": "DEMO",
+    "name": "Dữ liệu mẫu"
+  },
+  "BuildingPatch": {
+    "name": "Dữ liệu mẫu"
+  },
+  "RoomCreate": {
+    "buildingId": "00000000-0000-4000-8000-000000000001",
+    "code": "DEMO",
+    "capacity": 1,
+    "gender": "MALE",
+    "feeVnd": "1000000",
+    "status": "ACTIVE"
+  },
+  "RoomPatch": {
+    "capacity": 1,
+    "gender": "MALE",
+    "feeVnd": "1000000",
+    "status": "ACTIVE"
+  },
+  "ApplicationCreate": {
+    "preferredRoomId": "00000000-0000-4000-8000-000000000001"
+  },
+  "ApplicationApprove": {
+    "roomId": "00000000-0000-4000-8000-000000000001"
+  },
+  "ApplicationReject": {
+    "reason": "Dữ liệu mẫu"
+  },
+  "PeriodPatch": {
+    "status": "OPEN"
+  },
+  "CheckIn": {
+    "checkInDate": "2026-10-30"
+  },
+  "CheckOut": {
+    "checkOutDate": "2026-10-30"
+  },
+  "CancelAllocation": {
+    "reason": "Dữ liệu mẫu"
+  },
+  "ReceiptCreate": {
+    "residenceId": "00000000-0000-4000-8000-000000000001"
+  },
+  "ReceiptPay": {
+    "paymentDate": "2026-10-30"
+  },
+  "AccountLock": {
+    "isLocked": false
+  },
+  "AccountCreate": {
+    "accountType": "STUDENT",
+    "studentId": "00000000-0000-4000-8000-000000000001",
+    "role": "SV",
+    "password": "DemoOnly#2026"
+  },
+  "Empty": {},
+  "Error": {
+    "error": {
+      "code": "VALIDATION_ERROR",
+      "message": "Dữ liệu không hợp lệ"
+    }
+  },
+  "PageQuery": {
+    "page": 1,
+    "pageSize": 20
+  },
+  "StudentProfileQuery": {
+    "page": 1,
+    "pageSize": 20,
+    "q": "Dữ liệu mẫu",
+    "gender": "MALE"
+  },
+  "BuildingQuery": {
+    "page": 1,
+    "pageSize": 20,
+    "q": "Dữ liệu mẫu"
+  },
+  "RoomQuery": {
+    "page": 1,
+    "pageSize": 20,
+    "q": "Dữ liệu mẫu",
+    "buildingId": "00000000-0000-4000-8000-000000000001",
+    "gender": "MALE",
+    "hasAvailability": false,
+    "status": "ACTIVE"
+  },
+  "ApplicationQuery": {
+    "page": 1,
+    "pageSize": 20,
+    "status": "PENDING",
+    "studentId": "00000000-0000-4000-8000-000000000001",
+    "preferredRoomId": "00000000-0000-4000-8000-000000000001"
+  },
+  "ResidenceQuery": {
+    "page": 1,
+    "pageSize": 20,
+    "status": "ALLOCATED",
+    "studentId": "00000000-0000-4000-8000-000000000001",
+    "roomId": "00000000-0000-4000-8000-000000000001"
+  },
+  "ReceiptQuery": {
+    "page": 1,
+    "pageSize": 20,
+    "status": "UNPAID",
+    "studentId": "00000000-0000-4000-8000-000000000001",
+    "residenceId": "00000000-0000-4000-8000-000000000001"
+  },
+  "AccountQuery": {
+    "page": 1,
+    "pageSize": 20,
+    "q": "Dữ liệu mẫu",
+    "actorKind": "STUDENT",
+    "role": "SV",
+    "isLocked": false
+  },
+  "CandidateQuery": {
+    "page": 1,
+    "pageSize": 20,
+    "q": "Dữ liệu mẫu"
+  }
+}

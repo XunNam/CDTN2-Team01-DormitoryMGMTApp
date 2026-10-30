@@ -1,5 +1,7 @@
 # Cấu trúc thư mục và hợp đồng tài liệu dự kiến
 
+**Ghi chú giai đoạn mới:** tài liệu này giữ nội dung kế hoạch lịch sử. Bộ đặc tả thực tế và các lựa chọn đã chốt xem [baseline revision 1.0.0](13-SPECIFICATION-BASELINE.md). Lệnh chờ tạo đặc tả trong kế hoạch cũ đã được prompt mới thay thế; không dùng các đề xuất cũ để ghi đè contract/schema hiện hành.
+
 Trạng thái: **PLAN_RECONCILED** cho kế hoạch; bố cục file đích là **PROPOSED** để dùng khi được giao tạo bộ đặc tả. Chỉ `README.md`, `AGENTS.md` và `Planning/` hiện có. Đã nhận câu trả lời và hòa giải tại file 11; cây dưới đây chưa phải các file đã tồn tại. Chuẩn API/auth/dữ liệu lấy từ file 12, không chọn lại riêng cho từng thư mục.
 
 ## 1. Cây thư mục cho bộ đặc tả cộng tác

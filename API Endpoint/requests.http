@@ -1,0 +1,386 @@
+@baseUrl = http://localhost:3001
+@origin = http://localhost:3000
+@csrf = REPLACE_WITH_TOKEN_FROM_GET_CSRF
+@roomId = 00000000-0000-4000-8000-000000000001
+@studentId = 00000000-0000-4000-8000-000000000001
+@buildingId = 00000000-0000-4000-8000-000000000001
+@applicationId = 00000000-0000-4000-8000-000000000001
+@residenceId = 00000000-0000-4000-8000-000000000001
+@receiptId = 00000000-0000-4000-8000-000000000001
+@accountId = 00000000-0000-4000-8000-000000000001
+@actorKind = STUDENT
+
+# Dữ liệu giả; nhập ID seed thực tế. REST client cần lưu cookie.
+## GETcsrf -> login -> GETcsrf mới -> gọi role đã đăng nhập.
+
+### getCsrfToken
+GET {{baseUrl}}/api/v1/auth/csrf
+Accept: application/json
+
+### login
+POST {{baseUrl}}/api/v1/auth/login
+Accept: application/json
+Origin: {{origin}}
+X-CSRF-Token: {{csrf}}
+Content-Type: application/json
+
+{
+  "accountType": "STUDENT",
+  "identifier": "SV001",
+  "password": "DemoOnly#2026"
+}
+
+### logout
+POST {{baseUrl}}/api/v1/auth/logout
+Accept: application/json
+Origin: {{origin}}
+X-CSRF-Token: {{csrf}}
+Content-Type: application/json
+
+{}
+
+### changePassword
+POST {{baseUrl}}/api/v1/auth/change-password
+Accept: application/json
+Origin: {{origin}}
+X-CSRF-Token: {{csrf}}
+Content-Type: application/json
+
+{
+  "currentPassword": "DemoOnly#2026",
+  "newPassword": "ChangedDemo#2026"
+}
+
+### getCurrentIdentity
+GET {{baseUrl}}/api/v1/auth/me
+Accept: application/json
+
+### studentGetProfile
+GET {{baseUrl}}/api/v1/student/profile
+Accept: application/json
+
+### studentUpdateContact
+PATCH {{baseUrl}}/api/v1/student/profile
+Accept: application/json
+Origin: {{origin}}
+X-CSRF-Token: {{csrf}}
+Content-Type: application/json
+
+{
+  "phone": "+84900000000",
+  "email": "sv.demo@example.test"
+}
+
+### studentListBuildings
+GET {{baseUrl}}/api/v1/student/buildings
+Accept: application/json
+
+### studentListRooms
+GET {{baseUrl}}/api/v1/student/rooms
+Accept: application/json
+
+### studentGetRoom
+GET {{baseUrl}}/api/v1/student/rooms/{{roomId}}
+Accept: application/json
+
+### studentGetPeriod
+GET {{baseUrl}}/api/v1/student/registration-period
+Accept: application/json
+
+### studentCreateApplication
+POST {{baseUrl}}/api/v1/student/applications
+Accept: application/json
+Origin: {{origin}}
+X-CSRF-Token: {{csrf}}
+Content-Type: application/json
+
+{
+  "preferredRoomId": "00000000-0000-4000-8000-000000000001"
+}
+
+### studentListApplications
+GET {{baseUrl}}/api/v1/student/applications
+Accept: application/json
+
+### studentGetApplication
+GET {{baseUrl}}/api/v1/student/applications/{{applicationId}}
+Accept: application/json
+
+### studentListResidences
+GET {{baseUrl}}/api/v1/student/residences
+Accept: application/json
+
+### studentGetResidence
+GET {{baseUrl}}/api/v1/student/residences/{{residenceId}}
+Accept: application/json
+
+### studentListReceipts
+GET {{baseUrl}}/api/v1/student/receipts
+Accept: application/json
+
+### studentGetReceipt
+GET {{baseUrl}}/api/v1/student/receipts/{{receiptId}}
+Accept: application/json
+
+### managementListProfiles
+GET {{baseUrl}}/api/v1/management/student-profiles
+Accept: application/json
+
+### managementCreateProfile
+POST {{baseUrl}}/api/v1/management/student-profiles
+Accept: application/json
+Origin: {{origin}}
+X-CSRF-Token: {{csrf}}
+Content-Type: application/json
+
+{
+  "studentCode": "SV001",
+  "fullName": "Sinh viên mẫu",
+  "gender": "MALE",
+  "className": "K29",
+  "faculty": "CNTT",
+  "phone": "0900000000",
+  "email": null,
+  "dateOfBirth": null,
+  "permanentAddress": null
+}
+
+### managementGetProfile
+GET {{baseUrl}}/api/v1/management/student-profiles/{{studentId}}
+Accept: application/json
+
+### managementUpdateProfile
+PATCH {{baseUrl}}/api/v1/management/student-profiles/{{studentId}}
+Accept: application/json
+Origin: {{origin}}
+X-CSRF-Token: {{csrf}}
+Content-Type: application/json
+
+{
+  "fullName": "Sinh viên mẫu",
+  "phone": null
+}
+
+### managementListBuildings
+GET {{baseUrl}}/api/v1/management/buildings
+Accept: application/json
+
+### managementCreateBuilding
+POST {{baseUrl}}/api/v1/management/buildings
+Accept: application/json
+Origin: {{origin}}
+X-CSRF-Token: {{csrf}}
+Content-Type: application/json
+
+{
+  "code": "A",
+  "name": "Tòa A"
+}
+
+### managementGetBuilding
+GET {{baseUrl}}/api/v1/management/buildings/{{buildingId}}
+Accept: application/json
+
+### managementUpdateBuilding
+PATCH {{baseUrl}}/api/v1/management/buildings/{{buildingId}}
+Accept: application/json
+Origin: {{origin}}
+X-CSRF-Token: {{csrf}}
+Content-Type: application/json
+
+{
+  "name": "Tòa A mới"
+}
+
+### managementListRooms
+GET {{baseUrl}}/api/v1/management/rooms
+Accept: application/json
+
+### managementCreateRoom
+POST {{baseUrl}}/api/v1/management/rooms
+Accept: application/json
+Origin: {{origin}}
+X-CSRF-Token: {{csrf}}
+Content-Type: application/json
+
+{
+  "buildingId": "00000000-0000-4000-8000-000000000001",
+  "code": "A101",
+  "capacity": 6,
+  "gender": "MALE",
+  "feeVnd": "1000000",
+  "status": "ACTIVE"
+}
+
+### managementGetRoom
+GET {{baseUrl}}/api/v1/management/rooms/{{roomId}}
+Accept: application/json
+
+### managementUpdateRoom
+PATCH {{baseUrl}}/api/v1/management/rooms/{{roomId}}
+Accept: application/json
+Origin: {{origin}}
+X-CSRF-Token: {{csrf}}
+Content-Type: application/json
+
+{
+  "capacity": 6,
+  "feeVnd": "1200000"
+}
+
+### managementGetPeriod
+GET {{baseUrl}}/api/v1/management/registration-period
+Accept: application/json
+
+### managementUpdatePeriod
+PATCH {{baseUrl}}/api/v1/management/registration-period
+Accept: application/json
+Origin: {{origin}}
+X-CSRF-Token: {{csrf}}
+Content-Type: application/json
+
+{
+  "status": "OPEN"
+}
+
+### managementListApplications
+GET {{baseUrl}}/api/v1/management/applications
+Accept: application/json
+
+### managementGetApplication
+GET {{baseUrl}}/api/v1/management/applications/{{applicationId}}
+Accept: application/json
+
+### managementApproveApplication
+POST {{baseUrl}}/api/v1/management/applications/{{applicationId}}/approve
+Accept: application/json
+Origin: {{origin}}
+X-CSRF-Token: {{csrf}}
+Content-Type: application/json
+
+{
+  "roomId": "00000000-0000-4000-8000-000000000001"
+}
+
+### managementRejectApplication
+POST {{baseUrl}}/api/v1/management/applications/{{applicationId}}/reject
+Accept: application/json
+Origin: {{origin}}
+X-CSRF-Token: {{csrf}}
+Content-Type: application/json
+
+{
+  "reason": "Hồ sơ chưa đáp ứng điều kiện xét duyệt"
+}
+
+### managementListResidences
+GET {{baseUrl}}/api/v1/management/residences
+Accept: application/json
+
+### managementGetResidence
+GET {{baseUrl}}/api/v1/management/residences/{{residenceId}}
+Accept: application/json
+
+### managementCheckIn
+POST {{baseUrl}}/api/v1/management/residences/{{residenceId}}/check-in
+Accept: application/json
+Origin: {{origin}}
+X-CSRF-Token: {{csrf}}
+Content-Type: application/json
+
+{
+  "checkInDate": "2026-10-30"
+}
+
+### managementCancelAllocation
+POST {{baseUrl}}/api/v1/management/residences/{{residenceId}}/cancel
+Accept: application/json
+Origin: {{origin}}
+X-CSRF-Token: {{csrf}}
+Content-Type: application/json
+
+{
+  "reason": "Sinh viên không đến nhận phòng"
+}
+
+### managementCheckOut
+POST {{baseUrl}}/api/v1/management/residences/{{residenceId}}/check-out
+Accept: application/json
+Origin: {{origin}}
+X-CSRF-Token: {{csrf}}
+Content-Type: application/json
+
+{
+  "checkOutDate": "2026-10-30"
+}
+
+### managementListReceipts
+GET {{baseUrl}}/api/v1/management/receipts
+Accept: application/json
+
+### managementCreateReceipt
+POST {{baseUrl}}/api/v1/management/receipts
+Accept: application/json
+Origin: {{origin}}
+X-CSRF-Token: {{csrf}}
+Content-Type: application/json
+
+{
+  "residenceId": "00000000-0000-4000-8000-000000000001"
+}
+
+### managementGetReceipt
+GET {{baseUrl}}/api/v1/management/receipts/{{receiptId}}
+Accept: application/json
+
+### managementPayReceipt
+POST {{baseUrl}}/api/v1/management/receipts/{{receiptId}}/pay
+Accept: application/json
+Origin: {{origin}}
+X-CSRF-Token: {{csrf}}
+Content-Type: application/json
+
+{
+  "paymentDate": "2026-10-30"
+}
+
+### managementGetStatistics
+GET {{baseUrl}}/api/v1/management/statistics
+Accept: application/json
+
+### adminListAccounts
+GET {{baseUrl}}/api/v1/admin/accounts
+Accept: application/json
+
+### adminGetAccount
+GET {{baseUrl}}/api/v1/admin/accounts/{{actorKind}}/{{accountId}}
+Accept: application/json
+
+### adminCreateAccount
+POST {{baseUrl}}/api/v1/admin/accounts
+Accept: application/json
+Origin: {{origin}}
+X-CSRF-Token: {{csrf}}
+Content-Type: application/json
+
+{
+  "accountType": "STUDENT",
+  "studentId": "00000000-0000-4000-8000-000000000001",
+  "role": "SV",
+  "password": "DemoOnly#2026"
+}
+
+### adminSetAccountLock
+PATCH {{baseUrl}}/api/v1/admin/accounts/{{actorKind}}/{{accountId}}/lock
+Accept: application/json
+Origin: {{origin}}
+X-CSRF-Token: {{csrf}}
+Content-Type: application/json
+
+{
+  "isLocked": true
+}
+
+### adminListProfileCandidates
+GET {{baseUrl}}/api/v1/admin/student-profiles/candidates
+Accept: application/json

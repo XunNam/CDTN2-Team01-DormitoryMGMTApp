@@ -20,14 +20,21 @@ Bộ kế hoạch cộng tác xây dựng ứng dụng web đăng ký lưu trú,
 
 ## Trạng thái dự án
 
-**Trạng thái: PLAN_RECONCILED - đã rà 24 câu trả lời và chốt thêm Q-25..Q-27.** Kế hoạch dùng Next.js, Express.js và PostgreSQL; giữ đủ SRS, mật khẩu băm, kiểm quyền/khóa tại API. Repo chưa có ứng dụng, API contract operation hay `SQL/schema.sql`; lượt hiện tại hoàn thiện bộ kế hoạch.
+**SPECIFIED_NOT_IMPLEMENTED — bộ đặc tả revision 1.0.0 và khung backend dùng chung.** Đã có hợp đồng HTTP cho ba role, schema PostgreSQL và hướng dẫn giao việc cho AI. Backend scaffold chỉ cung cấp nền kỹ thuật/health; các API nghiệp vụ và xác thực vẫn cần triển khai theo task. Chưa kiểm chứng NFR hoặc toàn bộ runtime PostgreSQL.
 
 ## Bắt đầu
 
-1. Đọc [hướng dẫn cộng tác](AGENTS.md).
-2. Đọc [mục lục và kế hoạch tổng thể](Planning/00-PLAN-INDEX.md).
-3. Đọc [kết quả rà soát và ba xác nhận bổ sung](Planning/11-ANSWER-REVIEW.md), rồi [chuẩn kỹ thuật chung](Planning/12-SHARED-TECHNICAL-BASELINE.md).
-4. Dùng sổ quyết định hiện hành; câu trả lời gốc đã được giữ để truy vết. Khi giao tạo bộ đặc tả hoặc code, ghi task/phạm vi cụ thể; không cần trả lời lại các câu đã chốt.
+1. AI đọc [AGENTS gốc](AGENTS.md), xác định role và task với chính người giao việc.
+2. Đọc [hướng dẫn cộng tác](Coordination/README.md) và [baseline đặc tả](Planning/13-SPECIFICATION-BASELINE.md).
+3. Tra [danh mục API](<API Endpoint/README.md>), [chuẩn Shared](<API Endpoint/Shared/00-conventions.md>), [schema](SQL/schema.sql) và contract role.
+4. Code theo [khung backend](backend/README.md), kiểm thử rồi bàn giao cho Anh review. Không tự commit/push/merge.
+
+| Role | Contract | Code |
+|---|---|---|
+| SV | [Sinh viên](<API Endpoint/Student/API-Contract.md>) | backend/src/roles/student/ |
+| BQL | [Ban quản lý](<API Endpoint/Dormitory Management/API-Contract.md>) | backend/src/roles/management/ |
+| ADMIN | [Quản trị viên](<API Endpoint/System Admin/API-Contract.md>) | backend/src/roles/admin/ |
+| Shared được giao | [Auth dùng chung](<API Endpoint/Shared/01-authentication.md>) | backend/src/shared/ |
 
 ## Các tài liệu chính
 
