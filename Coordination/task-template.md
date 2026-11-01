@@ -23,6 +23,8 @@ Phạm vi dự kiến phiên này / checkpoint / bước tiếp tục:
 Dependency và thứ tự triển khai:
 Transaction/ownership/role/lock cần bảo toàn:
 Test đúng/sai input, sai quyền, khóa, ownership:
+Test PostgreSQL/tích hợp giao Anh: đường dẫn, setup/fixture, lệnh, expected result:
+Trạng thái test DB trên máy thành viên: NOT_RUN_PENDING_OWNER
 Test retry/cạnh tranh/rollback khi liên quan:
 Lệnh chạy và tiêu chí hoàn thành:
 Điểm cần Anh quyết định hoặc điều phối:
@@ -38,6 +40,7 @@ Tôi đang được giao role <SV/BQL/ADMIN>; task <mã task>, operation <danh s
 Nếu role hoặc task còn thiếu, hỏi lại tôi trước khi code nghiệp vụ.
 Trước code, tự đánh giá khối lượng; nếu quá lớn, báo tôi và đề xuất chia giai đoạn theo contract/phụ thuộc.
 Ghi kế hoạch và checkpoint để phiên sau tiếp tục đúng điểm, không làm lại phần đã xong.
+Máy tôi có Node.js/npm, không có PostgreSQL; chạy build/unit và bàn giao test DB/tích hợp để Anh chạy sau.
 Giữ method/path, tên trường, enum, quyền, envelope và transaction đã chốt.
 Không tạo backend/auth/database riêng. Không tự commit, push hoặc merge.
 Hoàn tất bằng handoff có file, kiểm thử thực tế, phần chưa kiểm chứng và dependency.

@@ -15,3 +15,7 @@ Revision1.0.0. Đây là danh mục giao việc, không là tuyên bố các tí
 | INTEGRATE | Anh điều phối | Review cácPR, kiểm thử luồng liên phần vàNFR; merge thủ công | Các handoff từng task | Chưa triển khai |
 
 ADMIN-01 không chặn BQL-FOUNDATION nếu có account demo hợp lệ trên DB test; DB seed không thay chức năng cấp account. Các API chưa được task giao không tự thêm route tạm trảsuccess. Khi task quá lớn tách theo operationId; cập nhật bảng với người đang giữ file để tránh hai Agent sửa cùngcontroller.ts.
+
+## Nơi thực hiện các phụ thuộc và kiểm thử
+
+Các dependency auth/schema/fixture trong bảng là điều kiện để kiểm chứng tích hợp đầy đủ, không buộc máy thành viên cài PostgreSQL mới được viết code. Thành viên dùng Node/npm, triển khai phần độc lập và viết test tích hợp để Anh chạy. BASE-REVIEW và kiểm thử DB do Anh điều phối trên máy Anh; các task role có thể READY_FOR_OWNER khi code/build/unit/hồ sơ đủ, còn test PostgreSQL ghi NOT_RUN_PENDING_OWNER. Xem [phân công](testing-responsibilities.md).

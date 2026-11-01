@@ -23,3 +23,12 @@ Các test HTTP chạy server cổng loopback tạm thời và đóng sau test. �
 ## Chưa kiểm chứng
 
 Chưa chạy schema trên PostgreSQL thật, chưa kiểm thử session-store với DB thật, chưa có API auth/role nghiệp vụ, chưa có dữ liệu NFR hoặc Compose/frontend. **Không đánh dấu TC nghiệp vụ, TC-N1, TC-N2, TC-N3 đã đạt.** Cạnh tranh thật, bảo toàn sức chứa/phiếu thu, migration và kiểm thử liên role thuộc task triển khai tiếp theo. Chỉ schema/docs tồn tại không chứng minh database đã được áp dụng.
+
+## Cập nhật phân công kiểm thử ngày 01/11/2026
+
+Theo yêu cầu chủ dự án, máy thành viên có Node.js 24/npm 11 và không có PostgreSQL. Bùi Thế Anh chạy kiểm thử DB/tích hợp sau bàn giao; xem [phân công](../Coordination/testing-responsibilities.md).
+
+- Đã chạy npm run check sau khi tách nhóm test: TypeScript build PASS, **15/15 test độc lập PASS**, 0 skipped/todo.
+- Ba test mới kiểm tra discovery không chọn file integration, unit không nhận biến kết nối DB và integration bắt buộc TEST_DATABASE_URL riêng, không dùng DATABASE_URL development.
+- Không kết nối PostgreSQL hoặc chạy test database trong lần kiểm tra này. Chưa có test tích hợp nghiệp vụ để chạy; nhóm đó ghi NOT_RUN_PENDING_OWNER khi thành viên bàn giao.
+- Lệnh mặc định npm test/check chỉ chạy nhóm độc lập. Lệnh npm run test:integration dành cho máy Anh với DB test đã chuẩn bị; không tự dựng/xóa database.

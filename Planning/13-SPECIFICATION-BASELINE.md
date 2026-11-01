@@ -15,6 +15,10 @@ Trạng thái **SPECIFIED_NOT_IMPLEMENTED**. Nguồn ủy quyền: prompt chủ 
 
 DEC-022 tiếp nối DEC-007 (kế hoạch đã hoàn tất), thay phạm vi chỉ lập kế hoạch. DEC-023 chốt các toolchain còn PROPOSED/OPEN trong TECH-11; không đổi framework. DEC-024..027 cụ thể hóa DEC-018/021, không thay quyền/FR/QT. Ngày xác lập theo prompt30/10/2026. Hosting và phân công tên người vẫn chưa chốt, không chặn đặc tả; không tự gán bạn nào vào role.
 
+## Làm rõ môi trường kiểm thử ngày 01/11/2026
+
+**DEC-028 / OWNER_CONFIRMED:** ba thành viên chuẩn bị Node.js 24/npm 11, không có PostgreSQL local; Bùi Thế Anh kiểm thử PostgreSQL/tích hợp sau bàn giao. Thành viên vẫn triển khai code, chạy build/unit và viết test tích hợp/fixture để bàn giao. Ghi NOT_RUN_PENDING_OWNER cho test cần DB; READY_FOR_OWNER không là DONE. Cho phép viết và bàn giao phần role độc lập trước khi có môi trường DB/auth để tích hợp; làm rõ điều kiện nhận task trong DEC-027. Đây là phân công nơi chạy test, không giảm yêu cầu SRS hoặc thay stack/contract. Chi tiết tại [phân công kiểm thử](../Coordination/testing-responsibilities.md).
+
 ## Nguồn triển khai
 
 - [Danh mục API](<../API Endpoint/README.md>) và [schemas](<../API Endpoint/Shared/schemas.json>).

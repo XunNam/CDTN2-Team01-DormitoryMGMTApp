@@ -8,7 +8,8 @@
 - [ ] Actor được đọc lại từ DB; account khóa bị chặn request kế tiếp; role không kế thừa nghiệp vụ.
 - [ ] Query SV bắt buộc ownership; list/detail/filter không lộ dữ liệu hoặc tồn tại tài nguyên của SV khác.
 - [ ] Schema/cột/mapping khớp SQL nguồn; không lộ password/hash/session ID hoặc SQL nội bộ.
-- [ ] Transaction dùng protocol chung, đã thử retry/rollback/cạnh tranh trên PostgreSQL thật nếu liên quan.
+- [ ] Thành viên: transaction đúng protocol, đã viết test/fixture retry/rollback/cạnh tranh liên quan; ghi NOT_RUN_PENDING_OWNER cho test PostgreSQL chưa chạy.
+- [ ] Anh trước merge: đã chạy các test PostgreSQL/tích hợp liên quan và xử lý lỗi; unit pass không thay kiểm chứng này.
 - [ ] Gửi đơn chưa giữ chỗ; duyệt và tạo residence nguyên tử; nhận không trừ thêm; hủy/trả giải phóng đúng một lần.
 - [ ] Một phiếu/residence; snapshot tiền lúc lập; đổi giá phòng không đổi phiếu; trả phòng không xóa nợ.
 - [ ] Build/test phù hợp đã chạy, bằng chứng được ghi; phần chưa chạy nêu rõ.

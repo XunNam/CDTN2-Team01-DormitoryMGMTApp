@@ -11,3 +11,7 @@ Tuân thủ [AGENTS gốc](../AGENTS.md). Revision đặc tả 1.0.0; đã đư�
 7. Giữ partial unique, FK RESTRICT, triggers trạng thái/metadata/snapshot và deferred approval/residence pair. Không tắt constraint/trigger để seed dễ hơn. Không hard-delete lịch sử.
 8. Trước bàn giao chạy kiểm tra static, rồi chạy SQL tests trên DB mới tách biệt nếu có runtime. Chưa chạy phải ghi `NOT_RUN`; không báo runtime đạt từ việc đọc SQL.
 9. Thay đổi ảnh hưởng DTO/enum/lock/giá/quyền phải được điều phối cùng API, Business Rules và test, có người khác rà soát trước tích hợp.
+
+## Kiểm thử khi máy thành viên không có PostgreSQL
+
+Theo [phân công kiểm thử](../Coordination/testing-responsibilities.md), thành viên chỉ cần Node.js 24/npm 11 để triển khai, viết test và chạy build/unit. Không yêu cầu cài PostgreSQL hoặc dừng role vì thiếu database. Vẫn viết test DB/tích hợp tại backend/tests/integration/<role>/ và bàn giao fixture, lệnh, expected result; ghi NOT_RUN_PENDING_OWNER để Bùi Thế Anh chạy trên máy Anh. READY_FOR_OWNER không đồng nghĩa DONE; test cạnh tranh/database thật vẫn bắt buộc trước nghiệm thu tương ứng.

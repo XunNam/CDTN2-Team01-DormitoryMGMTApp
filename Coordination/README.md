@@ -27,6 +27,10 @@ Thông tin role chưa rõ chỉ chặn code nghiệp vụ. AI vẫn có thể đ
 | Bàn giao để Anh review | [Mẫu bàn giao](handoff-template.md) |
 | Checklist trước tích hợp | [Kiểm tra bàn giao](review-checklist.md) |
 
+## Môi trường thành viên và kiểm thử tập trung
+
+Thành viên chuẩn bị Node.js 24/npm 11, không cần PostgreSQL. AI triển khai và chạy build/unit tại máy thành viên; viết test tích hợp để Anh chạy trên DB test riêng sau bàn giao. Đọc [phân công và lệnh test](testing-responsibilities.md). Thiếu DB tại máy thành viên không chặn toàn bộ role; ghi NOT_RUN_PENDING_OWNER cho các ca bàn giao.
+
 ## GitHub và tích hợp
 
 Thành viên tự tạo branch cho task, commit và push branch của mình, mở Pull Request tới branch nhóm đang dùng. Không đoán tên default branch. Bùi Thế Anh review, kiểm tra và tự merge. AI chỉ sửa file, kiểm thử và cung cấp nội dung bàn giao; không tự thực hiện các lệnh ghi Git theo AGENTS gốc. Push không có nghĩa đã hoàn thành hoặc đã tích hợp.
@@ -35,7 +39,7 @@ Một PR nên chứa một nhóm operation có thể kiểm chứng, kèm contra
 
 ## Trình tự giao việc
 
-1. Nền dùng chung và schema được review; có DB test sạch và dữ liệu giả.
+1. Nền dùng chung và schema được review; Anh chuẩn bị DB test sạch và dữ liệu giả để kiểm chứng tập trung. Thành viên không cần DB local.
 2. Shared auth/session và account provisioning được triển khai, kiểm thử riêng trước khi mở luồng role.
 3. Phòng/hồ sơ/kỳ → đăng ký/duyệt/lưu trú → phiếu thu → thống kê SHOULD.
 4. Từng role owner triển khai task theo contract, gửi handoff và PR cho Anh.

@@ -28,10 +28,14 @@
 
 ## Kiểm chứng và bàn giao
 
-Chạy kiểm tra theo backend README và các test của operation: thành công, input sai, thiếu phiên, tài khoản khóa, sai role, ownership, dữ liệu rỗng và gửi đơn đồng thời. Dùng PostgreSQL test riêng với dữ liệu giả. Không báo API hoạt động khi mới có tài liệu hoặc mock.
+Chạy kiểm tra theo backend README và các test của operation: thành công, input sai, thiếu phiên, tài khoản khóa, sai role, ownership, dữ liệu rỗng và gửi đơn đồng thời. Anh chạy PostgreSQL test riêng với dữ liệu giả sau bàn giao. Không báo API hoạt động khi mới có tài liệu hoặc mock.
 
 Bàn giao danh sách operation/file, thay đổi contract/schema nếu có, lệnh kiểm tra và kết quả thực tế, phần chưa kiểm chứng, phụ thuộc cần điều phối. Không tự commit, push, merge hoặc triển khai; người cộng tác thực hiện Git sau khi kiểm tra theo quy định gốc.
 
 ## Khối lượng và giai đoạn thực hiện
 
 Trước code, thực hiện [đánh giá và chia giai đoạn](../../Coordination/phased-execution.md). Nếu task vượt khả năng làm và kiểm tra trọn trong phiên, báo người giao, đề xuất nhóm operation theo contract/phụ thuộc đã có; ghi kế hoạch, checkpoint và bước tiếp tục. Không đổi quyền hoặc bỏ kiểm thử để làm nhanh. Hoàn thành giai đoạn phải phân biệt với hoàn thành toàn task/role. Task nhỏ được làm trọn; không tự yêu cầu duyệt lại từng bước đã được giao.
+
+## Kiểm thử khi máy thành viên không có PostgreSQL
+
+Theo [phân công kiểm thử](../../Coordination/testing-responsibilities.md), thành viên chỉ cần Node.js 24/npm 11 để triển khai, viết test và chạy build/unit. Không yêu cầu cài PostgreSQL hoặc dừng role vì thiếu database. Vẫn viết test DB/tích hợp tại backend/tests/integration/<role>/ và bàn giao fixture, lệnh, expected result; ghi NOT_RUN_PENDING_OWNER để Bùi Thế Anh chạy trên máy Anh. READY_FOR_OWNER không đồng nghĩa DONE; test cạnh tranh/database thật vẫn bắt buộc trước nghiệm thu tương ứng.

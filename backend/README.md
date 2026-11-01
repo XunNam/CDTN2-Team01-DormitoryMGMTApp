@@ -16,17 +16,19 @@ npm ci
 npm run check
 ```
 
-`check` chạy TypeScript build rồi Node test runner. Test scaffold sử dụng DB giả/MemoryStore riêng trong test để kiểm chứng middleware, envelope và thứ tự gọi transaction; không chứng minh constraint PostgreSQL, concurrency thật hoặc NFR đã đạt. Test PostgreSQL thật phải chạy trên DB test riêng theo [SQL README](../SQL/README.md), không dùng DB thật của đồ án.
+`check` chạy build và test độc lập, không cần PostgreSQL, psql, Docker hoặc file .env. `npm test` / `npm run test:unit` chỉ chọn test ngoài tests/integration/. Thành viên viết cả test tích hợp và fixture nhưng bàn giao Anh chạy; test DB chưa chạy ghi NOT_RUN_PENDING_OWNER. Xem [phân công kiểm thử](../Coordination/testing-responsibilities.md).
 
-Để chạy HTTP local, sao chép `.env.example` thành `.env`, điền DATABASE_URL của DB riêng và secret ngẫu nhiên tối thiểu32 ký tự; không commit `.env`. Chỉ áp schema theo SQL README khi được giao DB test sạch. Sau đó:
+## Kiểm thử PostgreSQL trên máy Anh
 
-```powershell
-npm run dev
-```
+Anh review code và test, chuẩn bị DB test riêng theo [SQL README](../SQL/README.md), rồi cấu hình TEST_DATABASE_URL trong .env.test từ .env.test.example. Chạy `npm run test:integration`; lệnh chỉ nạp test dưới tests/integration/, không tự tạo/reset database. Thiếu URL/file test thì báo lỗi hướng dẫn, không coi là pass. Repo hiện chưa có test tích hợp nghiệp vụ; thành viên phải bổ sung theo operation.
 
-Hoặc `npm run build` rồi `npm start`. Node đọc `.env` nếu tồn tại; production có thể cấp biến môi trường từ ngoài. Development `/health` ở port3001 theo cấu hình. APP_ORIGIN là origin frontend, ví dụ `http://localhost:3000`, không phải URL API có path. Frontend Next.js phải proxy `/api/v1` cùng origin; baseline không bật CORS. Không nới Origin để chữa cấu hình proxy sai.
+Test độc lập: `tests/<role>/<operationId>.test.ts`. Test PostgreSQL: `tests/integration/<role>/<operationId>.test.ts`. Mock/MemoryStore chỉ dùng nhóm độc lập, không thay kiểm chứng SQL/ownership với phiên thật hoặc concurrency. NFR và nghiệm thu liên phần do Anh chạy sau khi ghép.
 
-Production phải HTTPS, COOKIE_SECURE=true. Chỉ bật TRUST_PROXY=true khi có đúng một reverse proxy được tin cậy; không tự bật trên môi trường chưa xác định. NFR-03 frontend+API+DB bằng tối đa2lệnh là tiêu chí giao hàng sau khi ứng dụng và Compose được hoàn thành; scaffold này chưa xác nhận đạt.
+## Chạy server khi có database
+
+Chỉ cần cho người chạy ứng dụng/integration, không phải điều kiện viết backend ở máy thành viên. Sao chép .env.example thành .env và cấu hình DATABASE_URL, SESSION_SECRET, APP_ORIGIN trên DB riêng, rồi chạy `npm run dev` (hoặc build rồi start). Không commit credentials. Database phải được dựng trước theo SQL README.
+
+APP_ORIGIN là origin frontend; Next.js proxy /api/v1 cùng origin. Baseline không bật CORS. Production cần HTTPS/COOKIE_SECURE=true và chỉ bật TRUST_PROXY khi đã xác định proxy. Frontend/Compose và NFR-03 vẫn là phần bàn giao sau, chưa được kiểm chứng từ scaffold.
 
 ## Cấu trúc và điểm gắn code
 

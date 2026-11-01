@@ -2,6 +2,10 @@
 
 Áp dụng cho mọi AI nhận task trong repo. Quy tắc này bổ sung cách thực hiện công việc; giữ nguyên contract revision 1.0.0, schema, FR/QT/AC/TC, quyền sửa file và thứ tự phụ thuộc đã chốt. Nguồn: yêu cầu chủ dự án ngày 01/11/2026, tránh nhận khối lượng vượt khả năng hoàn tất trong một phiên AI.
 
+## Môi trường kiểm thử đã phân công
+
+Theo [phân công kiểm thử](testing-responsibilities.md), máy thành viên có Node/npm và không có PostgreSQL. Đây không phải blocker để triển khai hoặc bàn giao từng giai đoạn. Tính cả công sức viết test tích hợp và fixture, nhưng giao việc chạy DB cho Anh; ghi NOT_RUN_PENDING_OWNER. Giai đoạn đạt điều kiện code/build/unit và đủ hồ sơ có thể READY_FOR_OWNER, còn nghiệm thu tích hợp chờ Anh kiểm chứng. Thiếu Shared/code phụ thuộc vẫn phải báo riêng.
+
 ## Đánh giá trước khi code
 
 Sau khi rõ role và task, AI phải xem khối lượng thực tế trước khi hứa hoàn thành cả role:

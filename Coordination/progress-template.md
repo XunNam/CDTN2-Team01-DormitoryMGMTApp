@@ -14,6 +14,7 @@ Operation đã triển khai và trạng thái kiểm chứng từng operation:
 File/hàm đã sửa; route đã nối:
 Test/command đã chạy, kết quả và môi trường thực tế:
 Test chưa chạy và lý do:
+Test DB/tích hợp giao Anh (NOT_RUN_PENDING_OWNER): file, setup, lệnh và expected result:
 Phần đang làm dở, lỗi còn lại, code chưa nối:
 Phụ thuộc thiếu / quyết định cần người giao việc:
 Các giai đoạn/operation còn lại:

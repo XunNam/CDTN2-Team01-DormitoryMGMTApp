@@ -9,8 +9,12 @@
 - Mọi response theo Shared DTO/error; `sendData`/`sendList`, 204 không body; không raw DB row/hash/password/session/token. Chỉ log dữ liệu đã loại bí mật và định danh không cần thiết.
 - Mọi mutation dùng transaction chung và client được truyền, recheck actor sau advisory lock. GET list/count dùng cùng snapshot. Không dựa vào UI disable nút hoặc đếm chỗ trước transaction.
 - Scaffold không triển khai auth/business. Task role không được giả login/session để tuyên bố API chạy. Chuẩn bị validation/test độc lập trong khi chờ Shared auth; ghi dependency.
-- Chạy `npm run check` và test DB thật phù hợp; ghi kết quả thực tế, điều chưa chạy và ảnh hưởng liên phần vào handoff. Không coi test DB giả là kiểm chứng chống vượt sức chứa.
+- Chạy `npm run check` trên máy thành viên, bàn giao test DB thật cho Anh theo phân công; ghi kết quả thực tế, điều chưa chạy và ảnh hưởng liên phần vào handoff. Không coi test DB giả là kiểm chứng chống vượt sức chứa.
 
 ## Khối lượng và giai đoạn thực hiện
 
 Trước code, thực hiện [đánh giá và chia giai đoạn](../Coordination/phased-execution.md). Nếu task vượt khả năng làm và kiểm tra trọn trong phiên, báo người giao, đề xuất nhóm operation theo contract/phụ thuộc đã có; ghi kế hoạch, checkpoint và bước tiếp tục. Không đổi quyền hoặc bỏ kiểm thử để làm nhanh. Hoàn thành giai đoạn phải phân biệt với hoàn thành toàn task/role. Task nhỏ được làm trọn; không tự yêu cầu duyệt lại từng bước đã được giao.
+
+## Kiểm thử khi máy thành viên không có PostgreSQL
+
+Theo [phân công kiểm thử](../Coordination/testing-responsibilities.md), thành viên chỉ cần Node.js 24/npm 11 để triển khai, viết test và chạy build/unit. Không yêu cầu cài PostgreSQL hoặc dừng role vì thiếu database. Vẫn viết test DB/tích hợp tại backend/tests/integration/<role>/ và bàn giao fixture, lệnh, expected result; ghi NOT_RUN_PENDING_OWNER để Bùi Thế Anh chạy trên máy Anh. READY_FOR_OWNER không đồng nghĩa DONE; test cạnh tranh/database thật vẫn bắt buộc trước nghiệm thu tương ứng.

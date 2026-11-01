@@ -4,6 +4,10 @@ Revision **1.0.0**, `DELEGATED_SELECTION` cho cột/độ dài/protocol cụ th�
 
 Đọc lần lượt [dictionary](01-data-dictionary.md), [ERD](02-relationships.md), [constraints](03-constraints-and-indexes.md), [transaction](04-transactions-and-locking.md), [migration](05-migration-policy.md), [kiểm chứng](06-schema-verification.md).
 
+## Người thực hiện kiểm thử
+
+Bùi Thế Anh dựng PostgreSQL và chạy SQL/integration sau khi nhận backend. Ba thành viên không cần PostgreSQL/psql/Docker local; chỉ Node/npm cho build và unit test. Các lệnh bên dưới dành cho máy Anh, không là điều kiện bắt đầu code role. Xem [phân công](../Coordination/testing-responsibilities.md).
+
 ## Dựng database thử nghiệm
 
 Người vận hành tạo **một database rỗng dành riêng cho test**, cấu hình `DATABASE_URL` trỏ đúng DB đó; không dùng database học tập/đồ án đã có dữ liệu. DDL không có `DROP`, không tự tạo role hoặc thay quyền người dùng.

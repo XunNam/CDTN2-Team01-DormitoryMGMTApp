@@ -17,6 +17,7 @@ Lệnh kiểm tra đã chạy và kết quả thực tế:
 Ca đúng/sai input/chưa login/sai role/khóa/ownership:
 Ca retry/cạnh tranh/rollback:
 Kiểm thử chưa chạy và lý do:
+Test DB/tích hợp giao Anh (NOT_RUN_PENDING_OWNER): file, setup, lệnh và expected result:
 Giới hạn/lỗi còn lại:
 Ảnh hưởng UI/role khác/schema/seed:
 Contract hoặc migration thay đổi (nếu có, kèm decision):

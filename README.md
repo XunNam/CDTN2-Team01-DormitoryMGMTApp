@@ -54,3 +54,7 @@ Bộ kế hoạch cộng tác xây dựng ứng dụng web đăng ký lưu trú,
 | Auth, role, enum, JSON/SQL, tiền/ngày và retry thống nhất | [Chuẩn kỹ thuật](Planning/12-SHARED-TECHNICAL-BASELINE.md) |
 
 Chỉ sửa file trong repo. **AI không tự commit/push/merge; chủ dự án kiểm tra và thực hiện thủ công.**
+
+## Môi trường cộng tác
+
+Ba thành viên chỉ cần Node.js 24/npm 11 để viết backend, chạy build/unit và bàn giao test tích hợp. Bùi Thế Anh chuẩn bị PostgreSQL và chạy test DB/tích hợp sau bàn giao. Đọc [phân công kiểm thử](Coordination/testing-responsibilities.md); không cần cài DB trên máy thành viên.

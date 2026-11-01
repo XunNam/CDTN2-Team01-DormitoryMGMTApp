@@ -29,6 +29,13 @@ Nguồn hiện hành: `Planning/13-SPECIFICATION-BASELINE.md`; contract revision
 - Ghi kế hoạch và checkpoint theo task; cập nhật tiến độ trước khi phiên kết thúc hoặc có nguy cơ hết ngữ cảnh/hạn mức. Phiên tiếp theo đọc checkpoint và đối chiếu code/diff trước khi tiếp tục, không làm lại phần đã hoàn tất.
 - Không bịa hạn mức token/account; không hứa chắc chắn tránh mọi giới hạn. Một giai đoạn xong không đồng nghĩa toàn role xong. Các yêu cầu hỏi role/task chưa rõ và không tự commit/push/merge vẫn giữ nguyên.
 
+### Môi trường và trách nhiệm kiểm thử
+
+- Máy ba thành viên chỉ chuẩn bị Node.js 24 và npm 11; PostgreSQL, psql, Docker không là điều kiện nhận task backend. Áp dụng [phân công kiểm thử](Coordination/testing-responsibilities.md).
+- Thành viên triển khai code, viết test độc lập và tích hợp, chạy build/unit trên máy mình. Không dừng toàn bộ role vì thiếu PostgreSQL, không tự cài DB hoặc đổi công nghệ để né phụ thuộc.
+- Bùi Thế Anh chuẩn bị PostgreSQL và chạy test DB/tích hợp/cạnh tranh sau bàn giao. Test DB chưa chạy ghi NOT_RUN_PENDING_OWNER, có file test, fixture, lệnh và kết quả mong đợi. Không gọi mock là kiểm chứng database thật.
+- Bàn giao code đủ, build/unit đạt có thể đề nghị READY_FOR_OWNER; DONE/merge chỉ sau kiểm chứng cần thiết và review của Anh. Quyền sửa Shared/schema và giới hạn Git giữ nguyên.
+
 ## 3. Thứ tự đọc bắt buộc
 
 1. File này và `README.md`.

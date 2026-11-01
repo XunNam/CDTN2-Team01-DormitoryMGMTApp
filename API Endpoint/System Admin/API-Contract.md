@@ -592,3 +592,7 @@ Các file trên là đích triển khai đã chốt; một export chưa được
 - Hồ sơ đã có account không hiện; race hai Admin cấp cùng profile phải chỉ có một account; candidates không lộ thông tin liên hệ.
 
 Phụ thuộc đặc tả: [schema và dictionary](../../SQL/README.md), [quy tắc nghiệp vụ](<../../Business Rules/README.md>), Shared DTO/error/lock protocol cùng revision. Những kiểm thử trên là tiêu chí triển khai phải thực hiện và ghi bằng chứng; chưa mặc định đã chạy runtime.
+
+## Nơi chạy kiểm thử sau bàn giao
+
+Máy thành viên chỉ cần Node.js 24/npm 11; chạy build/unit theo backend README. Test PostgreSQL cần viết tại backend/tests/integration/<role>/<operationId>.test.ts và bàn giao cho Bùi Thế Anh cùng fixture, lệnh và expected result. Các đường dẫn test trong bảng từng operation là nhóm độc lập; thêm nhóm integration tương ứng cho các ca cần DB. Ghi NOT_RUN_PENDING_OWNER cho test DB chưa chạy, không xóa hoặc giảm ca bắt buộc của contract. Xem [phân công](../../Coordination/testing-responsibilities.md).

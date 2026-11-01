@@ -11,8 +11,10 @@
     "dev": "node --env-file-if-exists=.env --import tsx --watch src/server.ts",
     "build": "tsc -p tsconfig.json",
     "start": "node --env-file-if-exists=.env dist/src/server.js",
-    "test": "node --import tsx --test \"tests/**/*.test.ts\"",
-    "check": "npm run build && npm test"
+    "test": "node tools/run-tests.mjs unit",
+    "check": "npm run build && npm test",
+    "test:unit": "node tools/run-tests.mjs unit",
+    "test:integration": "node tools/run-tests.mjs integration"
   },
   "dependencies": {
     "argon2": "0.44.0",

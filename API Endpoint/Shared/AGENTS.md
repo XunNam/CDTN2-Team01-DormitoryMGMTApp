@@ -9,3 +9,7 @@ Trước nhận task Shared chưa rõ, hỏi người giao “Bạn đã đượ
 ## Khối lượng và giai đoạn thực hiện
 
 Áp dụng [đánh giá và chia giai đoạn](../../Coordination/phased-execution.md) trước task Shared. Đánh giá cả session, CSRF, quyền và kiểm thử liên phần; nếu quá lớn, báo người giao và chia theo phụ thuộc trong phạm vi được giao. Ghi kế hoạch/checkpoint để tiếp tục; không gộp task Shared vào role hoặc đánh dấu hoàn tất auth khi chỉ mới xong một giai đoạn.
+
+## Kiểm thử khi máy thành viên không có PostgreSQL
+
+Theo [phân công kiểm thử](../../Coordination/testing-responsibilities.md), thành viên chỉ cần Node.js 24/npm 11 để triển khai, viết test và chạy build/unit. Không yêu cầu cài PostgreSQL hoặc dừng role vì thiếu database. Vẫn viết test DB/tích hợp tại backend/tests/integration/<role>/ và bàn giao fixture, lệnh, expected result; ghi NOT_RUN_PENDING_OWNER để Bùi Thế Anh chạy trên máy Anh. READY_FOR_OWNER không đồng nghĩa DONE; test cạnh tranh/database thật vẫn bắt buộc trước nghiệm thu tương ứng.

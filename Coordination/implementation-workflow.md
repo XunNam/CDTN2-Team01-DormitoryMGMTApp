@@ -20,8 +20,8 @@ Task cần khóa revision, method/path, input/output schema, FR/QT/AC/TC, danh s
 4. Service lấy actor từ middleware đã kiểm tra DB, không từ body. Mutation dùng transaction helper, giữ khóa và kiểm tra lại tại thời điểm ghi. Không dùng một lần `SELECT` từ UI thay bảo vệ cạnh tranh.
 5. Controller chỉ trả response theo envelope chuẩn. Khi thất bại ném `AppError` có code đã định nghĩa; không tự trả HTTP 200 với cờ `success:false`.
 6. Router nối validation/controller trong đúng folder role. App đã mount prefix; không thêm lần nữa `/api/v1/student` ở route con. Đăng nhập/xuất/đổi mật khẩu nằm Shared auth, không sao chép sang từng role.
-7. Kiểm tra code mới không tạo thêm app/listen/pool/auth store. Kiểm thử DB thật cho constraint và cạnh tranh; mock đơn thuần không chứng minh không vượt sức chứa.
-8. Chạy build, test tự động và kiểm tra tích hợp phù hợp. Ghi lệnh/kết quả thực tế, giới hạn chưa chạy, file thay đổi và task nhận ảnh hưởng.
+7. Kiểm tra code mới không tạo thêm app/listen/pool/auth store. Viết test DB thật cho constraint và cạnh tranh để Anh chạy sau bàn giao; mock tại máy thành viên không chứng minh không vượt sức chứa.
+8. Thành viên chạy build/unit; test tích hợp cần PostgreSQL bàn giao cho Anh theo [phân công kiểm thử](testing-responsibilities.md). Ghi lệnh/kết quả thực tế, giới hạn chưa chạy, file thay đổi và task nhận ảnh hưởng.
 
 ## Mẫu controller đúng envelope
 
