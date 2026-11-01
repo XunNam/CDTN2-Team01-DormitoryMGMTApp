@@ -8,6 +8,10 @@ Nếu chưa biết role, hỏi chính người dùng AI role SV/BQL/ADMIN và ta
 
 Task cần khóa revision, method/path, input/output schema, FR/QT/AC/TC, danh sách file và dependency. Shared auth hoặc schema chưa sẵn phải được ghi trước khi nói có thể hoàn tất integration.
 
+## Đánh giá khối lượng trước khi code
+
+Áp dụng [quy tắc chia giai đoạn](phased-execution.md). Được giao cả role chưa có nghĩa phải làm hết trong một phiên: đánh giá đủ thời gian/ngữ cảnh cho kiểm thử và bàn giao, báo đề xuất chia nhỏ nếu công việc lớn. Mỗi giai đoạn đi đủ các tầng cho nhóm API được chọn, giữ nguyên contract và phụ thuộc. Lưu checkpoint khi hoàn tất nhóm API và trước khi đổi phiên; đọc lại checkpoint cùng diff khi tiếp tục.
+
 ## Từng bước code
 
 1. Viết test theo contract: đúng dữ liệu, thiếu/thừa/null/rỗng, sai enum/UUID, chưa login, khóa, sai role, dữ liệu của SV khác, sai trạng thái, retry và cạnh tranh nếu có mutation.

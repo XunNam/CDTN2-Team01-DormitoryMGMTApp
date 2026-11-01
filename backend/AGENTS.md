@@ -10,3 +10,7 @@
 - Mọi mutation dùng transaction chung và client được truyền, recheck actor sau advisory lock. GET list/count dùng cùng snapshot. Không dựa vào UI disable nút hoặc đếm chỗ trước transaction.
 - Scaffold không triển khai auth/business. Task role không được giả login/session để tuyên bố API chạy. Chuẩn bị validation/test độc lập trong khi chờ Shared auth; ghi dependency.
 - Chạy `npm run check` và test DB thật phù hợp; ghi kết quả thực tế, điều chưa chạy và ảnh hưởng liên phần vào handoff. Không coi test DB giả là kiểm chứng chống vượt sức chứa.
+
+## Khối lượng và giai đoạn thực hiện
+
+Trước code, thực hiện [đánh giá và chia giai đoạn](../Coordination/phased-execution.md). Nếu task vượt khả năng làm và kiểm tra trọn trong phiên, báo người giao, đề xuất nhóm operation theo contract/phụ thuộc đã có; ghi kế hoạch, checkpoint và bước tiếp tục. Không đổi quyền hoặc bỏ kiểm thử để làm nhanh. Hoàn thành giai đoạn phải phân biệt với hoàn thành toàn task/role. Task nhỏ được làm trọn; không tự yêu cầu duyệt lại từng bước đã được giao.

@@ -17,6 +17,9 @@ File được tạo/sửa:
 File dùng chung chỉ được đọc:
 Input DTO / output DTO / errorCode:
 Schema bảng/cột/constraint:
+Đánh giá khối lượng: làm trọn phiên / chia giai đoạn và lý do:
+Kế hoạch giai đoạn, operationId, đầu ra, điều kiện hoàn tất:
+Phạm vi dự kiến phiên này / checkpoint / bước tiếp tục:
 Dependency và thứ tự triển khai:
 Transaction/ownership/role/lock cần bảo toàn:
 Test đúng/sai input, sai quyền, khóa, ownership:
@@ -33,6 +36,8 @@ Hãy đọc AGENTS.md và README gốc, Coordination/README.md cùng các AGENTS
 Tôi đang được giao role <SV/BQL/ADMIN>; task <mã task>, operation <danh sách>.
 Đọc contract revision 1.0.0 và schema dùng chung, chỉ sửa <danh sách file>.
 Nếu role hoặc task còn thiếu, hỏi lại tôi trước khi code nghiệp vụ.
+Trước code, tự đánh giá khối lượng; nếu quá lớn, báo tôi và đề xuất chia giai đoạn theo contract/phụ thuộc.
+Ghi kế hoạch và checkpoint để phiên sau tiếp tục đúng điểm, không làm lại phần đã xong.
 Giữ method/path, tên trường, enum, quyền, envelope và transaction đã chốt.
 Không tạo backend/auth/database riêng. Không tự commit, push hoặc merge.
 Hoàn tất bằng handoff có file, kiểm thử thực tế, phần chưa kiểm chứng và dependency.

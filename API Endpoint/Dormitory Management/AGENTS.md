@@ -32,3 +32,7 @@ Nếu chưa xác định role, hỏi người đang làm việc với Agent: **�
 Kiểm thử mỗi operation cho luồng đúng, validation, role sai, khóa, trạng thái sai và không thay đổi dữ liệu khi thất bại. Với quyền, sức chứa, lưu trú hoặc tiền phải có review chéo và test PostgreSQL thật, gồm hai request cạnh tranh chỗ cuối, duyệt/từ chối cùng đơn, lập phiếu trùng và gọi lại nhận/trả/thu tiền.
 
 Bàn giao operation và đường dẫn code/test, contract revision, dependencies, lệnh/kết quả kiểm tra, phần chưa kiểm chứng và rủi ro tích hợp. Không tự commit/push/merge/tag hoặc triển khai.
+
+## Khối lượng và giai đoạn thực hiện
+
+Trước code, thực hiện [đánh giá và chia giai đoạn](../../Coordination/phased-execution.md). Nếu task vượt khả năng làm và kiểm tra trọn trong phiên, báo người giao, đề xuất nhóm operation theo contract/phụ thuộc đã có; ghi kế hoạch, checkpoint và bước tiếp tục. Không đổi quyền hoặc bỏ kiểm thử để làm nhanh. Hoàn thành giai đoạn phải phân biệt với hoàn thành toàn task/role. Task nhỏ được làm trọn; không tự yêu cầu duyệt lại từng bước đã được giao.

@@ -31,3 +31,7 @@ Nếu chưa có role/task rõ ràng, hỏi người đang làm việc với Agen
 Kiểm thử cấp ba loại role, account SV thiếu/trùng hồ sơ, username trùng, input thừa, sai quyền, hash không lộ, khóa/mở và self-lock. Test yêu cầu kế tiếp của tài khoản đang đăng nhập sau khi bị khóa; kiểm tra dữ liệu nghiệp vụ giữ nguyên.
 
 Bàn giao operation/file/test, revision và phụ thuộc, lệnh/kết quả kiểm tra thực tế, phần chưa kiểm chứng. Không tự commit/push/merge hoặc triển khai; người cộng tác tự kiểm tra và thực hiện các thao tác Git theo AGENTS gốc.
+
+## Khối lượng và giai đoạn thực hiện
+
+Trước code, thực hiện [đánh giá và chia giai đoạn](../../Coordination/phased-execution.md). Nếu task vượt khả năng làm và kiểm tra trọn trong phiên, báo người giao, đề xuất nhóm operation theo contract/phụ thuộc đã có; ghi kế hoạch, checkpoint và bước tiếp tục. Không đổi quyền hoặc bỏ kiểm thử để làm nhanh. Hoàn thành giai đoạn phải phân biệt với hoàn thành toàn task/role. Task nhỏ được làm trọn; không tự yêu cầu duyệt lại từng bước đã được giao.

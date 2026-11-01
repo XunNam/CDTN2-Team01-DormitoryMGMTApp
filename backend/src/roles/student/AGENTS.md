@@ -9,3 +9,7 @@ Nếu chưa rõ người giao đang làm role nào, hỏi họ role SV/BQL/ADMIN
 - Response và error giữ đúng Shared; không trả entity DB trực tiếp, không password/hash/token. Quy tắc ownership SV và quyền BQL/ADMIN giữ theo contract, không role kế thừa.
 - Không thay schema/auth/error enum/transaction hoặc folder role khác nếu chưa được giao task liên phần. Test tại backend/tests/student/<operationId>.test.ts; kiểm thử input, quyền, khóa, ownership, retry và đồng thời theo operation.
 - Kết thúc bằng handoff file/function, kiểm chứng thực tế, dependency và điều chưa chạy; người dùng tự push branch/PR, Anh tự review và merge.
+
+## Khối lượng và giai đoạn thực hiện
+
+Trước code, thực hiện [đánh giá và chia giai đoạn](../../../../Coordination/phased-execution.md). Nếu task vượt khả năng làm và kiểm tra trọn trong phiên, báo người giao, đề xuất nhóm operation theo contract/phụ thuộc đã có; ghi kế hoạch, checkpoint và bước tiếp tục. Không đổi quyền hoặc bỏ kiểm thử để làm nhanh. Hoàn thành giai đoạn phải phân biệt với hoàn thành toàn task/role. Task nhỏ được làm trọn; không tự yêu cầu duyệt lại từng bước đã được giao.

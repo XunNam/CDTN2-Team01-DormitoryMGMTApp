@@ -9,3 +9,7 @@ Tuân thủ [AGENTS gốc](../AGENTS.md). Chỉ sửa trong bản clone reposito
 - Sửa nhiệm vụ, quyền sở hữu, dependency hoặc trạng thái hoàn thành phải có căn cứ trong task/handoff; không đổi `DONE` chỉ vì tồn tại file hoặc AI đã trả lời xong.
 - Phần nền dùng chung, auth, SQL, DTO và transaction protocol do Bùi Thế Anh điều phối. Người đang làm một role phải đề xuất thay đổi qua task, không tự sửa shared để né dependency.
 - Tài liệu nhận việc, triển khai và bàn giao ở [README](README.md), [mẫu task](task-template.md), [bản đồ code](code-ownership.md), [quy trình](implementation-workflow.md), [mẫu bàn giao](handoff-template.md).
+
+## Khối lượng và giai đoạn thực hiện
+
+Trước code, thực hiện [đánh giá và chia giai đoạn](phased-execution.md). Nếu task vượt khả năng làm và kiểm tra trọn trong phiên, báo người giao, đề xuất nhóm operation theo contract/phụ thuộc đã có; ghi kế hoạch, checkpoint và bước tiếp tục. Không đổi quyền hoặc bỏ kiểm thử để làm nhanh. Hoàn thành giai đoạn phải phân biệt với hoàn thành toàn task/role. Task nhỏ được làm trọn; không tự yêu cầu duyệt lại từng bước đã được giao.

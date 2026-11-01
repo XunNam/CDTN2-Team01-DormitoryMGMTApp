@@ -31,3 +31,7 @@
 Chạy kiểm tra theo backend README và các test của operation: thành công, input sai, thiếu phiên, tài khoản khóa, sai role, ownership, dữ liệu rỗng và gửi đơn đồng thời. Dùng PostgreSQL test riêng với dữ liệu giả. Không báo API hoạt động khi mới có tài liệu hoặc mock.
 
 Bàn giao danh sách operation/file, thay đổi contract/schema nếu có, lệnh kiểm tra và kết quả thực tế, phần chưa kiểm chứng, phụ thuộc cần điều phối. Không tự commit, push, merge hoặc triển khai; người cộng tác thực hiện Git sau khi kiểm tra theo quy định gốc.
+
+## Khối lượng và giai đoạn thực hiện
+
+Trước code, thực hiện [đánh giá và chia giai đoạn](../../Coordination/phased-execution.md). Nếu task vượt khả năng làm và kiểm tra trọn trong phiên, báo người giao, đề xuất nhóm operation theo contract/phụ thuộc đã có; ghi kế hoạch, checkpoint và bước tiếp tục. Không đổi quyền hoặc bỏ kiểm thử để làm nhanh. Hoàn thành giai đoạn phải phân biệt với hoàn thành toàn task/role. Task nhỏ được làm trọn; không tự yêu cầu duyệt lại từng bước đã được giao.

@@ -9,7 +9,8 @@ Revision: **1.0.0 — READY_FOR_IMPLEMENTATION** cho đặc tả. Backend hiện
 3. Hỏi role nếu chưa có: “Bạn đang được giao role Sinh viên (SV), Ban quản lý (BQL) hay Quản trị viên (ADMIN), và các operation/task nào?”
 4. Khi người dùng trả lời, đối chiếu role với folder contract tương ứng. Nếu task mâu thuẫn role, hỏi lại; không đổi quyền API theo role người code.
 5. Hoàn tất [mẫu task](task-template.md): operationId, người phụ trách, file được sửa, đầu ra, dependency, người review, FR/QT/AC/TC và revision.
-6. Đọc mọi AGENTS áp dụng cho file đích, DTO/lỗi/auth dùng chung và phần SQL/quy tắc liên quan trước khi code.
+6. Đánh giá khối lượng theo [quy tắc chia giai đoạn](phased-execution.md); báo kế hoạch và tạo checkpoint nếu cần thực hiện nhiều phiên.
+7. Đọc mọi AGENTS áp dụng cho file đích, DTO/lỗi/auth dùng chung và phần SQL/quy tắc liên quan trước khi code.
 
 Thông tin role chưa rõ chỉ chặn code nghiệp vụ. AI vẫn có thể đọc tài liệu, xác định dependency và liệt kê câu hỏi, nhưng không tạo implementation tự chọn.
 
@@ -20,6 +21,7 @@ Thông tin role chưa rõ chỉ chặn code nghiệp vụ. AI vẫn có thể đ
 | Xác nhận người đang giữ task | [Bảng nhận việc](task-board.md) |
 | Xác định API được giao | [Danh mục API](../API%20Endpoint/README.md) và contract của role |
 | Tìm file code và giới hạn sửa | [Bản đồ code](code-ownership.md) và [backend README](../backend/README.md) |
+| Đánh giá làm trọn hay chia nhiều phiên | [Quy tắc giai đoạn](phased-execution.md), [mẫu kế hoạch](phase-plan-template.md), [checkpoint](progress-template.md) |
 | Thực hiện một operation đúng tầng | [Quy trình triển khai](implementation-workflow.md) |
 | Tạo task có thể giao cho AI | [Mẫu task](task-template.md) |
 | Bàn giao để Anh review | [Mẫu bàn giao](handoff-template.md) |

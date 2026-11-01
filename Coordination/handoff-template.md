@@ -3,6 +3,9 @@
 ```text
 Task / role / người thực hiện / revision:
 Trạng thái đề nghị:
+Giai đoạn hiện tại / phạm vi phiên đã thực hiện:
+Các giai đoạn và operation còn lại:
+File kế hoạch / checkpoint / bước tiếp theo chính xác:
 Operation đã triển khai (method/path/operationId):
 Tóm tắt hành vi thực tế:
 File được tạo/sửa và exported function chính:

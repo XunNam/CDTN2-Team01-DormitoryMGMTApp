@@ -8,3 +8,7 @@
 4. Code nằm tại `backend/src`, không đặt code chạy trong thư mục tài liệu. Mỗi operation ánh xạ layer và test ở manifest. Không tự tạo backend/database/auth riêng.
 5. Đổi contract/schema/Shared cần task của điều phối và cập nhật đồng bộ consumer, tài liệu, test. Không âm thầm đổi tên trường/status cho code dễ viết hơn.
 6. Không tự commit/push/merge. Sau code báo file, operation, kiểm thử đã chạy và phần chưa chạy cho người giao việc.
+
+## Khối lượng và giai đoạn thực hiện
+
+Trước code, thực hiện [đánh giá và chia giai đoạn](../Coordination/phased-execution.md). Nếu task vượt khả năng làm và kiểm tra trọn trong phiên, báo người giao, đề xuất nhóm operation theo contract/phụ thuộc đã có; ghi kế hoạch, checkpoint và bước tiếp tục. Không đổi quyền hoặc bỏ kiểm thử để làm nhanh. Hoàn thành giai đoạn phải phân biệt với hoàn thành toàn task/role. Task nhỏ được làm trọn; không tự yêu cầu duyệt lại từng bước đã được giao.

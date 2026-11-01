@@ -21,6 +21,14 @@ Nguồn hiện hành: `Planning/13-SPECIFICATION-BASELINE.md`; contract revision
 - Đọc AGENTS tại thư mục role tài liệu và role code. Code nằm tại `backend/src/roles/<role>/`, test tại `backend/tests/<role>/`. Không đặt code trong Markdown/SQL docs hoặc tự tạo app riêng.
 - Router khai báo HTTP; controller parse/serialize; validation kiểm allowlist; service xử lý nghiệp vụ và transaction; repository chỉ SQL tham số hóa trên client được truyền vào. Export operationId đúng manifest, không nhét business logic vào router/app.ts/server.ts.
 
+### Đánh giá khối lượng và chia giai đoạn
+
+- Trước khi code, tự đánh giá có thể hoàn tất cả triển khai, test và bàn giao trong một phiên hay cần chia nhỏ; xem [quy trình bắt buộc](Coordination/phased-execution.md).
+- Nếu task/role quá lớn, thông báo sớm cho người giao và đề xuất các giai đoạn theo operationId, phụ thuộc, file, đầu ra và tiêu chí kiểm tra của contract đã chốt. Không tự giảm yêu cầu hoặc mở quyền Shared để làm nhanh.
+- Task nhỏ đủ điều kiện thì làm trọn; khi đã được giao toàn bộ, chia giai đoạn không yêu cầu xin lại phép cho từng bước thường lệ. Nếu chỉ được giao một giai đoạn thì giữ đúng phạm vi đó.
+- Ghi kế hoạch và checkpoint theo task; cập nhật tiến độ trước khi phiên kết thúc hoặc có nguy cơ hết ngữ cảnh/hạn mức. Phiên tiếp theo đọc checkpoint và đối chiếu code/diff trước khi tiếp tục, không làm lại phần đã hoàn tất.
+- Không bịa hạn mức token/account; không hứa chắc chắn tránh mọi giới hạn. Một giai đoạn xong không đồng nghĩa toàn role xong. Các yêu cầu hỏi role/task chưa rõ và không tự commit/push/merge vẫn giữ nguyên.
+
 ## 3. Thứ tự đọc bắt buộc
 
 1. File này và `README.md`.
