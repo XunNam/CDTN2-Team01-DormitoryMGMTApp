@@ -33,7 +33,7 @@ function vietnamToday(): string {
 }
 
 const isoDate = z.string()
-  .regex(/^\d{4}-\d{2}-\d{2}$/)
+  .regex(/^(?!0000)\d{4}-\d{2}-\d{2}$/)
   .refine((value) => {
     const parsed = new Date(`${value}T00:00:00.000Z`);
     return !Number.isNaN(parsed.getTime()) && parsed.toISOString().slice(0, 10) === value;
@@ -269,3 +269,34 @@ export function requireUuidParam(value: string | undefined, field: string): stri
   }
   return result.data;
 }
+
+// Operation exports match the contract manifest; small parsers remain available
+// for focused validation tests. Path UUID validation is shared by detail/actions.
+export const managementListProfiles=parseStudentProfileQuery;
+export const managementCreateProfile=parseProfileCreate;
+export const managementGetProfile=parseEmptyQuery;
+export const managementUpdateProfile=parseProfilePatch;
+export const managementListBuildings=parseBuildingQuery;
+export const managementCreateBuilding=parseBuildingCreate;
+export const managementGetBuilding=parseEmptyQuery;
+export const managementUpdateBuilding=parseBuildingPatch;
+export const managementListRooms=parseRoomQuery;
+export const managementCreateRoom=parseRoomCreate;
+export const managementGetRoom=parseEmptyQuery;
+export const managementUpdateRoom=parseRoomPatch;
+export const managementGetPeriod=parseEmptyQuery;
+export const managementUpdatePeriod=parsePeriodPatch;
+export const managementListApplications=parseApplicationQuery;
+export const managementGetApplication=parseEmptyQuery;
+export const managementApproveApplication=parseApplicationApprove;
+export const managementRejectApplication=parseApplicationReject;
+export const managementListResidences=parseResidenceQuery;
+export const managementGetResidence=parseEmptyQuery;
+export const managementCheckIn=parseCheckIn;
+export const managementCancelAllocation=parseCancelAllocation;
+export const managementCheckOut=parseCheckOut;
+export const managementListReceipts=parseReceiptQuery;
+export const managementCreateReceipt=parseReceiptCreate;
+export const managementGetReceipt=parseEmptyQuery;
+export const managementPayReceipt=parseReceiptPay;
+export const managementGetStatistics=parseEmptyQuery;

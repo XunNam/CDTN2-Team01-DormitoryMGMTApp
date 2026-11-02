@@ -8,10 +8,11 @@ import { discoverTests, childEnvironment } from '../../tools/run-tests.mjs';
 test('default test discovery excludes integration files, not just execution', () => {
   const root = mkdtempSync(join(tmpdir(), 'dormflow-test-discovery-'));
   try {
-    for (const dir of ['tests/student', 'tests/shared', 'tests/integration/student']) mkdirSync(join(root, dir), { recursive: true });
-    for (const file of ['tests/student/operation.test.ts', 'tests/shared/runner.test.mjs', 'tests/integration/student/operation.test.ts']) writeFileSync(join(root, file), 'throw new Error("must not import during discovery")');
+    for (const dir of ['tests/student', 'tests/shared', 'tests/integration/student','tests/system']) mkdirSync(join(root, dir), { recursive: true });
+    for (const file of ['tests/student/operation.test.ts', 'tests/shared/runner.test.mjs', 'tests/integration/student/operation.test.ts','tests/system/flow.test.ts']) writeFileSync(join(root, file), 'throw new Error("must not import during discovery")');
     assert.equal(discoverTests(root, 'unit').length, 2);
     assert.deepEqual(discoverTests(root, 'integration'), [join(root, 'tests/integration/student/operation.test.ts')]);
+    assert.deepEqual(discoverTests(root, 'system'), [join(root, 'tests/system/flow.test.ts')]);
     assert.throws(() => discoverTests(root, 'all'));
   } finally {
     // mkdtemp generated this exact disposable directory beneath OS temp.

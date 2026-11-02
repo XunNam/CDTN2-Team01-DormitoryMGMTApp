@@ -1,6 +1,5 @@
 import type { PoolClient } from 'pg';
 import type { PageMeta } from '../../shared/http/response.js';
-import { AppError } from '../../shared/http/errors.js';
 
 type Queryable = Pick<PoolClient, 'query'>;
 
@@ -422,9 +421,6 @@ function pageMeta(page: number, pageSize: number, totalItems: number): PageMeta 
   };
 }
 
-function throwBusinessError(code: string, message: string): never {
-  throw new AppError(409, code, message);
-}
 
 export async function managementListProfiles(db: Queryable, query: StudentProfileQuery): Promise<ListResult<StudentProfile>> {
   const values: unknown[] = [];
@@ -440,7 +436,7 @@ export async function managementListProfiles(db: Queryable, query: StudentProfil
   const where = clauses.length ? `WHERE ${clauses.join(' AND ')}` : '';
   const count = await db.query<{ total: string }>(`SELECT count(*)::text AS total FROM student_profiles ${where}`, values);
   const totalItems = Number(count.rows[0]?.total ?? 0);
-  const listValues = [...values, query.pageSize, (query.page - 1) * query.pageSize];
+  const listValues = [...values, query.pageSize, ((BigInt(query.page)-1n)*BigInt(query.pageSize)).toString()];
   const result = await db.query<ProfileRow>(
     `SELECT id, student_code, full_name, gender, class_name, faculty, phone, email,
             date_of_birth::text AS date_of_birth, permanent_address, created_at, updated_at
@@ -495,49 +491,14 @@ const profilePatchColumns: Record<keyof ProfilePatchInput, string> = {
   permanentAddress: 'permanent_address',
 };
 
-export async function managementUpdateProfile(
-  db: Queryable,
-  studentId: string,
-  patch: ProfilePatchInput,
-): Promise<StudentProfile | null> {
-  const current = await db.query<ProfileRow>(
-    `SELECT id, student_code, full_name, gender, class_name, faculty, phone, email,
-            date_of_birth::text AS date_of_birth, permanent_address, created_at, updated_at
-       FROM student_profiles WHERE id = $1 FOR UPDATE`,
-    [studentId],
-  );
-  const row = current.rows[0];
-  if (!row) return null;
-  const changed = (Object.keys(patch) as Array<keyof ProfilePatchInput>)
-    .filter((key) => patch[key] !== row[profilePatchColumns[key] as keyof ProfileRow]);
-  if (changed.length === 0) return mapProfile(row);
-
-  if (patch.gender !== undefined && patch.gender !== row.gender) {
-    const mismatch = await db.query(
-      `SELECT 1
-         FROM residence_records rr
-         JOIN rooms r ON r.id = rr.room_id
-        WHERE rr.student_id = $1 AND rr.status IN ('ALLOCATED', 'CHECKED_IN')
-          AND r.gender <> $2
-        LIMIT 1`,
-      [studentId, patch.gender],
-    );
-    if (mismatch.rowCount) throwBusinessError('GENDER_MISMATCH', 'Giới tính không phù hợp với hồ sơ lưu trú đang mở.');
-  }
-
-  const values: unknown[] = [studentId];
-  const sets = changed.map((key) => {
-    values.push(patch[key]);
-    return `${profilePatchColumns[key]} = $${values.length}${key === 'dateOfBirth' ? '::date' : ''}`;
+export async function managementUpdateProfile(db: Queryable, studentId: string, patch: ProfilePatchInput): Promise<StudentProfile | null> {
+  const values: unknown[]=[studentId];
+  const sets=(Object.keys(patch) as Array<keyof ProfilePatchInput>).map(key=>{
+    values.push(patch[key]); return `${profilePatchColumns[key]}=$${values.length}${key==='dateOfBirth'?'::date':''}`;
   });
-  const updated = await db.query<ProfileRow>(
-    `UPDATE student_profiles SET ${sets.join(', ')}
-      WHERE id = $1
-      RETURNING id, student_code, full_name, gender, class_name, faculty, phone, email,
-                date_of_birth::text AS date_of_birth, permanent_address, created_at, updated_at`,
-    values,
-  );
-  return updated.rows[0] ? mapProfile(updated.rows[0]) : null;
+  const result=await db.query<ProfileRow>(`UPDATE student_profiles SET ${sets.join(',')} WHERE id=$1
+    RETURNING id,student_code,full_name,gender,class_name,faculty,phone,email,date_of_birth::text AS date_of_birth,permanent_address,created_at,updated_at`,values);
+  return result.rows[0]?mapProfile(result.rows[0]):null;
 }
 
 export async function managementListBuildings(db: Queryable, query: PageQuery): Promise<ListResult<Building>> {
@@ -552,7 +513,7 @@ export async function managementListBuildings(db: Queryable, query: PageQuery): 
   const result = await db.query<BuildingRow>(
     `SELECT id, code, name, created_at, updated_at FROM buildings ${where}
       ORDER BY code ASC, id ASC LIMIT $${values.length + 1} OFFSET $${values.length + 2}`,
-    [...values, query.pageSize, (query.page - 1) * query.pageSize],
+    [...values, query.pageSize, ((BigInt(query.page)-1n)*BigInt(query.pageSize)).toString()],
   );
   return { items: result.rows.map(mapBuilding), meta: pageMeta(query.page, query.pageSize, totalItems) };
 }
@@ -574,20 +535,9 @@ export async function managementGetBuilding(db: Queryable, buildingId: string): 
   return result.rows[0] ? mapBuilding(result.rows[0]) : null;
 }
 
-export async function managementUpdateBuilding(
-  db: Queryable,
-  buildingId: string,
-  input: BuildingPatchInput,
-): Promise<Building | null> {
-  const current = await managementGetBuilding(db, buildingId);
-  if (!current) return null;
-  if (current.name === input.name) return current;
-  const result = await db.query<BuildingRow>(
-    `UPDATE buildings SET name = $2 WHERE id = $1
-     RETURNING id, code, name, created_at, updated_at`,
-    [buildingId, input.name],
-  );
-  return result.rows[0] ? mapBuilding(result.rows[0]) : null;
+export async function managementUpdateBuilding(db: Queryable, buildingId: string, input: BuildingPatchInput): Promise<Building | null> {
+  const result=await db.query<BuildingRow>(`UPDATE buildings SET name=$2 WHERE id=$1 RETURNING id,code,name,created_at,updated_at`,[buildingId,input.name]);
+  return result.rows[0]?mapBuilding(result.rows[0]):null;
 }
 
 export async function managementListRooms(db: Queryable, query: RoomQuery): Promise<ListResult<Room>> {
@@ -621,14 +571,12 @@ export async function managementListRooms(db: Queryable, query: RoomQuery): Prom
        FROM room_availability ${where}
       ORDER BY building_code ASC, code ASC, id ASC
       LIMIT $${values.length + 1} OFFSET $${values.length + 2}`,
-    [...values, query.pageSize, (query.page - 1) * query.pageSize],
+    [...values, query.pageSize, ((BigInt(query.page)-1n)*BigInt(query.pageSize)).toString()],
   );
   return { items: result.rows.map(mapRoom), meta: pageMeta(query.page, query.pageSize, totalItems) };
 }
 
 export async function managementCreateRoom(db: Queryable, input: RoomCreateInput): Promise<Room> {
-  const building = await db.query('SELECT 1 FROM buildings WHERE id = $1', [input.buildingId]);
-  if (!building.rowCount) throw new AppError(404, 'NOT_FOUND', 'Tòa nhà không tồn tại.');
   const result = await db.query<{ id: string }>(
     `INSERT INTO rooms (building_id, code, capacity, gender, fee_vnd, status)
      VALUES ($1, $2, $3, $4, $5::bigint, $6)
@@ -657,60 +605,13 @@ const roomPatchColumns: Record<keyof RoomPatchInput, string> = {
   status: 'status',
 };
 
-export async function managementUpdateRoom(
-  db: Queryable,
-  roomId: string,
-  patch: RoomPatchInput,
-): Promise<Room | null> {
-  const currentResult = await db.query<Omit<RoomRow, 'allocated_places' | 'available_places'>>(
-    `SELECT r.id, r.building_id, b.code AS building_code, b.name AS building_name, r.code,
-            r.capacity, r.gender, r.fee_vnd::text AS fee_vnd, r.status, r.created_at, r.updated_at
-       FROM rooms r JOIN buildings b ON b.id = r.building_id
-      WHERE r.id = $1
-      FOR UPDATE OF r`,
-    [roomId],
-  );
-  const currentBase = currentResult.rows[0];
-  if (!currentBase) return null;
-  const occupancy = await db.query<{ allocated_places: number }>(
-    `SELECT count(*)::integer AS allocated_places FROM residence_records
-      WHERE room_id = $1 AND status IN ('ALLOCATED', 'CHECKED_IN')`,
-    [roomId],
-  );
-  const allocatedPlaces = occupancy.rows[0]?.allocated_places ?? 0;
-  const current: RoomRow = {
-    ...currentBase,
-    allocated_places: allocatedPlaces,
-    available_places: currentBase.capacity - allocatedPlaces,
-  };
-  const changed = (Object.keys(patch) as Array<keyof RoomPatchInput>)
-    .filter((key) => String(patch[key]) !== String(current[roomPatchColumns[key] as keyof RoomRow]));
-  if (!changed.length) return mapRoom(current);
-
-  if (patch.capacity !== undefined && patch.capacity < current.allocated_places) {
-    throwBusinessError('CAPACITY_BELOW_OCCUPANCY', 'Sức chứa không được thấp hơn số chỗ đã phân bổ.');
-  }
-  if (patch.status === 'INACTIVE' && patch.status !== current.status && current.allocated_places > 0) {
-    throwBusinessError('ROOM_OCCUPIED', 'Không thể ngừng sử dụng phòng còn hồ sơ lưu trú đang mở.');
-  }
-  if (patch.gender !== undefined && patch.gender !== current.gender) {
-    const mismatch = await db.query(
-      `SELECT 1 FROM residence_records rr
-        JOIN student_profiles sp ON sp.id = rr.student_id
-       WHERE rr.room_id = $1 AND rr.status IN ('ALLOCATED', 'CHECKED_IN')
-         AND sp.gender <> $2 LIMIT 1`,
-      [roomId, patch.gender],
-    );
-    if (mismatch.rowCount) throwBusinessError('GENDER_MISMATCH', 'Giới tính phòng không phù hợp với hồ sơ lưu trú đang mở.');
-  }
-
-  const values: unknown[] = [roomId];
-  const sets = changed.map((key) => {
-    values.push(patch[key]);
-    return `${roomPatchColumns[key]} = $${values.length}${key === 'feeVnd' ? '::bigint' : ''}`;
+export async function managementUpdateRoom(db: Queryable, roomId: string, patch: RoomPatchInput): Promise<Room | null> {
+  const values: unknown[]=[roomId];
+  const sets=(Object.keys(patch) as Array<keyof RoomPatchInput>).map(key=>{
+    values.push(patch[key]);return `${roomPatchColumns[key]}=$${values.length}${key==='feeVnd'?'::bigint':''}`;
   });
-  await db.query(`UPDATE rooms SET ${sets.join(', ')} WHERE id = $1`, values);
-  return managementGetRoom(db, roomId);
+  await db.query(`UPDATE rooms SET ${sets.join(',')} WHERE id=$1`,values);
+  return managementGetRoom(db,roomId);
 }
 
 export async function managementGetPeriod(db: Queryable): Promise<RegistrationPeriod> {
@@ -721,24 +622,8 @@ export async function managementGetPeriod(db: Queryable): Promise<RegistrationPe
   return mapPeriod(result.rows[0]);
 }
 
-export async function managementUpdatePeriod(
-  db: Queryable,
-  status: PeriodStatus,
-  actorId: string,
-): Promise<RegistrationPeriod> {
-  const current = await db.query<PeriodRow>(
-    `SELECT id, status, updated_by, updated_at FROM registration_period WHERE id = 1 FOR UPDATE`,
-  );
-  if (!current.rows[0]) throw new Error('Registration period singleton row is missing.');
-  if (current.rows[0].status === status) {
-    throwBusinessError('INVALID_STATE', 'Kỳ đăng ký đang ở trạng thái được yêu cầu.');
-  }
-  const result = await db.query<PeriodRow>(
-    `UPDATE registration_period SET status = $1, updated_by = $2
-      WHERE id = 1
-      RETURNING id, status, updated_by, updated_at`,
-    [status, actorId],
-  );
+export async function managementUpdatePeriod(db: Queryable, status: PeriodStatus, actorId: string): Promise<RegistrationPeriod> {
+  const result=await db.query<PeriodRow>(`UPDATE registration_period SET status=$1,updated_by=$2 WHERE id=1 RETURNING id,status,updated_by,updated_at`,[status,actorId]);
   return mapPeriod(result.rows[0]!);
 }
 
@@ -778,7 +663,7 @@ export async function managementListApplications(
     `SELECT ${applicationColumns} FROM applications ${where}
       ORDER BY created_at DESC, id ASC
       LIMIT $${values.length + 1} OFFSET $${values.length + 2}`,
-    [...values, query.pageSize, (query.page - 1) * query.pageSize],
+    [...values, query.pageSize, ((BigInt(query.page)-1n)*BigInt(query.pageSize)).toString()],
   );
   const totalItems = Number(count.rows[0]?.total ?? 0);
   return { items: result.rows.map(mapApplication), meta: pageMeta(query.page, query.pageSize, totalItems) };
@@ -792,95 +677,15 @@ export async function managementGetApplication(db: Queryable, applicationId: str
   return result.rows[0] ? mapApplication(result.rows[0]) : null;
 }
 
-export async function managementApproveApplication(
-  db: Queryable,
-  applicationId: string,
-  roomId: string,
-  actorId: string,
-): Promise<ApprovalResult> {
-  const selected = await db.query<ApplicationRow>(
-    `SELECT ${applicationColumns} FROM applications WHERE id = $1 FOR UPDATE`,
-    [applicationId],
-  );
-  const application = selected.rows[0];
-  if (!application) throw new AppError(404, 'NOT_FOUND', 'Đơn đăng ký không tồn tại.');
-  if (application.status !== 'PENDING') {
-    throwBusinessError('INVALID_STATE', 'Đơn đăng ký đã được xử lý.');
-  }
-
-  const activeResidence = await db.query(
-    `SELECT 1 FROM residence_records
-      WHERE student_id = $1 AND status IN ('ALLOCATED', 'CHECKED_IN') LIMIT 1`,
-    [application.student_id],
-  );
-  if (activeResidence.rowCount) {
-    throwBusinessError('ACTIVE_RESIDENCE_EXISTS', 'Sinh viên đã có hồ sơ lưu trú đang mở.');
-  }
-
-  const roomResult = await db.query<{ id: string; status: RoomStatus; gender: Gender; capacity: number }>(
-    `SELECT id, status, gender, capacity FROM rooms WHERE id = $1 FOR UPDATE`,
-    [roomId],
-  );
-  const room = roomResult.rows[0];
-  if (!room) throw new AppError(404, 'NOT_FOUND', 'Phòng không tồn tại.');
-  if (room.status !== 'ACTIVE') {
-    throwBusinessError('ROOM_INACTIVE', 'Phòng không hoạt động.');
-  }
-
-  const student = await db.query<{ gender: Gender }>(
-    `SELECT gender FROM student_profiles WHERE id = $1`,
-    [application.student_id],
-  );
-  if (!student.rows[0]) throw new AppError(404, 'NOT_FOUND', 'Hồ sơ sinh viên không tồn tại.');
-  if (student.rows[0].gender !== room.gender) {
-    throwBusinessError('GENDER_MISMATCH', 'Giới tính sinh viên không phù hợp với phòng.');
-  }
-
-  const occupancy = await db.query<{ allocated_places: number }>(
-    `SELECT count(*)::integer AS allocated_places FROM residence_records
-      WHERE room_id = $1 AND status IN ('ALLOCATED', 'CHECKED_IN')`,
-    [roomId],
-  );
-  if ((occupancy.rows[0]?.allocated_places ?? 0) >= room.capacity) {
-    throwBusinessError('ROOM_FULL', 'Phòng đã hết chỗ.');
-  }
-
-  const approved = await db.query<ApplicationRow>(
-    `UPDATE applications SET status = 'APPROVED', reviewed_by = $2
-      WHERE id = $1 RETURNING ${applicationColumns}`,
-    [applicationId, actorId],
-  );
-  const residence = await db.query<ResidenceRow>(
-    `INSERT INTO residence_records (application_id, student_id, room_id, allocated_by)
-     VALUES ($1, $2, $3, $4)
-     RETURNING ${residenceColumns}`,
-    [applicationId, application.student_id, roomId, actorId],
-  );
-  return {
-    application: mapApplication(approved.rows[0]!),
-    residence: mapResidence(residence.rows[0]!),
-  };
+export async function managementApproveApplication(db: Queryable, applicationId: string, roomId: string, actorId: string): Promise<ApprovalResult> {
+  const approved=await db.query<ApplicationRow>(`UPDATE applications SET status='APPROVED',reviewed_by=$2 WHERE id=$1 RETURNING ${applicationColumns}`,[applicationId,actorId]);
+  const residence=await db.query<ResidenceRow>(`INSERT INTO residence_records(application_id,student_id,room_id,allocated_by)
+    VALUES($1,$2,$3,$4) RETURNING ${residenceColumns}`,[applicationId,approved.rows[0]!.student_id,roomId,actorId]);
+  return {application:mapApplication(approved.rows[0]!),residence:mapResidence(residence.rows[0]!)};
 }
 
-export async function managementRejectApplication(
-  db: Queryable,
-  applicationId: string,
-  reason: string,
-  actorId: string,
-): Promise<Application> {
-  const selected = await db.query<{ status: ApplicationStatus }>(
-    `SELECT status FROM applications WHERE id = $1 FOR UPDATE`,
-    [applicationId],
-  );
-  if (!selected.rows[0]) throw new AppError(404, 'NOT_FOUND', 'Đơn đăng ký không tồn tại.');
-  if (selected.rows[0].status !== 'PENDING') {
-    throwBusinessError('INVALID_STATE', 'Đơn đăng ký đã được xử lý.');
-  }
-  const result = await db.query<ApplicationRow>(
-    `UPDATE applications SET status = 'REJECTED', rejection_reason = $2, reviewed_by = $3
-      WHERE id = $1 RETURNING ${applicationColumns}`,
-    [applicationId, reason, actorId],
-  );
+export async function managementRejectApplication(db: Queryable, applicationId: string, reason: string, actorId: string): Promise<Application> {
+  const result=await db.query<ApplicationRow>(`UPDATE applications SET status='REJECTED',rejection_reason=$2,reviewed_by=$3 WHERE id=$1 RETURNING ${applicationColumns}`,[applicationId,reason,actorId]);
   return mapApplication(result.rows[0]!);
 }
 
@@ -911,7 +716,7 @@ export async function managementListResidences(
     `SELECT ${residenceColumns} FROM residence_records ${where}
       ORDER BY allocated_at DESC, id ASC
       LIMIT $${values.length + 1} OFFSET $${values.length + 2}`,
-    [...values, query.pageSize, (query.page - 1) * query.pageSize],
+    [...values, query.pageSize, ((BigInt(query.page)-1n)*BigInt(query.pageSize)).toString()],
   );
   const totalItems = Number(count.rows[0]?.total ?? 0);
   return { items: result.rows.map(mapResidence), meta: pageMeta(query.page, query.pageSize, totalItems) };
@@ -925,73 +730,19 @@ export async function managementGetResidence(db: Queryable, residenceId: string)
   return result.rows[0] ? mapResidence(result.rows[0]) : null;
 }
 
-async function lockResidence(db: Queryable, residenceId: string): Promise<ResidenceRow> {
-  const result = await db.query<ResidenceRow>(
-    `SELECT ${residenceColumns} FROM residence_records WHERE id = $1 FOR UPDATE`,
-    [residenceId],
-  );
-  const residence = result.rows[0];
-  if (!residence) throw new AppError(404, 'NOT_FOUND', 'Hồ sơ lưu trú không tồn tại.');
-  return residence;
-}
 
-export async function managementCheckIn(
-  db: Queryable,
-  residenceId: string,
-  checkInDate: string,
-  actorId: string,
-): Promise<Residence> {
-  const residence = await lockResidence(db, residenceId);
-  if (residence.status !== 'ALLOCATED') {
-    throwBusinessError('INVALID_STATE', 'Hồ sơ lưu trú không ở trạng thái được nhận phòng.');
-  }
-  const result = await db.query<ResidenceRow>(
-    `UPDATE residence_records SET status = 'CHECKED_IN', check_in_date = $2::date, checked_in_by = $3
-      WHERE id = $1 RETURNING ${residenceColumns}`,
-    [residenceId, checkInDate, actorId],
-  );
+export async function managementCheckIn(db: Queryable, residenceId: string, date: string, actorId: string): Promise<Residence> {
+  const result=await db.query<ResidenceRow>(`UPDATE residence_records SET status='CHECKED_IN',check_in_date=$2::date,checked_in_by=$3 WHERE id=$1 RETURNING ${residenceColumns}`,[residenceId,date,actorId]);
   return mapResidence(result.rows[0]!);
 }
 
-export async function managementCancelAllocation(
-  db: Queryable,
-  residenceId: string,
-  reason: string,
-  actorId: string,
-): Promise<Residence> {
-  const residence = await lockResidence(db, residenceId);
-  if (residence.status !== 'ALLOCATED') {
-    throwBusinessError('INVALID_STATE', 'Chỉ có thể hủy hồ sơ đã xếp phòng nhưng chưa nhận phòng.');
-  }
-  const result = await db.query<ResidenceRow>(
-    `UPDATE residence_records
-        SET status = 'CANCELLED', cancellation_reason = $2, cancelled_by = $3
-      WHERE id = $1 RETURNING ${residenceColumns}`,
-    [residenceId, reason, actorId],
-  );
+export async function managementCancelAllocation(db: Queryable, residenceId: string, reason: string, actorId: string): Promise<Residence> {
+  const result=await db.query<ResidenceRow>(`UPDATE residence_records SET status='CANCELLED',cancellation_reason=$2,cancelled_by=$3 WHERE id=$1 RETURNING ${residenceColumns}`,[residenceId,reason,actorId]);
   return mapResidence(result.rows[0]!);
 }
 
-export async function managementCheckOut(
-  db: Queryable,
-  residenceId: string,
-  checkOutDate: string,
-  actorId: string,
-): Promise<Residence> {
-  const residence = await lockResidence(db, residenceId);
-  if (residence.status !== 'CHECKED_IN') {
-    throwBusinessError('INVALID_STATE', 'Chỉ có thể trả phòng từ hồ sơ đang nhận phòng.');
-  }
-  if (residence.check_in_date !== null && checkOutDate < residence.check_in_date) {
-    throw new AppError(422, 'VALIDATION_ERROR', 'Ngày trả phòng không được trước ngày nhận phòng.', [
-      { field: 'checkOutDate', message: 'Ngày trả phòng không được trước ngày nhận phòng.' },
-    ]);
-  }
-  const result = await db.query<ResidenceRow>(
-    `UPDATE residence_records SET status = 'ENDED', check_out_date = $2::date, checked_out_by = $3
-      WHERE id = $1 RETURNING ${residenceColumns}`,
-    [residenceId, checkOutDate, actorId],
-  );
+export async function managementCheckOut(db: Queryable, residenceId: string, date: string, actorId: string): Promise<Residence> {
+  const result=await db.query<ResidenceRow>(`UPDATE residence_records SET status='ENDED',check_out_date=$2::date,checked_out_by=$3 WHERE id=$1 RETURNING ${residenceColumns}`,[residenceId,date,actorId]);
   return mapResidence(result.rows[0]!);
 }
 
@@ -1022,30 +773,14 @@ export async function managementListReceipts(
        ${from}
       ORDER BY rf.created_at DESC, rf.id ASC
       LIMIT $${values.length + 1} OFFSET $${values.length + 2}`,
-    [...values, query.pageSize, (query.page - 1) * query.pageSize],
+    [...values, query.pageSize, ((BigInt(query.page)-1n)*BigInt(query.pageSize)).toString()],
   );
   const totalItems = Number(count.rows[0]?.total ?? 0);
   return { items: result.rows.map(mapReceipt), meta: pageMeta(query.page, query.pageSize, totalItems) };
 }
 
-export async function managementCreateReceipt(
-  db: Queryable,
-  residenceId: string,
-  actorId: string,
-): Promise<Receipt> {
-  const residence = await lockResidence(db, residenceId);
-  if (residence.status !== 'ALLOCATED' && residence.status !== 'CHECKED_IN') {
-    throwBusinessError('INVALID_STATE', 'Chỉ có thể lập phiếu thu cho hồ sơ lưu trú đang mở.');
-  }
-  const existing = await db.query('SELECT 1 FROM room_fee_receipts WHERE residence_id = $1', [residenceId]);
-  if (existing.rowCount) {
-    throwBusinessError('RECEIPT_ALREADY_EXISTS', 'Hồ sơ lưu trú đã có phiếu thu.');
-  }
-  const result = await db.query<ReceiptRow>(
-    `INSERT INTO room_fee_receipts (residence_id, created_by)
-     VALUES ($1, $2) RETURNING ${receiptColumns}`,
-    [residenceId, actorId],
-  );
+export async function managementCreateReceipt(db: Queryable, residenceId: string, actorId: string): Promise<Receipt> {
+  const result=await db.query<ReceiptRow>(`INSERT INTO room_fee_receipts(residence_id,created_by) VALUES($1,$2) RETURNING ${receiptColumns}`,[residenceId,actorId]);
   return mapReceipt(result.rows[0]!);
 }
 
@@ -1057,25 +792,8 @@ export async function managementGetReceipt(db: Queryable, receiptId: string): Pr
   return result.rows[0] ? mapReceipt(result.rows[0]) : null;
 }
 
-export async function managementPayReceipt(
-  db: Queryable,
-  receiptId: string,
-  paymentDate: string,
-  actorId: string,
-): Promise<Receipt> {
-  const selected = await db.query<{ status: ReceiptStatus }>(
-    `SELECT status FROM room_fee_receipts WHERE id = $1 FOR UPDATE`,
-    [receiptId],
-  );
-  if (!selected.rows[0]) throw new AppError(404, 'NOT_FOUND', 'Phiếu thu không tồn tại.');
-  if (selected.rows[0].status !== 'UNPAID') {
-    throwBusinessError('INVALID_STATE', 'Phiếu thu đã được thanh toán.');
-  }
-  const result = await db.query<ReceiptRow>(
-    `UPDATE room_fee_receipts SET status = 'PAID', payment_date = $2::date, paid_by = $3
-      WHERE id = $1 RETURNING ${receiptColumns}`,
-    [receiptId, paymentDate, actorId],
-  );
+export async function managementPayReceipt(db: Queryable, receiptId: string, date: string, actorId: string): Promise<Receipt> {
+  const result=await db.query<ReceiptRow>(`UPDATE room_fee_receipts SET status='PAID',payment_date=$2::date,paid_by=$3 WHERE id=$1 RETURNING ${receiptColumns}`,[receiptId,date,actorId]);
   return mapReceipt(result.rows[0]!);
 }
 
@@ -1099,4 +817,19 @@ export async function managementGetStatistics(db: Queryable): Promise<Statistics
     currentResidents: row.current_residents,
     unpaidReceipts: row.unpaid_receipts,
   };
+}
+
+export async function profileGenderMismatch(db:Queryable,id:string,gender:Gender) {
+  return !!(await db.query(`SELECT 1 FROM residence_records rr JOIN rooms r ON r.id=rr.room_id
+    WHERE rr.student_id=$1 AND rr.status IN ('ALLOCATED','CHECKED_IN') AND r.gender<>$2 LIMIT 1`,[id,gender])).rowCount;
+}
+export async function roomGenderMismatch(db:Queryable,id:string,gender:Gender) {
+  return !!(await db.query(`SELECT 1 FROM residence_records rr JOIN student_profiles s ON s.id=rr.student_id
+    WHERE rr.room_id=$1 AND rr.status IN ('ALLOCATED','CHECKED_IN') AND s.gender<>$2 LIMIT 1`,[id,gender])).rowCount;
+}
+export async function hasOpenResidence(db:Queryable,id:string) {
+  return !!(await db.query("SELECT 1 FROM residence_records WHERE student_id=$1 AND status IN ('ALLOCATED','CHECKED_IN') LIMIT 1",[id])).rowCount;
+}
+export async function hasReceipt(db:Queryable,id:string) {
+  return !!(await db.query('SELECT 1 FROM room_fee_receipts WHERE residence_id=$1',[id])).rowCount;
 }

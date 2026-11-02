@@ -14,7 +14,12 @@
     "test": "node tools/run-tests.mjs unit",
     "check": "npm run build && npm test",
     "test:unit": "node tools/run-tests.mjs unit",
-    "test:integration": "node tools/run-tests.mjs integration"
+    "test:integration": "node tools/run-tests.mjs integration",
+    "db:check": "node --env-file-if-exists=.env tools/check-db.mjs",
+    "db:prepare-test": "node --env-file-if-exists=.env tools/prepare-review-db.mjs",
+    "test:system": "node tools/run-tests.mjs system",
+    "db:bootstrap-admin": "node --env-file-if-exists=.env tools/bootstrap-admin.mjs",
+    "db:verify": "node --env-file-if-exists=.env tools/verify-schema.mjs"
   },
   "dependencies": {
     "argon2": "0.44.0",

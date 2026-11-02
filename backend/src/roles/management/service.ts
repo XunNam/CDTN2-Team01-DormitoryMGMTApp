@@ -1,3 +1,4 @@
+import * as repository from './repository.js';
 import type { Pool, PoolClient } from 'pg';
 import type { Actor, SessionIdentity } from '../../shared/auth/types.js';
 import { withBusinessTransaction } from '../../shared/db/transaction.js';
@@ -186,7 +187,13 @@ export async function managementUpdateProfile(
   studentId: string,
   patch: ProfilePatchInput,
 ) {
-  return withManagementWrite(pool, identity, (client) => repoUpdateProfile(client, studentId, patch));
+  return withManagementWrite(pool, identity, async client => {
+    const current=await repoGetProfile(client,studentId); if(!current) return null;
+    const changed=Object.fromEntries(Object.entries(patch).filter(([k,v])=>v!==current[k as keyof typeof current])) as ProfilePatchInput;
+    if(!Object.keys(changed).length) return current;
+    if(changed.gender && await repository.profileGenderMismatch(client,studentId,changed.gender)) conflict('GENDER_MISMATCH');
+    return repoUpdateProfile(client,studentId,changed);
+  });
 }
 
 export async function managementListBuildings(pool: Pool, query: PageQuery) {
@@ -223,7 +230,9 @@ export async function managementCreateRoom(
   identity: SessionIdentity,
   input: RoomCreateInput,
 ) {
-  return withManagementWrite(pool, identity, (client) => repoCreateRoom(client, input));
+  return withManagementWrite(pool, identity, async client => {
+    required(await repoGetBuilding(client,input.buildingId)); return repoCreateRoom(client,input);
+  });
 }
 
 export async function managementGetRoom(pool: Pool, roomId: string) {
@@ -236,7 +245,15 @@ export async function managementUpdateRoom(
   roomId: string,
   patch: RoomPatchInput,
 ) {
-  return withManagementWrite(pool, identity, (client) => repoUpdateRoom(client, roomId, patch));
+  return withManagementWrite(pool, identity, async client => {
+    const current=await repoGetRoom(client,roomId); if(!current) return null;
+    const changed=Object.fromEntries(Object.entries(patch).filter(([k,v])=>v!==current[k as keyof typeof current])) as RoomPatchInput;
+    if(!Object.keys(changed).length) return current;
+    if(changed.capacity!==undefined && changed.capacity<current.allocatedPlaces) conflict('CAPACITY_BELOW_OCCUPANCY');
+    if(changed.status==='INACTIVE' && current.allocatedPlaces>0) conflict('ROOM_OCCUPIED');
+    if(changed.gender && await repository.roomGenderMismatch(client,roomId,changed.gender)) conflict('GENDER_MISMATCH');
+    return repoUpdateRoom(client,roomId,changed);
+  });
 }
 
 export async function managementGetPeriod(pool: Pool) {
@@ -248,7 +265,10 @@ export async function managementUpdatePeriod(
   identity: SessionIdentity,
   status: 'OPEN' | 'CLOSED',
 ) {
-  return withManagementWrite(pool, identity, (client, actor) => repoUpdatePeriod(client, status, actor.accountId));
+  return withManagementWrite(pool, identity, async (client,actor) => {
+    if((await repoGetPeriod(client)).status===status) conflict('INVALID_STATE');
+    return repoUpdatePeriod(client,status,actor.accountId);
+  });
 }
 
 export async function managementListApplications(pool: Pool, query: ApplicationQuery) {
@@ -265,8 +285,17 @@ export async function managementApproveApplication(
   applicationId: string,
   input: ApplicationApproveInput,
 ) {
-  return withManagementWrite(pool, identity, (client, actor) =>
-    repoApproveApplication(client, applicationId, input.roomId, actor.accountId));
+  return withManagementWrite(pool, identity, async (client,actor) => {
+    const application=required(await repoGetApplication(client,applicationId));
+    if(application.status!=='PENDING') conflict('INVALID_STATE');
+    if(await repository.hasOpenResidence(client,application.studentId)) conflict('ACTIVE_RESIDENCE_EXISTS');
+    const room=required(await repoGetRoom(client,input.roomId));
+    if(room.status!=='ACTIVE') conflict('ROOM_INACTIVE');
+    const profile=required(await repoGetProfile(client,application.studentId));
+    if(profile.gender!==room.gender) conflict('GENDER_MISMATCH');
+    if(room.availablePlaces<=0) conflict('ROOM_FULL');
+    return repoApproveApplication(client,applicationId,input.roomId,actor.accountId);
+  });
 }
 
 export async function managementRejectApplication(
@@ -275,8 +304,10 @@ export async function managementRejectApplication(
   applicationId: string,
   input: ApplicationRejectInput,
 ) {
-  return withManagementWrite(pool, identity, (client, actor) =>
-    repoRejectApplication(client, applicationId, input.reason, actor.accountId));
+  return withManagementWrite(pool, identity, async (client,actor) => {
+    if(required(await repoGetApplication(client,applicationId)).status!=='PENDING') conflict('INVALID_STATE');
+    return repoRejectApplication(client,applicationId,input.reason,actor.accountId);
+  });
 }
 
 export async function managementListResidences(pool: Pool, query: ResidenceQuery) {
@@ -293,8 +324,11 @@ export async function managementCheckIn(
   residenceId: string,
   input: CheckInInput,
 ) {
-  return withManagementWrite(pool, identity, (client, actor) =>
-    repoCheckIn(client, residenceId, input.checkInDate, actor.accountId));
+  return withManagementWrite(pool, identity, async (client,actor) => {
+    const residence=await openResidence(client,residenceId,'ALLOCATED');
+
+    return repoCheckIn(client,residenceId,input.checkInDate,actor.accountId);
+  });
 }
 
 export async function managementCancelAllocation(
@@ -303,8 +337,11 @@ export async function managementCancelAllocation(
   residenceId: string,
   input: CancelAllocationInput,
 ) {
-  return withManagementWrite(pool, identity, (client, actor) =>
-    repoCancelAllocation(client, residenceId, input.reason, actor.accountId));
+  return withManagementWrite(pool, identity, async (client,actor) => {
+    const residence=await openResidence(client,residenceId,'ALLOCATED');
+
+    return repoCancelAllocation(client,residenceId,input.reason,actor.accountId);
+  });
 }
 
 export async function managementCheckOut(
@@ -313,8 +350,11 @@ export async function managementCheckOut(
   residenceId: string,
   input: CheckOutInput,
 ) {
-  return withManagementWrite(pool, identity, (client, actor) =>
-    repoCheckOut(client, residenceId, input.checkOutDate, actor.accountId));
+  return withManagementWrite(pool, identity, async (client,actor) => {
+    const residence=await openResidence(client,residenceId,'CHECKED_IN');
+    if(residence.checkInDate && input.checkOutDate<residence.checkInDate) throw new AppError(422,'VALIDATION_ERROR','Ngày trả phòng không được trước ngày nhận phòng.',[{field:'checkOutDate',message:'Ngày không hợp lệ.'}]);
+    return repoCheckOut(client,residenceId,input.checkOutDate,actor.accountId);
+  });
 }
 
 export async function managementListReceipts(pool: Pool, query: ReceiptQuery) {
@@ -326,8 +366,12 @@ export async function managementCreateReceipt(
   identity: SessionIdentity,
   input: ReceiptCreateInput,
 ) {
-  return withManagementWrite(pool, identity, (client, actor) =>
-    repoCreateReceipt(client, input.residenceId, actor.accountId));
+  return withManagementWrite(pool, identity, async (client,actor) => {
+    const residence=required(await repoGetResidence(client,input.residenceId));
+    if(!['ALLOCATED','CHECKED_IN'].includes(residence.status)) conflict('INVALID_STATE');
+    if(await repository.hasReceipt(client,input.residenceId)) conflict('RECEIPT_ALREADY_EXISTS');
+    return repoCreateReceipt(client,input.residenceId,actor.accountId);
+  });
 }
 
 export async function managementGetReceipt(pool: Pool, receiptId: string) {
@@ -340,10 +384,20 @@ export async function managementPayReceipt(
   receiptId: string,
   input: ReceiptPayInput,
 ) {
-  return withManagementWrite(pool, identity, (client, actor) =>
-    repoPayReceipt(client, receiptId, input.paymentDate, actor.accountId));
+  return withManagementWrite(pool, identity, async (client,actor) => {
+    if(required(await repoGetReceipt(client,receiptId)).status!=='UNPAID') conflict('INVALID_STATE');
+    return repoPayReceipt(client,receiptId,input.paymentDate,actor.accountId);
+  });
 }
 
 export async function managementGetStatistics(pool: Pool) {
   return withReadSnapshot(pool, (client) => repoGetStatistics(client));
+}
+
+function conflict(code:string): never {throw new AppError(409,code,'Điều kiện xử lý không còn phù hợp. Vui lòng tải lại dữ liệu.');}
+function required<T>(value:T|null):T {if(value===null) throw new AppError(404,'NOT_FOUND','Không tìm thấy tài nguyên.'); return value;}
+async function openResidence(client:PoolClient,id:string,state:'ALLOCATED'|'CHECKED_IN') {
+  const residence=required(await repoGetResidence(client,id));
+  if(residence.status!==state) conflict('INVALID_STATE');
+  return residence;
 }

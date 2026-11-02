@@ -1,5 +1,5 @@
-# Test tích hợp do Anh chạy
+# Kiểm thử PostgreSQL
 
-Thành viên viết test tại `<role>/<operationId>.test.ts` cùng fixture và README setup. Chạy npm run test:integration từ backend trên máy Anh, có TEST_DATABASE_URL trỏ DB test đã chuẩn bị. Không fallback mock, không tự DROP/TRUNCATE/áp schema lúc import. Không ghi secret vào repo.
+Test role nằm trong admin/, management/, student/ tùy nhánh; Shared nằm trong shared/. Không chạy DB test trong unit. Dùng npm run test:integration theo [backend README](../../README.md), với .env.test trỏ DB test hoặc schema codex_review_* riêng, không fallback public. Runner chạy file nối tiếp; ca race chủ động tạo request đồng thời.
 
-Nhóm này tách khỏi npm test/npm run check, vì máy ba thành viên chưa có PostgreSQL. Hiện chưa có test nghiệp vụ trong thư mục này. Trạng thái bàn giao trước khi Anh chạy: NOT_RUN_PENDING_OWNER. [Quy trình](../../../Coordination/testing-responsibilities.md).
+Fixtures dùng dữ liệu giả, giữ lịch sử theo trigger và không DROP/TRUNCATE/tắt constraint. Test Shared dùng session PostgreSQL và login HTTP thật; test ADMIN chuyên biệt có seed session để cô lập nghiệp vụ. Chỉ test có DB thật mới là bằng chứng SQL. Kết quả hiện hành tại [review 02/11/2026](../../../Coordination/reports/2026-11-02-backend-readiness.md).

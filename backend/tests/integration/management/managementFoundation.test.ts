@@ -134,7 +134,7 @@ test('Management foundation operations preserve PostgreSQL contract invariants',
   })).meta.totalItems, 1);
   await assert.rejects(
     managementCreateProfile(pool, identity, {
-      studentCode: studentCode.toLowerCase(),
+      studentCode: studentCode,
       fullName: 'Duplicate test profile',
       gender: 'FEMALE',
       className: 'TEST',
@@ -159,7 +159,7 @@ test('Management foundation operations preserve PostgreSQL contract invariants',
   })).meta.totalItems, 1);
   assert.equal((await managementUpdateBuilding(pool, identity, building.id, { name: 'Tòa kiểm thử đã sửa' }))?.name, 'Tòa kiểm thử đã sửa');
   await assert.rejects(
-    managementCreateBuilding(pool, identity, { code: buildingCode.toLowerCase(), name: 'Tòa trùng' }),
+    managementCreateBuilding(pool, identity, { code: buildingCode, name: 'Tòa trùng' }),
     (error: unknown) => error instanceof AppError && error.code === 'DUPLICATE_BUILDING_CODE',
   );
 
@@ -190,7 +190,7 @@ test('Management foundation operations preserve PostgreSQL contract invariants',
   await assert.rejects(
     managementCreateRoom(pool, identity, {
       buildingId: building.id,
-      code: roomCode.toLowerCase(),
+      code: roomCode,
       capacity: 2,
       gender: 'MALE',
       feeVnd: '0',

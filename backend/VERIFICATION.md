@@ -1,3 +1,5 @@
+> Các mục bên dưới là biên bản scaffold lịch sử. Kết quả code/DB hiện hành ngày 02/11/2026 nằm trong [báo cáo review backend](../Coordination/reports/2026-11-02-backend-readiness.md).
+
 # Kiểm chứng scaffold
 
 Ngày 30/10/2026, revision đặc tả1.0.0. Node24.22.1, npm11.16.0. Dependency được cài local và pin exact trong package-lock.json, không cài global, không sửa DB hoặc khởi động dịch vụ PostgreSQL/Docker.

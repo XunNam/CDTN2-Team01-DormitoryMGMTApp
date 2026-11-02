@@ -2,7 +2,8 @@ import express from 'express';
 import session from 'express-session';
 import connectPgSimple from 'connect-pg-simple';
 import type { Pool } from 'pg';
-import { authRouter } from './shared/auth/router.js';
+import { createAuthRouter } from './shared/auth/router.js';
+import { SafeSessionStore } from './shared/auth/session-store.js';
 import { requireActor, requireRole } from './shared/auth/guard.js';
 import { enforceOrigin, requireCsrfToken } from './shared/auth/security.js';
 import { AppError, errorHandler } from './shared/http/errors.js';
@@ -23,14 +24,17 @@ export interface AppOptions {
 
 export function createApp(options: AppOptions): express.Express {
   const app = express();
+  app.locals.pool = options.pool;
   app.enable('strict routing');
   app.disable('x-powered-by');
   app.set('trust proxy', options.trustProxy ? 1 : false);
   app.get('/health', (_req, res) => sendData(res, 200, { status: 'ok', scope: 'backend-scaffold' }));
   const PgStore = connectPgSimple(session);
+  const sessionStore = options.sessionStore ?? new PgStore({ pool: options.pool, tableName: 'sessions', createTableIfMissing: false });
+  app.locals.sessionStore = sessionStore;
   app.use(session({
     name: 'dormflow.sid', secret: options.sessionSecret,
-    store: options.sessionStore ?? new PgStore({ pool: options.pool, tableName: 'sessions', createTableIfMissing: false }),
+    store: new SafeSessionStore(sessionStore),
     resave: false, saveUninitialized: false, rolling: false,
     cookie: { httpOnly: true, sameSite: 'lax', secure: options.secureCookies, maxAge: 30 * 60 * 1000 },
   }));
@@ -53,7 +57,7 @@ export function createApp(options: AppOptions): express.Express {
     next();
   });
   app.use(enforceOrigin(options.appOrigin));
-  app.use('/api/v1/auth', authRouter);
+  app.use('/api/v1/auth', createAuthRouter(options.pool));
   app.use('/api/v1/student', requireCsrfToken, requireActor(options.pool), requireRole('SV'), studentRouter);
   app.use('/api/v1/management', requireCsrfToken, requireActor(options.pool), requireRole('BQL'), createManagementRouter(options.pool));
   app.use('/api/v1/admin', requireCsrfToken, requireActor(options.pool), requireRole('ADMIN'), adminRouter);

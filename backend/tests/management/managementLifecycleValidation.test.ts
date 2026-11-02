@@ -61,6 +61,7 @@ test('management lifecycle bodies validate identifiers, trimmed reasons, and non
   assert.deepEqual(parseReceiptPay({ paymentDate: pastDate }), { paymentDate: pastDate });
   assert.throws(() => parseCheckIn({ checkInDate: '2999-01-01' }), AppError);
   assert.throws(() => parseCheckOut({ checkOutDate: '2025-02-30' }), AppError);
+  assert.throws(() => parseCheckOut({ checkOutDate: '0000-01-01' }), AppError);
   assert.throws(() => parseReceiptPay({ paymentDate: '2999-01-01' }), AppError);
 });
 

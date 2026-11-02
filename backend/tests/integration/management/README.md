@@ -1,6 +1,8 @@
+> Đã chạy PASS ngày 02/11/2026. Shared auth và kiểm HTTP xuyên role hiện đã có; xem [báo cáo review](../../../../Coordination/reports/2026-11-02-api-managers-review.md). Nội dung dưới mô tả phạm vi test service và cách fixture được giữ.
+
 # Management role database test
 
-`managementFoundation.test.ts` exercises all 28 BQL Management service operations and their database invariants against the PostgreSQL schema, including atomic application approval/residence allocation, residence lifecycle transitions, receipt price snapshots/payment, and statistics. It does not claim to verify the authenticated HTTP path: Shared `AUTH-01` is not implemented yet.
+`managementFoundation.test.ts` exercises all 28 BQL Management service operations and their database invariants against the PostgreSQL schema, including atomic application approval/residence allocation, residence lifecycle transitions, receipt price snapshots/payment, and statistics. It does not claim to verify the authenticated HTTP path: the service-focused file itself does not execute login; real login is covered in shared/system tests.
 
 The owner must prepare a disposable test database from `SQL/schema.sql`, seed one unlocked staff account with role `BQL`, and configure these variables in `backend/.env.test`:
 
@@ -15,4 +17,4 @@ From `backend/`, run:
 npm run test:integration
 ```
 
-Expected result: all profile/building/room/period and application/residence/receipt/statistics checks pass, including approve-versus-reject on one application, two approvals competing for the last room place, the fee snapshot remaining unchanged after room price changes, retaining an unpaid receipt through checkout, and allowing payment after checkout. This test is `NOT_RUN_PENDING_OWNER` until run on the prepared PostgreSQL database.
+Expected result: all profile/building/room/period and application/residence/receipt/statistics checks pass, including approve-versus-reject on one application, two approvals competing for the last room place, the fee snapshot remaining unchanged after room price changes, retaining an unpaid receipt through checkout, and allowing payment after checkout. Actual result on PostgreSQL 18.6: PASS; see the dated review.
