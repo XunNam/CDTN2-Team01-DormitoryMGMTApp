@@ -37,7 +37,8 @@ test('health is scaffold liveness only and does not create a session cookie', as
     assert.equal(protectedRes.status, 401);
     assert.equal((await protectedRes.json() as { error: { code: string } }).error.code, 'AUTH_REQUIRED');
     const csrfRes = await fetch(`${base}/api/v1/auth/csrf`);
-    assert.equal(csrfRes.status, 404, 'auth endpoints remain explicitly unimplemented');
+    assert.equal(csrfRes.status, 200);
+    assert.match((await csrfRes.json() as { data: { csrfToken: string } }).data.csrfToken, /^[0-9a-f]{64}$/);
   });
 });
 

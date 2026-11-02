@@ -6,7 +6,7 @@ Revision1.0.0. Đây là danh mục giao việc, không là tuyên bố các tí
 |---|---|---|---|---|
 | BASE-REVIEW | Shared được Anh giao | Review schema+helper+contract; chạy SQL trên DB test sạch; xác nhận bản1.0.0 cho tích hợp | Bộ tài liệu hiện tại | Chờ người review |
 | AUTH-01 | Shared được Anh giao | getCsrfToken/login/logout/changePassword/getCurrentIdentity + kiểm thử session/CSRF/khóa/version | BASE-REVIEW | Chưa triển khai |
-| ADMIN-01 | ADMIN |5 operation Admin theo manifest; cấp account từ profile đã có | AUTH-01; có staffAdmin demo từ công cụ hash | Chưa triển khai |
+| ADMIN-01 | ADMIN — Trần Quốc Vương | 5 operation Admin theo manifest; cấp account từ profile đã có | AUTH-01; có staffAdmin demo từ công cụ hash; app.ts cấp Pool cho router role | READY_FOR_OWNER — chờ Anh review ([handoff](tasks/ADMIN-01/handoff.md)) |
 | BQL-FOUNDATION | BQL | Profile/building/room/period; kiểm thử sức chứa và dữ liệu đầu vào | AUTH-01 | Chưa triển khai |
 | SV-01 | SV |13 operationStudent; ưu tiên profile/room/period trước gửi đơn | AUTH-01; BQL-FOUNDATION dữ liệu giả | Chưa triển khai |
 | BQL-LIFECYCLE | BQL | Applications/residences/actions + kiểm thử đồng thời | BQL-FOUNDATION; dữ liệu đơn SV | Chưa triển khai |
