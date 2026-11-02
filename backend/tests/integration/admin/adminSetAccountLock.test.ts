@@ -16,8 +16,8 @@ after(async () => { await env?.close(); });
 test('TC-01.2: lock blocks the next protected request of a logged-in BQL; unlock restores access; repeat is 409', async () => {
   const bql = await seedStaff(env, 'bql', 'BQL');
   const bqlSession = await seedSession(env, 'STAFF', bql.id);
-  // Before lock: guard passes, the (still empty) management router answers 404.
-  assert.equal((await api(env, bqlSession, 'GET', '/management/statistics')).status, 404);
+  // Use an implemented shared route so this assertion also holds after all roles are integrated.
+  assert.equal((await api(env, bqlSession, 'GET', '/auth/me')).status, 200);
   const before = (await env.pool.query('SELECT updated_at, session_version FROM staff_accounts WHERE id = $1', [bql.id])).rows[0];
 
   const locked = await api(env, admin, 'PATCH', `/admin/accounts/STAFF/${bql.id}/lock`, { isLocked: true });
@@ -28,7 +28,7 @@ test('TC-01.2: lock blocks the next protected request of a logged-in BQL; unlock
   assert.ok(row.updated_at > before.updated_at, 'updated_at set by trigger');
   assert.equal(row.session_version, before.session_version, 'lock does not touch session_version');
 
-  const blocked = await api(env, bqlSession, 'GET', '/management/statistics');
+  const blocked = await api(env, bqlSession, 'GET', '/auth/me');
   assert.equal(blocked.status, 401);
   assert.equal(blocked.json.error.code, 'ACCOUNT_LOCKED');
   const repeat = await api(env, admin, 'PATCH', `/admin/accounts/STAFF/${bql.id}/lock`, { isLocked: true });
@@ -36,7 +36,7 @@ test('TC-01.2: lock blocks the next protected request of a logged-in BQL; unlock
   assert.equal(repeat.json.error.code, 'INVALID_STATE');
 
   assert.equal((await api(env, admin, 'PATCH', `/admin/accounts/STAFF/${bql.id}/lock`, { isLocked: false })).status, 200);
-  assert.equal((await api(env, bqlSession, 'GET', '/management/statistics')).status, 404, 'unlocked: guard passes again');
+  assert.equal((await api(env, bqlSession, 'GET', '/auth/me')).status, 200, 'unlocked: guard passes again');
 });
 
 test('TC-01.2: locking a student account keeps the profile unchanged', async () => {

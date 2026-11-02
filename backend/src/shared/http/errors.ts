@@ -30,7 +30,7 @@ export const errorHandler: ErrorRequestHandler = (err: unknown, _req, res, _next
     return;
   }
   if (err && typeof err === 'object' && 'code' in err && typeof err.code === 'string'
-      && /^(08\w{3}|57P0[123]|53300|55P03|40001|40P01|ECONNREFUSED|ECONNRESET|ETIMEDOUT|ENOTFOUND)$/.test(err.code)) {
+      && /^(08\w{3}|57P0[123]|57014|53300|55P03|40001|40P01|ECONNREFUSED|ECONNRESET|ETIMEDOUT|ENOTFOUND)$/.test(err.code)) {
     res.status(503).json({ error: { code: 'SERVICE_UNAVAILABLE', message: 'Dịch vụ tạm thời không sẵn sàng.' } });
     return;
   }

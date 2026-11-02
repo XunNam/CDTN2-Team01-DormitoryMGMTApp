@@ -2,10 +2,9 @@
 // applied once (SQL/README.md). The runner sets DATABASE_URL from TEST_DATABASE_URL; nothing here creates,
 // resets or migrates the database. Every fixture row carries a random tag and is deleted in cleanup().
 //
-// AUTH NOTE: Shared login (AUTH-01) is not implemented yet. Sessions are therefore written straight into the
-// real PostgreSQL session store (connect-pg-simple, table `sessions`) for an account that really exists;
-// the real guard still re-reads account/role/lock/session_version from the DB on every request.
-// This verifies the ADMIN API, not the login flow. Replace seedSession() with POST /auth/login once AUTH-01 lands.
+// Focused ADMIN tests seed a real PostgreSQL session so they can isolate account behavior.
+// Login itself is exercised through HTTP in integration/shared/auth.test.ts and tests/system/.
+// The guard still re-reads account/role/lock/session_version on every request.
 import assert from 'node:assert/strict';
 import { createHmac, randomBytes } from 'node:crypto';
 import type { AddressInfo } from 'node:net';
@@ -48,8 +47,8 @@ export async function setup(): Promise<Env> {
   const PgStore = connectPgSimple(session);
   const store = new PgStore({ pool, tableName: 'sessions', createTableIfMissing: false });
   const app = createApp({ pool, sessionSecret: SECRET, appOrigin: ORIGIN, secureCookies: false, sessionStore: store });
-  // Requested Shared wiring (see handoff): app.ts should expose the single Pool to role routers.
-  if (!app.locals.pool) app.locals.pool = pool;
+  // Regression: the app factory must expose its real Pool without fixture patching.
+  assert.equal(app.locals.pool, pool, 'createApp must wire its single Pool');
   const server = app.listen(0, '127.0.0.1');
   await new Promise<void>(resolve => server.once('listening', resolve));
   const { port } = server.address() as AddressInfo;

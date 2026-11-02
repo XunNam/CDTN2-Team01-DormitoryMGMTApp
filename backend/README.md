@@ -1,79 +1,59 @@
-# Khung backend dùng chung
+# Backend DormFlow
 
-Revision đặc tả **1.0.0**. Node.js **24 LTS**, npm **11**, TypeScript **5.9.3**, ESM, Express **5.3.0**, node-postgres **8.23.1**, express-session **1.19.0**, connect-pg-simple **10.0.0**, Zod **4.6.7**, Argon2 **0.44.0**. Phiên bản dependency chính xác nằm trong package.json và package-lock.json; dùng `npm ci`, không tự nâng từng máy hoặc dùng package global để chạy dự án.
+Contract revision 1.0.0; Express/TypeScript ESM, Node 24, PostgreSQL 18.6, một Pool và PostgreSQL session store. Dependency chính xác theo package.json/package-lock.json; môi trường chuẩn npm 11. Backend sau khi tích hợp cả ba nhánh gồm 51 operation (5 Shared, 5 ADMIN, 28 BQL, 13 SV). Mỗi nhánh PR chỉ mang module của role tương ứng và các sửa Shared; xem [kết quả review](../Coordination/reports/2026-11-02-backend-readiness.md).
 
-## Trạng thái thực tế
-
-Scaffold có app/server, health, pg Pool, PostgreSQL session-store wiring, helper fresh account/role guard, Origin/CSRF helper, response/error helper và transaction wrapper. **Chưa có login, logout, CSRF issuance hoặc API nghiệp vụ được triển khai.** Role router rỗng là vị trí nhận code, không phải endpoint trả thành công giả. `GET /health` chỉ chứng minh tiến trình HTTP hoạt động, không kiểm chứng kết nối DB hoặc tính năng.
-
-## Cài và kiểm tra
-
-Từ root repo, thành viên có Node 24 + npm 11 thực hiện:
+## Cài và kiểm tra độc lập
 
 ```powershell
-Set-Location backend
+cd backend
 npm ci
 npm run check
 ```
 
-`check` chạy build và test độc lập, không cần PostgreSQL, psql, Docker hoặc file .env. `npm test` / `npm run test:unit` chỉ chọn test ngoài tests/integration/. Thành viên viết cả test tích hợp và fixture nhưng bàn giao Anh chạy; test DB chưa chạy ghi NOT_RUN_PENDING_OWNER. Xem [phân công kiểm thử](../Coordination/testing-responsibilities.md).
+check chạy build và unit, không kết nối DB. Test integration/system được tách khỏi unit. /health chỉ là liveness, không thay kiểm tra database.
 
-## Kiểm thử PostgreSQL trên máy Anh
+## Chạy local
 
-Anh review code và test, chuẩn bị DB test riêng theo [SQL README](../SQL/README.md), rồi cấu hình TEST_DATABASE_URL trong .env.test từ .env.test.example. Chạy `npm run test:integration`; lệnh chỉ nạp test dưới tests/integration/, không tự tạo/reset database. Thiếu URL/file test thì báo lỗi hướng dẫn, không coi là pass. Repo hiện chưa có test tích hợp nghiệp vụ; thành viên phải bổ sung theo operation.
+Sao chép .env.example thành .env rồi điền DATABASE_URL, SESSION_SECRET ít nhất 32 ký tự ngẫu nhiên, APP_ORIGIN. Cấu hình local ở máy chủ dự án đã có trong .env và không được commit. Schema phải có trước; không chạy schema.sql lần nữa trên DB đã có bảng. Nếu account kết nối thiếu quyền, chủ sở hữu bảng xem [script cấp quyền local](../SQL/grant-local-app-access.sql).
 
-Test độc lập: `tests/<role>/<operationId>.test.ts`. Test PostgreSQL: `tests/integration/<role>/<operationId>.test.ts`. Mock/MemoryStore chỉ dùng nhóm độc lập, không thay kiểm chứng SQL/ownership với phiên thật hoặc concurrency. NFR và nghiệm thu liên phần do Anh chạy sau khi ghép.
-
-## Chạy server khi có database
-
-Chỉ cần cho người chạy ứng dụng/integration, không phải điều kiện viết backend ở máy thành viên. Sao chép .env.example thành .env và cấu hình DATABASE_URL, SESSION_SECRET, APP_ORIGIN trên DB riêng, rồi chạy `npm run dev` (hoặc build rồi start). Không commit credentials. Database phải được dựng trước theo SQL README.
-
-APP_ORIGIN là origin frontend; Next.js proxy /api/v1 cùng origin. Baseline không bật CORS. Production cần HTTPS/COOKIE_SECURE=true và chỉ bật TRUST_PROXY khi đã xác định proxy. Frontend/Compose và NFR-03 vẫn là phần bàn giao sau, chưa được kiểm chứng từ scaffold.
-
-## Cấu trúc và điểm gắn code
-
-```text
-src/
-  app.ts                   # Một app factory, mount prefix/middleware
-  server.ts                # Một listen, một Pool, shutdown
-  shared/
-    auth/                  # Session guard, Origin/CSRF và auth task
-    db/pool.ts             # Pool duy nhất, DATE giữ chuỗi
-    db/transaction.ts      # Global write lock + recheck actor
-    http/                  # AppError, error handler, sendData/sendList
-    domain/                # Logic liên role, task Shared quản lý
-  roles/
-    student/               # Chỉ task SV
-    management/            # Chỉ task BQL
-    admin/                 # Chỉ task ADMIN
-tests/
-  shared/scaffold.test.ts
-  student/ management/ admin/  # <operationId>.test.ts của task tương ứng
+```powershell
+npm run db:check
+npm run dev
 ```
 
-Mỗi folder role có `router.ts`, `validation.ts`, `controller.ts`, `service.ts`, `repository.ts`, vùng `IMPLEMENTATION SLOT`. Các hàm export theo operationId trong [contract manifest](../Coordination/contract-manifest.json). App đã mount `/api/v1/student`, `/api/v1/management`, `/api/v1/admin`; route con chỉ khai báo phần tương đối. Router dùng strict routing; không thêm trailing slash. Không khai báo thêm app, server, DB Pool, session store hoặc auth middleware theo người làm.
+Server kiểm tra kết nối trước listen. db:check kiểm các bảng/view/singleton nhưng không chứng nhận toàn bộ schema; db:verify dựng một schema test mới, chạy SQL invariants rollback rồi đối chiếu cấu trúc public, không sửa public.
 
-Controller dùng `res.locals.actor` đã fresh-check, không nhận role/studentId từ body để phân quyền. Response qua `sendData(res,status,data)` / `sendList(res,data,meta)`; 204 dùng `res.status(204).end()`. JSON BIGINT tiền giữ chuỗi. Auth helper đọc DB mỗi request theo `(actorKind,accountId)`, so version, khóa và idle30 phút. Role ADMIN không tự có quyền BQL.
+Nếu DB chưa có staff account, tự đặt DORMFLOW_ADMIN_USERNAME, DORMFLOW_ADMIN_NAME và DORMFLOW_ADMIN_PASSWORD trong .env local, chạy npm run db:bootstrap-admin rồi xóa ba biến bootstrap. Công cụ chỉ cho tạo Admin đầu tiên khi staff_accounts rỗng, băm Argon2id và không reset tài khoản cũ. Sau đó dùng API ADMIN để cấp BQL/SV; BQL phải tạo hồ sơ SV trước.
 
-Session store có thể tự `touch` thời hạn hàng lưu phiên khi một request đi qua middleware, kể cả request bị từ chối. Đây chỉ là vòng đời bản ghi lưu trữ: **không được dùng expire của hàng thay idle đăng nhập**. Guard luôn kiểm `identity.lastSeenAt`; request hết idle/khóa/version cũ không cập nhật giá trị này, nên lặp request hoặc GET csrf không hồi sinh quyền đăng nhập. Auth owner phải giữ quy tắc này khi thêm handler.
+## Kiểm tra PostgreSQL
 
-Mọi mutation đã xác thực gọi:
+Dùng DB test riêng theo SQL/README hoặc schema tách biệt khi tài khoản local không có CREATEDB. Công cụ dưới đây chỉ tạo schema tên codex_review_*, không drop/reset, không sửa public và không ghi đè .env.test đã có:
 
-```ts
-withBusinessTransaction(pool, req.session.identity!, async (client, actor) => {
-  // actor is freshly checked after global lock; all repositories use this client.
-  // Validate state/ownership/business rules and commit one atomic operation.
-});
+```powershell
+npm run db:prepare-test -- codex_review_ten_nhanh_lan_moi
+npm run test:integration
 ```
 
-Việc route đã kiểm token/actor không thay việc recheck sau khi chờ khóa. Wrapper acquire advisory `(724006,1)` ngay sau BEGIN READ COMMITTED; rollback khi có lỗi, luôn release. Login là ngoại lệ chưa có actor trước xác thực: Shared auth task phải triển khai luồng khóa rồi re-read credential theo contract; không lách wrapper bằng actor giả. GET list/count phải cùng snapshot read-only REPEATABLE READ theo contract, không khóa global.
+.env.test do công cụ tạo chứa TEST_DATABASE_URL với search_path chỉ schema test và pg_catalog; không fallback public. Có sẵn BQL fixture và MANAGEMENT_TEST_ACCOUNT_ID cho test service BQL. Test giữ lịch sử theo schema; chọn namespace mới cho lần test sạch, giữ/đổi tên .env.test cũ trước khi chuẩn bị. Không dùng DB có dữ liệu thật. Test DB/fixtures không chạy trong unit.
 
-## Nhiệm vụ Shared auth trước khi tích hợp role
+Sau khi có đủ ba module trong cùng source:
 
-Auth owner triển khai [contract auth](../API%20Endpoint/Shared/01-authentication.md), gồm GETcsrf/login/logout/change-password/me. `auth/router.ts` đang rỗng; task phải gắn helper đúng từng operation. **Không có blanket CSRF middleware cho auth namespace** vì logout hết phiên có ngoại lệ204. Role namespaces có Origin/CSRF trước fresh auth và role guard.
+```powershell
+npm run test:system
+```
 
-GETcsrf phát synchronizer token32 random bytes dạng64hex, lưu phiên; login/đổi mật khẩu regenerate session và token; mọi mutation có Origin đúng và token, trừ logout thiếu/hết phiên theo contract. Session identity chỉ `{actorKind,accountId,sessionVersion,lastSeenAt}`; không lưu role để phân quyền. `requireActor` cập nhật idle sau fresh lookup và `touch`; GETcsrf không được làm mới lastSeenAt. Không dùng MemoryStore ngoài test; bảng `sessions` phải có từ schema và app không tự tạo bảng.
+System test kiểm HTTP xuyên role, ownership, các cuộc đua có khóa DB thật và benchmark NFR-02. Không chạy system trên một nhánh chưa có các module còn lại. Integration files chạy nối tiếp vì cùng singleton kỳ đăng ký; các ca concurrency tạo các request đồng thời bên trong test.
 
-## Tiêu chí nhận code
+## Luồng frontend
 
-Đọc [bản đồ code](../Coordination/code-ownership.md), [quy trình](../Coordination/implementation-workflow.md) và AGENTS tương ứng. Mỗi task có file, operationId, DTO/error, FR/QT/AC/TC và test; thay đổi Shared/schema phải được Anh điều phối. Người dùng tự thực hiện Git và mở PR; Anh tự review/merge. Không báo hoàn thành API khi chỉ sửa slot hoặc trả mock.
+Next.js proxy /api/v1 qua cùng origin (APP_ORIGIN mặc định http://localhost:3000); backend mặc định cổng 3001, không bật CORS riêng.
+
+1. GET /api/v1/auth/csrf với cookie, giữ data.csrfToken.
+2. POST /api/v1/auth/login với accountType STUDENT/STAFF, identifier, password; gửi Origin và X-CSRF-Token.
+3. Login/đổi mật khẩu regenerate cookie và CSRF: gọi lại GET csrf trước mutation tiếp theo. GET csrf không kéo dài idle.
+4. GET auth/me trả role hiện tại; API bảo vệ luôn kiểm khóa/role/ownership. 401 đưa về đăng nhập, 403 báo thiếu quyền, 409 tải lại dữ liệu.
+5. Mutation gửi JSON object và đúng field allowlist. Không tự gửi studentId/actor để chọn chủ thể, không tự đổi role/status ngoài action contract. 204 không parse JSON. Tiền VND giữ chuỗi; chỉ format ở UI. Ngày nghiệp vụ YYYY-MM-DD theo Việt Nam.
+
+Router khai báo HTTP, controller parse/serialize, validation strict allowlist, service chứa nghiệp vụ và transaction, repository truy vấn tham số hóa/map DTO. Mọi ghi dùng withBusinessTransaction: BEGIN READ COMMITTED → advisory lock (724006,1) → actor fresh → kiểm tra/ghi → COMMIT. GET list/count cùng snapshot REPEATABLE READ READ ONLY. Không tạo app/auth/Pool riêng cho role.
+
+Production cần HTTPS/COOKIE_SECURE=true, SESSION_SECRET riêng và cấu hình proxy phù hợp. Frontend/Compose và NFR-03 vẫn là bước tiếp theo. Chủ dự án tự review/commit/push/merge.

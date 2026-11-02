@@ -43,7 +43,7 @@ export function fakeDb(actor: ActorState, handler: Handler = () => ({ rows: [] }
 
 export interface Harness { base: string; cookie: string; db: FakeDb; actor: ActorState; close: () => Promise<void> }
 
-/** createApp with a seeded MemoryStore session; app.locals.pool mirrors the requested app.ts wiring. */
+/** createApp with a seeded MemoryStore session; the app factory supplies the actual Pool. */
 export async function startApp(initial: ActorState, handler?: Handler, options: { loggedIn?: boolean } = {}): Promise<Harness> {
   const actor = { ...initial }; // tests may mutate lock state; never share the module constant
   const store = new session.MemoryStore();
@@ -57,7 +57,7 @@ export async function startApp(initial: ActorState, handler?: Handler, options: 
   }
   const db = fakeDb(actor, handler);
   const app = createApp({ pool: db.pool, sessionSecret: SECRET, appOrigin: ORIGIN, secureCookies: false, sessionStore: store });
-  app.locals.pool = db.pool;
+  assert.equal(app.locals.pool, db.pool, 'createApp must wire Pool');
   const server = app.listen(0, '127.0.0.1');
   await new Promise<void>(resolve => server.once('listening', resolve));
   const { port } = server.address() as AddressInfo;

@@ -6,10 +6,7 @@ import { sendData, sendList } from '../../shared/http/response.js';
 import * as service from './service.js';
 import * as validation from './validation.js';
 
-/**
- * The single Pool created by server.ts. app.ts must expose it as `app.locals.pool`
- * (one-line Shared change requested in the ADMIN-01 handoff); role code never creates a Pool.
- */
+/** The app factory supplies the one shared Pool; role code never creates another. */
 function poolOf(req: Request): Pool {
   const pool = req.app.locals.pool as Pool | undefined;
   if (!pool) throw new AppError(503, 'SERVICE_UNAVAILABLE', 'Dịch vụ tạm thời không sẵn sàng.');
