@@ -9,7 +9,7 @@ import { enforceOrigin, requireCsrfToken } from './shared/auth/security.js';
 import { AppError, errorHandler } from './shared/http/errors.js';
 import { sendData } from './shared/http/response.js';
 import { studentRouter } from './roles/student/router.js';
-import { managementRouter } from './roles/management/router.js';
+import { createManagementRouter } from './roles/management/router.js';
 import { adminRouter } from './roles/admin/router.js';
 
 export interface AppOptions {
@@ -59,7 +59,7 @@ export function createApp(options: AppOptions): express.Express {
   app.use(enforceOrigin(options.appOrigin));
   app.use('/api/v1/auth', createAuthRouter(options.pool));
   app.use('/api/v1/student', requireCsrfToken, requireActor(options.pool), requireRole('SV'), studentRouter);
-  app.use('/api/v1/management', requireCsrfToken, requireActor(options.pool), requireRole('BQL'), managementRouter);
+  app.use('/api/v1/management', requireCsrfToken, requireActor(options.pool), requireRole('BQL'), createManagementRouter(options.pool));
   app.use('/api/v1/admin', requireCsrfToken, requireActor(options.pool), requireRole('ADMIN'), adminRouter);
   app.use((_req, _res, next) => next(new AppError(404, 'NOT_FOUND', 'Không tìm thấy tài nguyên.')));
   app.use(errorHandler);
