@@ -7,7 +7,7 @@ import { AppError } from '../../shared/http/errors.js';
 import type { PageMeta } from '../../shared/http/response.js';
 import { withBusinessTransaction } from '../../shared/db/transaction.js';
 import * as repo from './repository.js';
-import type { PageInput, RoomQueryInput, ContactPatchInput } from './validation.js';
+import type { PageInput, RoomQueryInput, ContactPatchInput, StatusQueryInput } from './validation.js';
 
 export interface ListResult<T> { data: T[]; meta: PageMeta }
 
@@ -113,4 +113,62 @@ export async function studentGetPeriod(pool: Pool, actor: Actor): Promise<repo.R
   // The singleton row is created by schema.sql; its absence is a data-integrity fault, not a client error.
   if (!period) throw new Error('registration_period singleton row is missing');
   return period;
+}
+
+const conflict = (code: string) => new AppError(409, code, 'Điều kiện xử lý không còn phù hợp. Vui lòng tải lại dữ liệu.');
+export async function studentCreateApplication(pool: Pool, identity: SessionIdentity, input: { preferredRoomId: string }) {
+  try {
+    return await withBusinessTransaction(pool, identity, async (client, actor) => {
+      const id = studentIdOf(actor);
+      const period = await repo.studentGetPeriod(client);
+      if (!period) throw new Error('registration_period singleton missing');
+      if (period.status !== 'OPEN') throw conflict('PERIOD_CLOSED');
+      if (await repo.studentHasPendingApplication(client,id)) throw conflict('PENDING_APPLICATION_EXISTS');
+      if (await repo.studentHasOpenResidence(client,id)) throw conflict('ACTIVE_RESIDENCE_EXISTS');
+      const room = await repo.studentFindPreferredRoom(client,input.preferredRoomId);
+      if (!room) throw notFound();
+      if (room.status !== 'ACTIVE') throw conflict('ROOM_INACTIVE');
+      const profile = await repo.studentGetProfile(client,id);
+      if (!profile) throw notFound();
+      if (profile.gender !== room.gender) throw conflict('GENDER_MISMATCH');
+      if (room.availablePlaces <= 0) throw conflict('ROOM_FULL');
+      // Submission never reserves a place; only BQL approval inserts a residence.
+      return repo.studentCreateApplication(client,id,room.id);
+    });
+  } catch(error) {
+    const e = error as { code?:string; constraint?:string; message?:string };
+    if (e.code==='23505' && e.constraint==='applications_one_pending_per_student') throw conflict('PENDING_APPLICATION_EXISTS');
+    if (e.code==='23514' && ['PERIOD_CLOSED','PENDING_APPLICATION_EXISTS','ACTIVE_RESIDENCE_EXISTS','ROOM_INACTIVE','GENDER_MISMATCH','ROOM_FULL'].includes(e.message??'')) throw conflict(e.message!);
+    throw error;
+  }
+}
+export async function studentListApplications(pool: Pool, actor: Actor, q: StatusQueryInput) {
+  const id=studentIdOf(actor);
+  const result=await withReadSnapshot(pool,c=>repo.studentListApplications(c,id,q));
+  return {data:result.items,meta:pageMeta(q,result.total)};
+}
+export async function studentGetApplication(pool: Pool, actor: Actor, applicationId: string) {
+  const id=studentIdOf(actor);
+  const value=await withReadSnapshot(pool,c=>repo.studentGetApplication(c,id,applicationId));
+  if(!value) throw notFound(); return value;
+}
+export async function studentListResidences(pool: Pool, actor: Actor, q: StatusQueryInput) {
+  const id=studentIdOf(actor);
+  const result=await withReadSnapshot(pool,c=>repo.studentListResidences(c,id,q));
+  return {data:result.items,meta:pageMeta(q,result.total)};
+}
+export async function studentGetResidence(pool: Pool, actor: Actor, residenceId: string) {
+  const id=studentIdOf(actor);
+  const value=await withReadSnapshot(pool,c=>repo.studentGetResidence(c,id,residenceId));
+  if(!value) throw notFound(); return value;
+}
+export async function studentListReceipts(pool: Pool, actor: Actor, q: StatusQueryInput) {
+  const id=studentIdOf(actor);
+  const result=await withReadSnapshot(pool,c=>repo.studentListReceipts(c,id,q));
+  return {data:result.items,meta:pageMeta(q,result.total)};
+}
+export async function studentGetReceipt(pool: Pool, actor: Actor, receiptId: string) {
+  const id=studentIdOf(actor);
+  const value=await withReadSnapshot(pool,c=>repo.studentGetReceipt(c,id,receiptId));
+  if(!value) throw notFound(); return value;
 }

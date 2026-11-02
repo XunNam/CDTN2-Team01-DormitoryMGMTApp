@@ -1,3 +1,5 @@
+> Lịch sử bàn giao P1; phần bổ sung/kiểm thử sau đó xem [review 02/11/2026](reports/2026-11-02-api-students-review.md).
+
 # SV-01 — Kế hoạch theo giai đoạn
 
 Task / role / owner / reviewer: SV-01 / SV / người được giao role SV (sinh viên của nhóm) / Bùi Thế Anh

@@ -46,7 +46,7 @@ def main():
     check(len({(o['method'],o['path']) for o in manifest})==51,'duplicate method path')
     examples=json.loads((ROOT/'API Endpoint/Shared/examples.json').read_text(encoding='utf-8'))
     for name,value in examples.items():validate(value,schemas[name],name)
-    docs=[f for f in ROOT.rglob('*.md') if not any(k in f.parts for k in ['node_modules','.git','.qa','dist'])]
+    docs=[f for f in ROOT.rglob('*.md') if not any(k in f.relative_to(ROOT).parts for k in ['node_modules','.git','.qa','dist'])]
     links=0
     for f in docs:
         text=f.read_text(encoding='utf-8');check(text.count('```')%2==0,str(f)+': code fence')

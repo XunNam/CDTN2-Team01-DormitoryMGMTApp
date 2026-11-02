@@ -156,3 +156,25 @@ export function studentUpdateContact(query: unknown, body: unknown): ContactPatc
   if (Object.keys(out).length === 0) fail([{ field: 'request', message: 'Cần ít nhất một trường phone hoặc email.' }]);
   return out;
 }
+
+export interface StatusQueryInput extends PageInput { status?: string }
+function statusQuery(query: unknown, statuses: readonly string[]): StatusQueryInput {
+  const raw = parseStrict(z.strictObject({ ...pageFields, status: z.enum(statuses).optional() }), plainQuery(query));
+  return { ...readPage(raw), ...(raw.status === undefined ? {} : { status: raw.status }) };
+}
+function detailId(params: unknown, query: unknown, field: string): string {
+  noQuery(query);
+  const value = (params as Record<string, unknown> | undefined)?.[field];
+  if (typeof value !== 'string' || !UUID.test(value)) fail([{ field, message: 'Phải là UUID hợp lệ.' }]);
+  return value.toLowerCase();
+}
+export function studentCreateApplication(query: unknown, body: unknown): { preferredRoomId: string } {
+  noQuery(query);
+  return parseStrict(z.strictObject({ preferredRoomId: z.string().regex(UUID).transform(v => v.toLowerCase()) }), body);
+}
+export function studentListApplications(query: unknown) { return statusQuery(query, ['PENDING','APPROVED','REJECTED']); }
+export function studentGetApplication(params: unknown, query: unknown) { return detailId(params, query, 'applicationId'); }
+export function studentListResidences(query: unknown) { return statusQuery(query, ['ALLOCATED','CHECKED_IN','ENDED','CANCELLED']); }
+export function studentGetResidence(params: unknown, query: unknown) { return detailId(params, query, 'residenceId'); }
+export function studentListReceipts(query: unknown) { return statusQuery(query, ['UNPAID','PAID']); }
+export function studentGetReceipt(params: unknown, query: unknown) { return detailId(params, query, 'receiptId'); }

@@ -20,7 +20,7 @@ Bộ kế hoạch cộng tác xây dựng ứng dụng web đăng ký lưu trú,
 
 ## Trạng thái dự án
 
-**SPECIFIED_NOT_IMPLEMENTED — bộ đặc tả revision 1.0.0 và khung backend dùng chung.** Đã có hợp đồng HTTP cho ba role, schema PostgreSQL và hướng dẫn giao việc cho AI. Backend scaffold chỉ cung cấp nền kỹ thuật/health; các API nghiệp vụ và xác thực vẫn cần triển khai theo task. Chưa kiểm chứng NFR hoặc toàn bộ runtime PostgreSQL.
+**Backend đã được review và kiểm tra trên PostgreSQL ngày 02/11/2026.** Mỗi nhánh chứa module role của mình và Shared; bản ghép kiểm chứng đủ 51 operation, sẵn sàng để chủ dự án review/tích hợp trước frontend. Xem [báo cáo sẵn sàng](Coordination/reports/2026-11-02-backend-readiness.md) để biết phiên bản, kết quả, nơi giữ source từng nhánh và phần NFR-03 còn chờ.
 
 ## Bắt đầu
 

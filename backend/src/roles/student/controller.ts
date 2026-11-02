@@ -7,12 +7,7 @@ import { sendData, sendList } from '../../shared/http/response.js';
 import * as service from './service.js';
 import * as validation from './validation.js';
 
-/**
- * DEPENDENCY (Shared/app.ts owner): the single Pool is created in server.ts and handed to createApp,
- * but role routers cannot see it. This layer reads it from `app.locals.pool`; createApp must set
- * `app.locals.pool = options.pool`. Until then every Student route answers 500 INTERNAL_ERROR.
- * A second Pool is deliberately NOT created here.
- */
+/** The app factory supplies the one shared Pool; role code never creates another. */
 function poolOf(req: Request): Pool {
   const pool = req.app.locals.pool as Pool | undefined;
   if (!pool) throw new AppError(500, 'INTERNAL_ERROR', 'Không thể xử lý yêu cầu.');
@@ -49,4 +44,33 @@ export async function studentGetRoom(req: Request, res: Response): Promise<void>
 export async function studentGetPeriod(req: Request, res: Response): Promise<void> {
   validation.studentGetPeriod(req.query);
   sendData(res, 200, await service.studentGetPeriod(poolOf(req), res.locals.actor));
+}
+
+export async function studentCreateApplication(req: Request,res: Response) {
+  const input=validation.studentCreateApplication(req.query,req.body);
+  sendData(res,201,await service.studentCreateApplication(poolOf(req),req.session.identity!,input));
+}
+export async function studentListApplications(req: Request,res: Response) {
+  const q=validation.studentListApplications(req.query);
+  const r=await service.studentListApplications(poolOf(req),res.locals.actor,q); sendList(res,r.data,r.meta);
+}
+export async function studentGetApplication(req: Request,res: Response) {
+  const id=validation.studentGetApplication(req.params,req.query);
+  sendData(res,200,await service.studentGetApplication(poolOf(req),res.locals.actor,id));
+}
+export async function studentListResidences(req: Request,res: Response) {
+  const q=validation.studentListResidences(req.query);
+  const r=await service.studentListResidences(poolOf(req),res.locals.actor,q); sendList(res,r.data,r.meta);
+}
+export async function studentGetResidence(req: Request,res: Response) {
+  const id=validation.studentGetResidence(req.params,req.query);
+  sendData(res,200,await service.studentGetResidence(poolOf(req),res.locals.actor,id));
+}
+export async function studentListReceipts(req: Request,res: Response) {
+  const q=validation.studentListReceipts(req.query);
+  const r=await service.studentListReceipts(poolOf(req),res.locals.actor,q); sendList(res,r.data,r.meta);
+}
+export async function studentGetReceipt(req: Request,res: Response) {
+  const id=validation.studentGetReceipt(req.params,req.query);
+  sendData(res,200,await service.studentGetReceipt(poolOf(req),res.locals.actor,id));
 }

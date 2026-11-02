@@ -1,3 +1,5 @@
+> Lịch sử bàn giao P1; phần bổ sung/kiểm thử sau đó xem [review 02/11/2026](reports/2026-11-02-api-students-review.md).
+
 # Bàn giao SV-01 / P1 cho Bùi Thế Anh
 
 Task / role / người thực hiện / revision: SV-01 / SV / (người được giao role SV) + AI / contract 1.0.0

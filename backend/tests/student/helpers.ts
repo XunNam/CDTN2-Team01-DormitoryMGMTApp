@@ -92,8 +92,8 @@ export async function startApp(options: FakeOptions & { withSession?: boolean } 
   const cookie = `dormflow.sid=${encodeURIComponent(`s:${sid}.${signature}`)}`;
   const app = createApp({ pool: pool as unknown as Pool, sessionSecret: SECRET, appOrigin: ORIGIN,
     secureCookies: false, sessionStore: store });
-  // Mirrors the one-line change requested from the Shared owner (see controller.ts / handoff).
-  app.locals.pool = pool;
+  // Exercise createApp wiring directly; never patch the app from this fixture.
+
   const server = app.listen(0, '127.0.0.1');
   await new Promise<void>(resolve => server.once('listening', resolve));
   const { port } = server.address() as AddressInfo;

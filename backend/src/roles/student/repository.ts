@@ -3,7 +3,7 @@
 // Rows are never returned as-is: only DTO keys, BIGINT money as string, DATE as YYYY-MM-DD,
 // timestamps as UTC ISO-8601 (Z).
 import type { PoolClient } from 'pg';
-import type { PageInput, RoomQueryInput, ContactPatchInput } from './validation.js';
+import type { PageInput, RoomQueryInput, ContactPatchInput, StatusQueryInput } from './validation.js';
 
 export type Db = Pick<PoolClient, 'query'>;
 
@@ -139,4 +139,88 @@ export async function studentGetPeriod(db: Db): Promise<RegistrationPeriodDto | 
     'SELECT id, status, updated_by, updated_at FROM registration_period WHERE id = 1');
   const r = rows[0];
   return r ? { id: 1, status: r.status, updatedBy: r.updated_by, updatedAt: iso(r.updated_at) } : null;
+}
+
+export interface ApplicationDto {
+  id: string; studentId: string; preferredRoomId: string; periodId: number; status: string;
+  rejectionReason: string | null; reviewedBy: string | null; reviewedAt: string | null; createdAt: string; updatedAt: string;
+}
+export interface ResidenceDto {
+  id: string; applicationId: string; studentId: string; roomId: string; status: string;
+  allocatedBy: string; allocatedAt: string; checkInDate: string | null; checkedInBy: string | null;
+  checkedInAt: string | null; checkOutDate: string | null; checkedOutBy: string | null;
+  checkedOutAt: string | null; cancellationReason: string | null; cancelledBy: string | null; cancelledAt: string | null;
+}
+export interface ReceiptDto {
+  id: string; residenceId: string; amountVnd: string; status: string; createdBy: string; createdAt: string;
+  paymentDate: string | null; paidBy: string | null; paidAt: string | null;
+}
+type Row = Record<string, any>;
+const nullableIso = (v: Timestamp | null) => v === null ? null : iso(v);
+const mapApplication = (r: Row): ApplicationDto => ({ id:r.id, studentId:r.student_id, preferredRoomId:r.preferred_room_id,
+  periodId:r.period_id, status:r.status, rejectionReason:r.rejection_reason, reviewedBy:r.reviewed_by,
+  reviewedAt:nullableIso(r.reviewed_at), createdAt:iso(r.created_at), updatedAt:iso(r.updated_at) });
+const mapResidence = (r: Row): ResidenceDto => ({ id:r.id, applicationId:r.application_id, studentId:r.student_id,
+  roomId:r.room_id, status:r.status, allocatedBy:r.allocated_by, allocatedAt:iso(r.allocated_at),
+  checkInDate:r.check_in_date, checkedInBy:r.checked_in_by, checkedInAt:nullableIso(r.checked_in_at),
+  checkOutDate:r.check_out_date, checkedOutBy:r.checked_out_by, checkedOutAt:nullableIso(r.checked_out_at),
+  cancellationReason:r.cancellation_reason, cancelledBy:r.cancelled_by, cancelledAt:nullableIso(r.cancelled_at) });
+const mapReceipt = (r: Row): ReceiptDto => ({ id:r.id, residenceId:r.residence_id, amountVnd:String(r.amount_vnd),
+  status:r.status, createdBy:r.created_by, createdAt:iso(r.created_at), paymentDate:r.payment_date,
+  paidBy:r.paid_by, paidAt:nullableIso(r.paid_at) });
+const applicationColumns = `a.id,a.student_id,a.preferred_room_id,a.period_id,a.status,a.rejection_reason,
+  a.reviewed_by,a.reviewed_at,a.created_at,a.updated_at`;
+const residenceColumns = `a.id,a.application_id,a.student_id,a.room_id,a.status,a.allocated_by,a.allocated_at,
+  a.check_in_date::text,a.checked_in_by,a.checked_in_at,a.check_out_date::text,a.checked_out_by,a.checked_out_at,
+  a.cancellation_reason,a.cancelled_by,a.cancelled_at`;
+const receiptColumns = `a.id,a.residence_id,a.amount_vnd::text,a.status,a.created_by,a.created_at,
+  a.payment_date::text,a.paid_by,a.paid_at`;
+
+// Table names, columns and sort are fixed server constants; only values come from requests.
+async function ownedList<T>(db: Db, from: string, columns: string, owner: string, order: string,
+  studentId: string, q: StatusQueryInput, map: (row: Row) => T) {
+  const params: unknown[] = [studentId];
+  const where = `${owner}=$1${q.status === undefined ? '' : ' AND a.status=$2'}`;
+  if (q.status !== undefined) params.push(q.status);
+  const count = await db.query<{ total: number }>(`SELECT count(*)::integer AS total FROM ${from} WHERE ${where}`, params);
+  const list = await db.query(`SELECT ${columns} FROM ${from} WHERE ${where}
+    ORDER BY ${order} DESC,a.id ASC LIMIT $${params.length+1} OFFSET $${params.length+2}::bigint`,
+    [...params,q.pageSize,offsetOf(q)]);
+  return { items:list.rows.map(map), total:count.rows[0]!.total };
+}
+export function studentListApplications(db: Db, id: string, q: StatusQueryInput) {
+  return ownedList(db,'applications a',applicationColumns,'a.student_id','a.created_at',id,q,mapApplication);
+}
+export function studentListResidences(db: Db, id: string, q: StatusQueryInput) {
+  return ownedList(db,'residence_records a',residenceColumns,'a.student_id','a.allocated_at',id,q,mapResidence);
+}
+export function studentListReceipts(db: Db, id: string, q: StatusQueryInput) {
+  return ownedList(db,'room_fee_receipts a JOIN residence_records r ON r.id=a.residence_id',receiptColumns,'r.student_id','a.created_at',id,q,mapReceipt);
+}
+export async function studentGetApplication(db: Db, studentId: string, id: string) {
+  const {rows}=await db.query(`SELECT ${applicationColumns} FROM applications a WHERE a.id=$1 AND a.student_id=$2`,[id,studentId]);
+  return rows[0] ? mapApplication(rows[0]) : null;
+}
+export async function studentGetResidence(db: Db, studentId: string, id: string) {
+  const {rows}=await db.query(`SELECT ${residenceColumns} FROM residence_records a WHERE a.id=$1 AND a.student_id=$2`,[id,studentId]);
+  return rows[0] ? mapResidence(rows[0]) : null;
+}
+export async function studentGetReceipt(db: Db, studentId: string, id: string) {
+  const {rows}=await db.query(`SELECT ${receiptColumns} FROM room_fee_receipts a JOIN residence_records r ON r.id=a.residence_id
+    WHERE a.id=$1 AND r.student_id=$2`,[id,studentId]);
+  return rows[0] ? mapReceipt(rows[0]) : null;
+}
+export async function studentHasPendingApplication(db: Db, id: string) {
+  return !!(await db.query("SELECT 1 FROM applications WHERE student_id=$1 AND status='PENDING'",[id])).rowCount;
+}
+export async function studentHasOpenResidence(db: Db, id: string) {
+  return !!(await db.query("SELECT 1 FROM residence_records WHERE student_id=$1 AND status IN ('ALLOCATED','CHECKED_IN')",[id])).rowCount;
+}
+export async function studentFindPreferredRoom(db: Db, id: string) {
+  const {rows}=await db.query<RoomRow>(`SELECT ${ROOM_COLUMNS} FROM room_availability ra WHERE ra.id=$1`,[id]);
+  return rows[0] ? toRoom(rows[0]) : null;
+}
+export async function studentCreateApplication(db: Db, studentId: string, roomId: string) {
+  const {rows}=await db.query(`INSERT INTO applications(student_id,preferred_room_id) VALUES($1,$2) RETURNING *`,[studentId,roomId]);
+  return mapApplication(rows[0]);
 }

@@ -12,4 +12,10 @@ studentRouter.get('/rooms', controller.studentListRooms);                       
 studentRouter.get('/rooms/:roomId', controller.studentGetRoom);                 // studentGetRoom
 studentRouter.get('/registration-period', controller.studentGetPeriod);         // studentGetPeriod
 
-// IMPLEMENTATION SLOT (P2/P3): applications, residences, receipts routes are added by later phases.
+studentRouter.post('/applications',controller.studentCreateApplication);
+studentRouter.get('/applications',controller.studentListApplications);
+studentRouter.get('/applications/:applicationId',controller.studentGetApplication);
+studentRouter.get('/residences',controller.studentListResidences);
+studentRouter.get('/residences/:residenceId',controller.studentGetResidence);
+studentRouter.get('/receipts',controller.studentListReceipts);
+studentRouter.get('/receipts/:receiptId',controller.studentGetReceipt);

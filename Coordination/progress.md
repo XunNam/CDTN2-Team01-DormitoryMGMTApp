@@ -1,3 +1,5 @@
+> Lịch sử bàn giao P1; phần bổ sung/kiểm thử sau đó xem [review 02/11/2026](reports/2026-11-02-api-students-review.md).
+
 Task / role / người phụ trách: SV-01 / SV / (người được giao role SV)
 Cập nhật lúc: 02/11/2026 (giờ VN)
 Contract revision / file plan: 1.0.0 / Coordination/tasks/SV-01/plan.md
