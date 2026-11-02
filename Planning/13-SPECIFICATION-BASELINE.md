@@ -19,6 +19,14 @@ DEC-022 tiếp nối DEC-007 (kế hoạch đã hoàn tất), thay phạm vi ch�
 
 **DEC-028 / OWNER_CONFIRMED:** ba thành viên chuẩn bị Node.js 24/npm 11, không có PostgreSQL local; Bùi Thế Anh kiểm thử PostgreSQL/tích hợp sau bàn giao. Thành viên vẫn triển khai code, chạy build/unit và viết test tích hợp/fixture để bàn giao. Ghi NOT_RUN_PENDING_OWNER cho test cần DB; READY_FOR_OWNER không là DONE. Cho phép viết và bàn giao phần role độc lập trước khi có môi trường DB/auth để tích hợp; làm rõ điều kiện nhận task trong DEC-027. Đây là phân công nơi chạy test, không giảm yêu cầu SRS hoặc thay stack/contract. Chi tiết tại [phân công kiểm thử](../Coordination/testing-responsibilities.md).
 
+## Hoàn thiện Shared/SV ngày 02/11/2026
+
+**DEC-029 / DELEGATED_SELECTION:** trong yêu cầu chủ dự án hoàn thiện hai đề xuất còn lại và commit/push trên api-students, chuyển `withReadSnapshot` của SV vào `backend/src/shared/db/read-snapshot.ts`. Giữ READ ONLY REPEATABLE READ, một client, không advisory write lock, rollback/release và lỗi gốc. Các role khác có thể tái sử dụng helper khi được giao sửa consumer; lượt này không đưa implementation ADMIN/BQL vào nhánh SV.
+
+Thống nhất biểu diễn timestamp UTC có ba chữ số mili giây (`YYYY-MM-DDTHH:mm:ss.SSSZ`), khớp cách ADMIN/BQL hiện có, qua formatter `backend/src/shared/http/datetime.ts` được mapper SV dùng. Không đổi kiểu date-time, field/enum/quyền/schema DB hoặc ngày nghiệp vụ; giữ độ chính xác để frontend so thời điểm cập nhật. Đây là lựa chọn kỹ thuật trong phạm vi chủ dự án giao, không trình bày như chủ dự án tự chọn định dạng cụ thể. Đề xuất cũ trong bàn giao P1 cắt phần lẻ giây để giống ví dụ được thay bằng quy tắc này.
+
+Kiểm chứng: unit về transaction cleanup và timestamp precision; PostgreSQL snapshot với writer đồng thời; DTO HTTP so thời gian DB và bản ghép ba role. Chi tiết/trạng thái thực tế tại `Coordination/tasks/SHARED-SV-FOLLOWUP-20261102/progress.md` và báo cáo bổ sung cùng ngày. Chủ dự án đã cho phép commit ký/push cho task; không merge hoặc approve PR.
+
 ## Nguồn triển khai
 
 - [Danh mục API](<../API Endpoint/README.md>) và [schemas](<../API Endpoint/Shared/schemas.json>).

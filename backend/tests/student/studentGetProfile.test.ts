@@ -13,9 +13,23 @@ test('studentGetProfile returns the exact StudentProfile DTO for the session stu
     assert.deepEqual(Object.keys(res.body.data).sort(), PROFILE_KEYS, 'every DTO key present, nothing extra');
     assert.equal(res.body.data.email, null, 'null stays null');
     assert.equal(res.body.data.dateOfBirth, null);
-    assert.equal(res.body.data.createdAt, '2026-10-30T03:00:00Z', 'UTC ISO-8601 with Z');
+    assert.equal(res.body.data.createdAt, '2026-10-30T03:00:00.000Z', 'UTC ISO-8601 with millisecond precision');
     assert.equal(Object.keys(res.body).join(), 'data', 'envelope has only data');
     assert.ok(!('password' in res.body.data) && !('passwordHash' in res.body.data));
+  });
+});
+
+test('studentGetProfile preserves timestamp milliseconds and normalizes timezone without changing business dates', async () => {
+  await withApp({ handler: sql => (/FROM student_profiles/.test(sql) ? [profileRow({
+    created_at: new Date('2026-10-30T03:00:00.123Z'),
+    updated_at: '2026-10-30T10:00:00.456+07:00',
+    date_of_birth: '2005-03-09',
+  })] : undefined) }, async h => {
+    const res = await get(h, '/api/v1/student/profile');
+    assert.equal(res.status, 200);
+    assert.equal(res.body.data.createdAt, '2026-10-30T03:00:00.123Z');
+    assert.equal(res.body.data.updatedAt, '2026-10-30T03:00:00.456Z');
+    assert.equal(res.body.data.dateOfBirth, '2005-03-09');
   });
 });
 

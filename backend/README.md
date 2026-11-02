@@ -56,4 +56,6 @@ Next.js proxy /api/v1 qua cùng origin (APP_ORIGIN mặc định http://localhos
 
 Router khai báo HTTP, controller parse/serialize, validation strict allowlist, service chứa nghiệp vụ và transaction, repository truy vấn tham số hóa/map DTO. Mọi ghi dùng withBusinessTransaction: BEGIN READ COMMITTED → advisory lock (724006,1) → actor fresh → kiểm tra/ghi → COMMIT. GET list/count cùng snapshot REPEATABLE READ READ ONLY. Không tạo app/auth/Pool riêng cho role.
 
+SV dùng helper `src/shared/db/read-snapshot.ts` cho snapshot đọc, không còn bản private trong service. Helper không lấy khóa ghi; client lỗi BEGIN/rollback bị loại khỏi pool và lỗi gốc được giữ. Formatter `src/shared/http/datetime.ts` trả timestamp UTC có ba chữ số mili giây (`2026-11-02T10:20:30.123Z`), cùng dạng ADMIN/BQL; ngày nghiệp vụ vẫn YYYY-MM-DD. Xem DEC-029 tại [baseline](../Planning/13-SPECIFICATION-BASELINE.md).
+
 Production cần HTTPS/COOKIE_SECURE=true, SESSION_SECRET riêng và cấu hình proxy phù hợp. Frontend/Compose và NFR-03 vẫn là bước tiếp theo. Chủ dự án tự review/commit/push/merge.

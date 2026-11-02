@@ -11,7 +11,7 @@ test('studentGetPeriod returns the singleton for OPEN and for CLOSED (closed is 
     await withApp({ handler: sql => (isPeriod(sql) ? [{ id: 1, status, updated_by, updated_at: new Date('2026-10-30T03:00:00Z') }] : undefined) }, async h => {
       const res = await get(h, PATH);
       assert.equal(res.status, 200);
-      assert.deepEqual(res.body, { data: { id: 1, status, updatedBy: updated_by, updatedAt: '2026-10-30T03:00:00Z' } });
+      assert.deepEqual(res.body, { data: { id: 1, status, updatedBy: updated_by, updatedAt: '2026-10-30T03:00:00.000Z' } });
       assert.ok(!h.pool.sqls.some(s => /pg_advisory/.test(s)), 'read does not take the write lock');
       assert.ok(!h.pool.calls.some(c => /UPDATE|INSERT|DELETE/.test(c.sql)), 'SV cannot change the period');
     });

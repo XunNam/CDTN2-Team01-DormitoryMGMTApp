@@ -3,6 +3,7 @@
 // Rows are never returned as-is: only DTO keys, BIGINT money as string, DATE as YYYY-MM-DD,
 // timestamps as UTC ISO-8601 (Z).
 import type { PoolClient } from 'pg';
+import { toUtcTimestamp as iso } from '../../shared/http/datetime.js';
 import type { PageInput, RoomQueryInput, ContactPatchInput, StatusQueryInput } from './validation.js';
 
 export type Db = Pick<PoolClient, 'query'>;
@@ -21,7 +22,6 @@ export interface RoomDto {
 export interface RegistrationPeriodDto { id: 1; status: 'OPEN' | 'CLOSED'; updatedBy: string | null; updatedAt: string }
 
 type Timestamp = Date | string;
-const iso = (value: Timestamp): string => new Date(value).toISOString().replace(/\.\d{3}Z$/, 'Z');
 
 const PROFILE_COLUMNS = `id, student_code, full_name, gender, class_name, faculty, phone, email,
   to_char(date_of_birth, 'YYYY-MM-DD') AS date_of_birth, permanent_address, created_at, updated_at`;

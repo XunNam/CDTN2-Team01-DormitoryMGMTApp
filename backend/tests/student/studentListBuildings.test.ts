@@ -18,7 +18,7 @@ test('studentListBuildings returns Building[] + meta with defaults page=1 pageSi
     const res = await get(h, BASE);
     assert.equal(res.status, 200);
     assert.deepEqual(res.body, {
-      data: [{ id, code: 'A', name: 'Tòa A', createdAt: '2026-10-30T03:00:00Z', updatedAt: '2026-10-30T03:00:00Z' }],
+      data: [{ id, code: 'A', name: 'Tòa A', createdAt: '2026-10-30T03:00:00.000Z', updatedAt: '2026-10-30T03:00:00.000Z' }],
       meta: { page: 1, pageSize: 20, totalItems: 1, totalPages: 1 },
     });
     const list = h.pool.domainCalls.find(c => isList(c.sql))!;

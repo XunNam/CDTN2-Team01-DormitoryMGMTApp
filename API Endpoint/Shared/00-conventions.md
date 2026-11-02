@@ -27,6 +27,8 @@ Sort cố định: buildings `code ASC,id ASC`; rooms `buildingCode ASC,code ASC
 
 VND chuỗi chữ số chuẩn không dấu đầu+, không zero thừa (trừ0), 0..9223372036854775807. So sánh bằng BigInt, không Number; PostgreSQL BIGINT không custom parser sang JS number. Ngày YYYY-MM-DD phải là ngày lịch thật, không tương lai theo Asia/Ho_Chi_Minh; ngày trả >= ngày nhận; ngày sinh <= hôm nay. Timestamp do server tạo UTC ISO8601 Z; node-pg DATE giữ chuỗi nguyên ngày, không parse Date gây lệch múi giờ.
 
+Làm rõ ngày 02/11/2026 theo DEC-029: timestamp trả về thống nhất dạng `YYYY-MM-DDTHH:mm:ss.SSSZ`, ví dụ `2026-11-02T10:20:30.123Z`, giữ ba chữ số mili giây như ADMIN/BQL đang dùng. Mapper SV dùng `shared/http/datetime.ts` để giữ cùng dạng, không cắt mất phần mili giây. Đây vẫn là `format: date-time` tại schemas.json; các ví dụ không có phần lẻ giây là minh họa ISO8601 hợp lệ, không phải yêu cầu cắt độ chính xác. Không đổi ngày nghiệp vụ YYYY-MM-DD, thứ tự sort theo timestamp trong DB hoặc dữ liệu lưu PostgreSQL.
+
 ## Thứ tự kiểm tra lỗi
 
 1. Giới hạn transport/JSON (kể cả root phải là object và GET/HEAD không body) -> 2. Origin+CSRF với mutation -> 3. xác thực fresh (401) -> 4. role (403) -> 5. validate path/query/body (422) -> 6. tìm tài nguyên kèm ownership (404) -> 7. trạng thái (409) -> 8. điều kiện nghiệp vụ theo thứ tự operation -> 9. ghi atomic. Login/logout và GETcsrf theo ngoại lệ tại authentication. Không trả lỗi tồn tại bản ghi trước xác thực/role. Với mutation recheck account bên trong khóa trước bước6.

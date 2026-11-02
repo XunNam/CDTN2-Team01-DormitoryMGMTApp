@@ -78,7 +78,7 @@ export function assertDto(name:string,data:Record<string,unknown>) {
     if(value===null) {assert.ok(Array.isArray(p.type)&&p.type.includes('null'),key+' nullable');continue;}
     assert.equal(typeof value,p.type==='integer'?'number':Array.isArray(p.type)?p.type.find((x:string)=>x!=='null'):p.type,key+' type');
     if(p.enum) assert.ok(p.enum.includes(value),key+' enum');
-    if(p.format==='date-time') assert.match(value as string,/Z$/);
+    if(p.format==='date-time') assert.match(value as string,/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/);
     if(p.format==='date') assert.match(value as string,/^\d{4}-\d{2}-\d{2}$/);
   }
 }

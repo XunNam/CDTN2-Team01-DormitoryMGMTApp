@@ -1,11 +1,12 @@
 // Business flow and transactions for the Student role. No Request/Response objects here.
 // Reads run in one READ ONLY REPEATABLE READ snapshot and take no business lock.
-// The only mutation (studentUpdateContact) uses the shared withBusinessTransaction.
-import type { Pool, PoolClient } from 'pg';
+// Contact updates and application submission use the shared withBusinessTransaction.
+import type { Pool } from 'pg';
 import type { Actor, SessionIdentity } from '../../shared/auth/types.js';
 import { AppError } from '../../shared/http/errors.js';
 import type { PageMeta } from '../../shared/http/response.js';
 import { withBusinessTransaction } from '../../shared/db/transaction.js';
+import { withReadSnapshot } from '../../shared/db/read-snapshot.js';
 import * as repo from './repository.js';
 import type { PageInput, RoomQueryInput, ContactPatchInput, StatusQueryInput } from './validation.js';
 
@@ -19,30 +20,6 @@ function studentIdOf(actor: Actor): string {
   if (actor.role !== 'SV') throw forbidden();
   if (!actor.studentId) throw notFound();
   return actor.studentId;
-}
-
-/**
- * Same BEGIN/ROLLBACK/release discipline as the shared write wrapper, but READ ONLY REPEATABLE READ
- * and without the global advisory lock (reads must not block on business writes).
- * TODO(shared): promote to src/shared/db once the Shared owner provides a read-snapshot helper.
- */
-async function withReadSnapshot<T>(pool: Pool, work: (client: PoolClient) => Promise<T>): Promise<T> {
-  const client = await pool.connect();
-  let started = false;
-  let destroyClient = false;
-  try {
-    await client.query('BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY');
-    started = true;
-    const result = await work(client);
-    await client.query('COMMIT');
-    started = false;
-    return result;
-  } catch (error) {
-    if (started) {
-      try { await client.query('ROLLBACK'); } catch { destroyClient = true; }
-    } else destroyClient = true;
-    throw error;
-  } finally { client.release(destroyClient); }
 }
 
 function pageMeta(p: PageInput, totalItems: number): PageMeta {
