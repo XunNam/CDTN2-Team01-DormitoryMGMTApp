@@ -1,3 +1,5 @@
 .qa/
 __pycache__/
 *.pyc
+designs/**/history/
+designs/**/.artifact-server.log
