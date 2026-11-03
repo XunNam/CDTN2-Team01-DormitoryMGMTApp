@@ -1,0 +1,25 @@
+{
+  "v": 3,
+  "layout": "files",
+  "createdOnFiles": {
+    "v": 1,
+    "at": "2026-11-03T11:20:30.632Z"
+  },
+  "title": "DormFlow",
+  "namespace": "DormFlow",
+  "libraries": [],
+  "sections": {},
+  "groups": [],
+  "assetGroups": {},
+  "blobs": {},
+  "docs": {
+    "readme": "project/README.md",
+    "sections": []
+  },
+  "lastChange": {
+    "by": "Codex",
+    "at": "2026-11-03T11:20:30.632Z",
+    "via": "Codex",
+    "note": "Campus Modern login design system; original visual direction, Figma structure and existing auth contract."
+  }
+}

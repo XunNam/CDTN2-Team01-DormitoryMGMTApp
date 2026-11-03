@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Đăng nhập trên điện thoại · DormFlow</title>
+<script src="./support.js"></script>
+</head><body>
+<x-dc><helmet><link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Manrope:wght@500;600;700&display=swap" rel="stylesheet"><style>
+body{margin:0}*{box-sizing:border-box}button,input{font:inherit}button{cursor:pointer}input::placeholder{color:#536767;opacity:1}input:focus-visible,button:focus-visible{outline:3px solid #276A55;outline-offset:3px}button:hover:not(:disabled){filter:brightness(1.08)}button:disabled{cursor:wait}.mobile-brand{display:none!important}.account-radio{position:absolute;opacity:0;width:100%;height:100%;inset:0;margin:0;cursor:pointer}.account-radio:focus-visible+span{outline:3px solid #276A55;outline-offset:3px}
+@media(max-width:759px){.hero{display:none!important}.mobile-brand{display:flex!important}.auth-side{padding:32px 24px!important;gap:32px!important}.auth-heading{font-size:28px!important;line-height:36px!important}.auth-form{margin:0!important}.auth-main{align-items:flex-start!important}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style></helmet>
+<main class="auth-main" style="display:flex;min-height:100vh;width:100%;background:#F7F9F8;color:#162F35;font-family:'Be Vietnam Pro','Segoe UI',sans-serif">
+<section class="hero" aria-label="Giới thiệu DormFlow" style="flex:0 0 44%;padding:64px;display:flex;flex-direction:column;gap:48px;background:#163D3D;color:#FFFFFF;overflow:hidden">
+<div style="display:flex;align-items:center;gap:16px;font-size:24px;font-weight:600;letter-spacing:-.7px"><span>VLU</span><span style="width:1px;height:24px;background:#D5E2DA;opacity:.5"></span><span>DormFlow</span></div>
+<div style="display:flex;flex-direction:column;gap:24px;flex:1;justify-content:center">
+<p style="margin:0;font-size:12px;line-height:20px;letter-spacing:2px;font-weight:500;color:#D5E2DA">KHÔNG GIAN SỐ CHO ĐỜI SỐNG KÝ TÚC XÁ</p>
+<h1 style="margin:0;font-family:'Manrope','Be Vietnam Pro','Segoe UI',sans-serif;font-size:clamp(40px,3.9vw,56px);line-height:1.15;letter-spacing:-1.8px;font-weight:600;text-wrap:balance">Đăng ký chỗ ở.<br><span style="color:#D9EEAD">Theo dõi<br>dễ dàng.</span></h1>
+<p style="max-width:360px;margin:0;font-size:15px;line-height:26px;color:#D5E2DA">Tra cứu phòng, gửi đăng ký và theo dõi kết quả lưu trú tại một nơi.</p>
+</div>
+<div aria-hidden="true" style="position:relative;height:240px;flex-shrink:0;display:flex;align-items:flex-end;gap:16px;border-bottom:1px solid #D5E2DA">
+<div style="width:21%;height:160px;border:1px solid #D5E2DA;border-bottom:0;border-radius:24px 24px 0 0;display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:20px 16px"><div style="background:#D9EEAD;border-radius:8px;height:36px"></div><div style="background:#D5E2DA;border-radius:8px;height:36px"></div><div style="background:#D5E2DA;border-radius:8px;height:36px;opacity:.4"></div><div style="background:#D9EEAD;border-radius:8px;height:36px"></div></div>
+<div style="width:58%;height:240px;border:1px solid #D5E2DA;border-bottom:0;border-radius:24px 24px 0 0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));align-content:start;gap:12px;padding:24px 20px"><div style="height:40px;border-radius:8px;background:#D9EEAD;opacity:1;"></div><div style="height:40px;border-radius:8px;background:#D5E2DA;opacity:1;"></div><div style="height:40px;border-radius:8px;background:#D5E2DA;opacity:0.4;"></div><div style="height:40px;border-radius:8px;background:#D5E2DA;opacity:1;"></div><div style="height:40px;border-radius:8px;background:#D9EEAD;opacity:1;"></div><div style="height:40px;border-radius:8px;background:#D5E2DA;opacity:1;"></div><div style="height:40px;border-radius:8px;background:#D5E2DA;opacity:0.4;"></div><div style="height:40px;border-radius:8px;background:#D9EEAD;opacity:1;"></div><div style="height:40px;border-radius:8px;background:#D5E2DA;opacity:1;"></div><div style="height:72px;border-radius:8px;background:#D9EEAD;opacity:1;grid-row:span 2;"></div><div style="height:40px;border-radius:8px;background:#D5E2DA;opacity:0.4;"></div><div style="height:40px;border-radius:8px;background:#D5E2DA;opacity:1;"></div></div>
+<div style="width:17%;height:112px;background:#D9EEAD;border-radius:24px 24px 0 0;display:flex;flex-direction:column;align-items:center;gap:12px;padding:24px 12px"><div style="height:24px;width:100%;background:#163D3D;border-radius:8px"></div><div style="height:24px;width:100%;background:#163D3D;border-radius:8px"></div></div>
+</div>
+</section>
+<section class="auth-side" aria-label="Đăng nhập tài khoản" style="flex:1;min-width:0;min-height:100vh;padding:64px 48px;display:flex;flex-direction:column;align-items:center;gap:40px">
+<div class="mobile-brand" style="width:100%;max-width:424px;display:flex;align-items:center;gap:12px;color:#163D3D;font-size:22px;line-height:32px;font-weight:600;letter-spacing:-.6px"><span>VLU</span><span style="height:22px;width:1px;background:#81928D"></span><span>DormFlow</span></div>
+<div class="auth-form" style="width:100%;max-width:424px;display:flex;flex-direction:column;gap:32px;margin:auto 0">
+<header style="display:flex;flex-direction:column;gap:12px">
+<p style="margin:0;font-size:12px;line-height:20px;letter-spacing:2px;font-weight:600;color:#536767">CỔNG THÔNG TIN KÝ TÚC XÁ</p>
+<h2 class="auth-heading" style="margin:0;font-family:'Manrope','Be Vietnam Pro','Segoe UI',sans-serif;font-size:36px;line-height:44px;letter-spacing:-1px;font-weight:600">Đăng nhập</h2>
+<p style="margin:0;font-size:14px;line-height:24px;color:#536767">Sử dụng tài khoản đã được cấp để tiếp tục.</p>
+</header>
+<form onSubmit="{{submit}}" noValidate="{{yes}}" aria-busy="{{busy}}" style="display:flex;flex-direction:column;gap:24px">
+<fieldset disabled="{{busy}}" style="border:0;margin:0;padding:0;display:flex;flex-direction:column;gap:8px">
+<legend style="padding:0;margin-bottom:12px;font-size:14px;line-height:20px;font-weight:600">Nhóm tài khoản</legend>
+<div style="display:flex;gap:8px;padding:4px;border-radius:12px;background:#EAF0EC">
+<label style="flex:1;position:relative"><input class="account-radio" type="radio" name="accountType" value="STUDENT" checked="{{student}}" onChange="{{pickStudent}}"><span style="{{studentStyle}}"><span aria-hidden="true">{{studentCheck}}</span>Sinh viên</span></label>
+<label style="flex:1;position:relative"><input class="account-radio" type="radio" name="accountType" value="STAFF" checked="{{staff}}" onChange="{{pickStaff}}"><span style="{{staffStyle}}"><span aria-hidden="true">{{staffCheck}}</span>Nhân sự</span></label>
+</div>
+<p style="margin:4px 0 0;font-size:12px;line-height:20px;color:#536767">{{accountHint}}</p>
+</fieldset>
+<sc-if value="{{hasNotice}}" hint-placeholder-val="{{false}}">
+<div role="{{noticeRole}}" aria-live="polite" style="{{noticeStyle}}">
+<div style="display:flex;align-items:flex-start;gap:12px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="flex-shrink:0"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.75"></circle><path d="M12 7v6m0 3v1" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"></path></svg><div style="display:flex;flex-direction:column;gap:4px"><strong style="font-size:14px;line-height:22px">{{noticeTitle}}</strong><p style="margin:0;font-size:13px;line-height:22px">{{noticeText}}</p></div></div>
+</div>
+</sc-if>
+<div style="display:flex;flex-direction:column;gap:8px">
+<label for="identifier" style="font-size:14px;line-height:20px;font-weight:600">{{identifierLabel}}</label>
+<input id="identifier" name="identifier" type="text" autoComplete="username" autoCapitalize="none" spellCheck="{{false}}" placeholder="{{identifierPlaceholder}}" value="{{identifier}}" onChange="{{changeIdentifier}}" ref="{{identifierRef}}" aria-invalid="{{identifierInvalid}}" aria-describedby="{{identifierDescription}}" disabled="{{busy}}" style="{{identifierStyle}}">
+<sc-if value="{{identifierInvalid}}" hint-placeholder-val="{{false}}"><p id="identifier-error" style="margin:0;font-size:12px;line-height:20px;color:#9E3D28">{{identifierError}}</p></sc-if>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<label for="password" style="font-size:14px;line-height:20px;font-weight:600">Mật khẩu</label>
+<div style="position:relative;display:flex">
+<input id="password" name="password" type="{{passwordType}}" autoComplete="current-password" placeholder="Nhập mật khẩu" value="{{password}}" onChange="{{changePassword}}" ref="{{passwordRef}}" aria-invalid="{{passwordInvalid}}" aria-describedby="{{passwordDescription}}" disabled="{{busy}}" style="{{passwordStyle}}">
+<button type="button" onClick="{{togglePassword}}" aria-controls="password" aria-label="{{passwordAction}}" aria-pressed="{{showPassword}}" disabled="{{busy}}" style="position:absolute;right:4px;top:4px;min-width:64px;height:44px;border:0;border-radius:8px;background:#FFFFFF;color:#163D3D;font-size:13px;font-weight:600">{{passwordButton}}</button>
+</div>
+<sc-if value="{{passwordInvalid}}" hint-placeholder-val="{{false}}"><p id="password-error" style="margin:0;font-size:12px;line-height:20px;color:#9E3D28">{{passwordError}}</p></sc-if>
+</div>
+<button type="submit" disabled="{{busy}}" aria-busy="{{busy}}" style="width:100%;height:52px;padding:0 20px;border:0;border-radius:8px;background:#163D3D;color:#FFFFFF;font-size:15px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:12px">{{submitLabel}}<sc-if value="{{showArrow}}" hint-placeholder-val="{{true}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-5-5 5 5-5 5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"></path></svg></sc-if></button>
+</form>
+<div style="display:flex;flex-direction:column;gap:4px;padding-top:24px;border-top:1px solid #81928D">
+<p style="margin:0;font-size:13px;line-height:22px;font-weight:500">Chưa có tài khoản hoặc tài khoản bị khóa?</p>
+<p style="margin:0;font-size:13px;line-height:22px;color:#536767">Liên hệ Ban quản lý ký túc xá để được hướng dẫn.</p>
+</div>
+</div>
+<div style="width:100%;max-width:424px;display:flex;align-items:flex-start;gap:8px;color:#536767"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="flex-shrink:0;margin-top:3px"><rect x="5" y="10" width="14" height="11" rx="3" stroke="currentColor" stroke-width="1.75"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3m-4 4v3" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"></path></svg><p style="margin:0;font-size:12px;line-height:20px">Phiên đăng nhập kết thúc sau 30 phút không hoạt động.</p></div>
+</section>
+</main>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accountType":{"editor":"enum","default":"STUDENT","options":["STUDENT","STAFF"]},"previewState":{"editor":"enum","default":"READY","options":["READY","LOADING","INVALID_CREDENTIALS","ACCOUNT_LOCKED","SERVICE_UNAVAILABLE","CSRF_INVALID","ORIGIN_FORBIDDEN","SESSION_EXPIRED","SUCCESS"]},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  state = { accountType:null,identifier:"",password:"",showPassword:false,identifierError:"",passwordError:"",result:null,busy:false };
+  componentWillUnmount(){if(this.timer)clearTimeout(this.timer);}
+  changeField(key,value){this.setState({[key]:value,[key+"Error"]:"",result:null});}
+  pick(kind){if(this.state.busy)return;this.setState({accountType:kind,password:"",passwordError:"",identifierError:"",result:null,showPassword:false});}
+  submitForm(event){
+    event.preventDefault();
+    if(this.state.busy||this.props.previewState==="LOADING")return;
+    const identifier=this.state.identifier.trim(), password=this.state.password;
+    const identifierError=identifier.length===0?"Vui lòng nhập mã đăng nhập.":[...identifier].length>50?"Mã đăng nhập không được vượt quá 50 ký tự.":"";
+    const passwordError=password.length===0?"Vui lòng nhập mật khẩu.":[...password].length<8||[...password].length>128?"Mật khẩu cần từ 8 đến 128 ký tự.":"";
+    if(identifierError||passwordError){this.setState({identifierError,passwordError,result:null},()=>{if(identifierError)this.idInput?.focus();else this.passInput?.focus();});return;}
+    this.setState({busy:true,result:null});
+    this.timer=setTimeout(()=>this.setState({busy:false,result:this.props.previewState==="READY"||!this.props.previewState?"SUCCESS":this.props.previewState,password:"",showPassword:false}),700);
+  }
+  renderVals(){
+    const s=this.state, kind=s.accountType??this.props.accountType??"STUDENT";
+    const state=s.result??this.props.previewState??"READY";
+    const busy=s.busy||state==="LOADING",student=kind==="STUDENT";
+    const messages={
+      INVALID_CREDENTIALS:["Chưa thể đăng nhập","Thông tin đăng nhập chưa đúng. Kiểm tra nhóm tài khoản, mã đăng nhập và mật khẩu."],
+      ACCOUNT_LOCKED:["Tài khoản đã bị khóa","Liên hệ Ban quản lý ký túc xá để được hướng dẫn."],
+      SERVICE_UNAVAILABLE:["Tạm thời chưa thể đăng nhập","Hệ thống chưa thể xử lý yêu cầu. Vui lòng thử lại sau."],
+      CSRF_INVALID:["Phiên đăng nhập cần làm mới","Tải lại trang, sau đó nhập lại mật khẩu để đăng nhập."],
+      ORIGIN_FORBIDDEN:["Không thể gửi yêu cầu từ trang này","Mở cổng DormFlow từ địa chỉ chính thức rồi thử lại."],
+      SESSION_EXPIRED:["Phiên đăng nhập đã hết hạn","Vui lòng đăng nhập lại để tiếp tục."],
+      SUCCESS:["Đăng nhập thành công","Bạn đã hoàn tất thao tác trong bản mẫu tương tác."]
+    };
+    const m=messages[state],success=state==="SUCCESS";
+    const inputBase={width:"100%",minWidth:0,height:52,padding:"0 16px",borderRadius:8,color:"#162F35",background:"#FFFFFF",fontSize:15,lineHeight:"24px"};
+    const tab=(active)=>({display:"flex",alignItems:"center",justifyContent:"center",gap:8,height:48,borderRadius:8,fontSize:14,fontWeight:600,color:active?"#FFFFFF":"#536767",background:active?"#163D3D":"transparent"});
+    return {
+      yes:true,false:false,student,staff:!student,busy,studentStyle:tab(student),staffStyle:tab(!student),studentCheck:student?"✓":"",staffCheck:student?"":"✓",
+      accountHint:student?"Đăng nhập bằng mã số sinh viên của bạn.":"Dành cho Ban quản lý và Quản trị viên.",
+      identifierLabel:student?"Mã số sinh viên":"Tên đăng nhập",identifierPlaceholder:student?"Nhập mã số sinh viên":"Nhập tên đăng nhập",
+      identifier:s.identifier,password:s.password,identifierInvalid:!!s.identifierError,passwordInvalid:!!s.passwordError,identifierError:s.identifierError,passwordError:s.passwordError,
+      identifierDescription:s.identifierError?"identifier-error":undefined,passwordDescription:s.passwordError?"password-error":undefined,
+      identifierStyle:{...inputBase,border:"1px solid "+(s.identifierError?"#9E3D28":"#81928D")},
+      passwordStyle:{...inputBase,paddingRight:80,border:"1px solid "+(s.passwordError?"#9E3D28":"#81928D")},
+      hasNotice:!!m&&!busy,noticeRole:success?"status":"alert",noticeTitle:m?.[0]??"",noticeText:m?.[1]??"",
+      noticeStyle:{padding:16,border:"1px solid "+(success?"#163D3D":"#9E3D28"),borderRadius:12,background:success?"#EAF0EC":"#FFF1EC",color:success?"#163D3D":"#9E3D28"},
+      showPassword:s.showPassword,passwordType:s.showPassword?"text":"password",passwordAction:s.showPassword?"Ẩn mật khẩu":"Hiện mật khẩu",passwordButton:s.showPassword?"Ẩn":"Hiện",
+      submitLabel:busy?"Đang đăng nhập…":"Đăng nhập",showArrow:!busy,
+      pickStudent:()=>this.pick("STUDENT"),pickStaff:()=>this.pick("STAFF"),
+      changeIdentifier:e=>this.changeField("identifier",e.target.value),changePassword:e=>this.changeField("password",e.target.value),
+      togglePassword:()=>this.setState({showPassword:!s.showPassword}),
+      submit:e=>this.submitForm(e),
+      identifierRef:el=>{this.idInput=el;},passwordRef:el=>{this.passInput=el;}
+    };
+  }
+}
+</script>
+</body></html>
+

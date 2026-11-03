@@ -1,0 +1,71 @@
+{
+  "v": 3,
+  "createdOnFiles": {
+    "v": 1,
+    "at": "2026-11-03T11:23:00.525Z"
+  },
+  "title": "DormFlow · Đăng nhập",
+  "launch": {
+    "view": "canvas"
+  },
+  "pages": [],
+  "boards": {
+    "Main.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "title": "01 · Sinh viên / Máy tính",
+      "expand": "fill",
+      "is_interactive": true
+    },
+    "Mobile.dc.html": {
+      "x": 1520,
+      "y": 0,
+      "w": 390,
+      "h": 844,
+      "title": "02 · Sinh viên / Điện thoại",
+      "is_interactive": true
+    },
+    "Staff.dc.html": {
+      "x": 0,
+      "y": 1020,
+      "w": 1440,
+      "h": 900,
+      "title": "03 · Nhân sự / Tài khoản bị khóa",
+      "expand": "fill",
+      "is_interactive": true
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "Mobile.dc.html",
+    "Staff.dc.html"
+  ],
+  "notes": {
+    "prototype": {
+      "x": 0,
+      "y": -210,
+      "w": 600,
+      "text": "BẢN MẪU TƯƠNG TÁC · Chưa gọi API thật. Bấm Play để đổi nhóm tài khoản, hiện/ẩn mật khẩu và gửi thử. Chỉ dùng dữ liệu giả; không nhập mật khẩu thật.",
+      "fill": "teal"
+    },
+    "states": {
+      "x": 680,
+      "y": -210,
+      "w": 600,
+      "text": "TRẠNG THÁI · Tweaks → previewState: đang gửi, sai thông tin, bị khóa, hệ thống bận, cần làm mới phiên, sai nguồn trang, hết phiên hoặc thành công. Xem Integration.md để nối API.",
+      "fill": "gray"
+    }
+  },
+  "designSystems": [
+    {
+      "title": "DormFlow",
+      "namespace": "dormflow",
+      "artifact": "designs/dormflow-design-system",
+      "version": null,
+      "copiedAt": "2026-11-03T11:23:00.525Z"
+    }
+  ]
+}
+
