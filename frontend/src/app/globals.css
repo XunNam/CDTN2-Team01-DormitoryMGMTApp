@@ -1,0 +1,45 @@
+/* DormFlow · values from the approved Campus Modern design system. */
+:root {
+  --ink: #162F35;
+  --muted: #536767;
+  --primary: #163D3D;
+  --on-primary: #FFFFFF;
+  --canvas: #F7F9F8;
+  --subtle: #EAF0EC;
+  --border: #81928D;
+  --accent: #D9EEAD;
+  --on-dark-muted: #D5E2DA;
+  --danger: #9E3D28;
+  --danger-surface: #FFF1EC;
+  --focus: #276A55;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-48: 48px;
+  --space-64: 64px;
+  --radius-control: 8px;
+  --radius-group: 12px;
+  --radius-panel: 24px;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; }
+body {
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-body), "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+h1, h2, p, dl { margin: 0; }
+button, input, select { font: inherit; }
+button { cursor: pointer; }
+button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible, [tabindex="0"]:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; }
+}
