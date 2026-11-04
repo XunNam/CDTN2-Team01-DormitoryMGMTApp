@@ -1,0 +1,10 @@
+import type { StudentProfile, Building, Room, Application, Residence, Receipt } from '../src/lib/student/schema.ts';
+export const uuid = (n: number) => '00000000-0000-4000-8000-' + String(n).padStart(12, '0');
+export const time = '2026-11-04T12:30:00.000Z';
+export const profile: StudentProfile = { id: uuid(1), studentCode: 'SV0001', fullName: 'Sinh viên minh họa A', gender: 'MALE', className: 'K30-CNTT01', faculty: 'Công nghệ thông tin', phone: null, email: null, dateOfBirth: null, permanentAddress: null, createdAt: time, updatedAt: time };
+export const building: Building = { id: uuid(2), code: 'A', name: 'Tòa A', createdAt: time, updatedAt: time };
+export const room: Room = { id: uuid(3), buildingId: building.id, buildingCode: 'A', buildingName: 'Tòa A', code: 'A101', capacity: 6, gender: 'MALE', feeVnd: '1000000', status: 'ACTIVE', allocatedPlaces: 5, availablePlaces: 1, createdAt: time, updatedAt: time };
+export const room2: Room = { ...room, id: uuid(4), code: 'A102', allocatedPlaces: 0, availablePlaces: 6 };
+export const application: Application = { id: uuid(10), studentId: profile.id, preferredRoomId: room.id, periodId: 1, status: 'PENDING', rejectionReason: null, reviewedBy: null, reviewedAt: null, createdAt: time, updatedAt: time };
+export const residence: Residence = { id: uuid(20), applicationId: application.id, studentId: profile.id, roomId: room2.id, status: 'ALLOCATED', allocatedBy: uuid(99), allocatedAt: time, checkInDate: null, checkedInBy: null, checkedInAt: null, checkOutDate: null, checkedOutBy: null, checkedOutAt: null, cancellationReason: null, cancelledBy: null, cancelledAt: null };
+export const receipt: Receipt = { id: uuid(30), residenceId: residence.id, amountVnd: '1000000', status: 'UNPAID', createdBy: uuid(99), createdAt: time, paymentDate: null, paidBy: null, paidAt: null };
