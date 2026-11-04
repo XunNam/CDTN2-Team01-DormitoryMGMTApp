@@ -1,0 +1,12 @@
+import { ApiError } from '../api/client.ts';
+import type { Notice } from '../auth/notices.ts';
+export const labels: Record<string, string> = { PENDING: 'Chờ duyệt', APPROVED: 'Đã duyệt', REJECTED: 'Đã từ chối', ACTIVE: 'Đang sử dụng', INACTIVE: 'Ngừng sử dụng', ALLOCATED: 'Đã xếp phòng', CHECKED_IN: 'Đang ở', CANCELLED: 'Đã hủy xếp', ENDED: 'Đã trả phòng', PAID: 'Đã thanh toán', UNPAID: 'Chưa thanh toán', MALE: 'Nam', FEMALE: 'Nữ', OPEN: 'Đang mở', CLOSED: 'Đã đóng' };
+export function money(v: string) { return BigInt(v).toLocaleString('vi-VN') + ' ₫'; }
+export function date(v: string | null) { return v ? new Intl.DateTimeFormat('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh', dateStyle: 'short' }).format(new Date(v)) : 'Chưa có thông tin'; }
+export function notice(error: unknown): Notice {
+    const code = error instanceof ApiError ? error.code : '';
+    const messages: Record<string, string> = {
+        ROOM_FULL: 'Phòng vừa hết chỗ. Tải lại thông tin và chọn phòng khác.', ROOM_INACTIVE: 'Phòng đã ngừng sử dụng. Chọn phòng khác.', GENDER_MISMATCH: 'Giới tính của sinh viên và phòng không phù hợp. Tải lại và kiểm tra lựa chọn.', ACTIVE_RESIDENCE_EXISTS: 'Sinh viên đã có hồ sơ lưu trú chưa kết thúc.', CAPACITY_BELOW_OCCUPANCY: 'Sức chứa mới nhỏ hơn số chỗ đã phân bổ.', ROOM_OCCUPIED: 'Phòng còn hồ sơ lưu trú mở; chưa thể ngừng sử dụng.', INVALID_STATE: 'Trạng thái đã thay đổi. Tải lại trước khi thao tác tiếp.', RECEIPT_ALREADY_EXISTS: 'Hồ sơ này đã có phiếu thu. Xem danh sách phiếu trước khi tiếp tục.', DUPLICATE_STUDENT_CODE: 'Mã số sinh viên đã tồn tại.', DUPLICATE_BUILDING_CODE: 'Mã tòa nhà đã tồn tại.', DUPLICATE_ROOM_CODE: 'Mã phòng đã tồn tại trong tòa nhà này.', VALIDATION_ERROR: 'Kiểm tra các trường được đánh dấu.', CSRF_INVALID: 'Phiên cần được làm mới. Tải lại thông tin trước khi gửi yêu cầu khác.', NOT_FOUND: 'Không tìm thấy dữ liệu. Quay về danh sách để kiểm tra.', WRITE_OUTCOME_UNKNOWN: 'Yêu cầu có thể đã hoàn tất. Kiểm tra trạng thái hiện tại trước khi thực hiện thao tác khác; hệ thống không tự gửi lại.', NETWORK_ERROR: 'Kiểm tra kết nối rồi tải lại thông tin.', REQUEST_TIMEOUT: 'Yêu cầu quá thời gian chờ. Kiểm tra kết nối rồi tải lại.', ORIGIN_FORBIDDEN: 'Mở DormFlow từ địa chỉ được cấu hình cho hệ thống.', UNEXPECTED_RESPONSE: 'Dữ liệu trả về chưa hợp lệ. Vui lòng tải lại hoặc liên hệ người quản trị.'
+    };
+    return { title: code === 'WRITE_OUTCOME_UNKNOWN' ? 'Cần kiểm tra kết quả' : 'Chưa thể hoàn tất', message: messages[code] ?? 'Hệ thống tạm thời chưa xử lý được. Vui lòng thử lại sau.', tone: 'error' };
+}

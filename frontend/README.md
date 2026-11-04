@@ -1,6 +1,6 @@
 # DormFlow · Frontend
 
-Ứng dụng Next.js 16.4.4/React 19.3.0, TypeScript/App Router/CSS Modules. Đã hiện thực đăng nhập và toàn bộ luồng quản trị tài khoản ADMIN theo prototype Campus Modern được duyệt. Dependency chính xác giữ trong package-lock.json; dùng Node.js 24+ và npm 11+.
+Ứng dụng Next.js 16.4.4/React 19.3.0, TypeScript/App Router/CSS Modules. Đã hiện thực đăng nhập, luồng ADMIN và frontend Management (BQL) theo prototype Campus Modern được duyệt. Dependency chính xác giữ trong package-lock.json; dùng Node.js 24+ và npm 11+.
 
 ## Chạy ứng dụng
 
@@ -12,7 +12,7 @@ npm ci
 npm run dev
 ```
 
-Mở [http://localhost:3000/login](http://localhost:3000/login). ADMIN đăng nhập thành công chuyển vào [http://localhost:3000/admin](http://localhost:3000/admin). Người dùng SV/BQL vẫn dùng màn hình xác nhận tài khoản hiện có; màn hình nghiệp vụ của hai role này chưa thuộc task này.
+Mở [http://localhost:3000/login](http://localhost:3000/login). ADMIN đăng nhập thành công chuyển vào [http://localhost:3000/admin](http://localhost:3000/admin), BQL vào [http://localhost:3000/management](http://localhost:3000/management). SV vẫn dùng màn hình xác nhận tài khoản hiện có; frontend nghiệp vụ SV chưa thuộc task này.
 
 Backend Express chạy riêng, mặc định cổng 3001; xem [hướng dẫn backend](../backend/README.md). Next.js chuyển tiếp /api/v1/* về http://127.0.0.1:3001/api/v1/*. Muốn đổi nơi API chạy, tạo .env.local từ .env.example, đặt BACKEND_ORIGIN rồi chạy lại frontend. Chỉ dùng origin HTTP(S) không kèm path/query/credentials; biến này chỉ dùng phía server.
 

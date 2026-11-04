@@ -85,6 +85,7 @@ export default function LoginPage({ reauthenticate = false, signedOut = false }:
         if (!controller.signal.aborted) {
           setIdentity(current);
           if (current.actorKind === "STAFF" && current.role === "ADMIN") router.replace("/admin");
+          if (current.actorKind === "STAFF" && current.role === "BQL") router.replace("/management");
         }
       } catch (error) {
         if (controller.signal.aborted) return;
@@ -137,6 +138,7 @@ export default function LoginPage({ reauthenticate = false, signedOut = false }:
       if (signal?.aborted) return;
       setIdentity(result.identity);
       if (result.identity.actorKind === "STAFF" && result.identity.role === "ADMIN") router.replace("/admin");
+      if (result.identity.actorKind === "STAFF" && result.identity.role === "BQL") router.replace("/management");
       if (!result.csrfReady) {
         setNotice({ title: "Bạn đã đăng nhập", message: "Kết nối chưa ổn định. Vui lòng thử lại nếu thao tác tiếp theo chưa hoàn tất.", tone: "info" });
       }
