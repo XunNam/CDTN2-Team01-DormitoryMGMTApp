@@ -6,10 +6,11 @@ import type { Pool, PoolClient } from 'pg';
 import session from 'express-session';
 import connectPgSimple from 'connect-pg-simple';
 import argon2 from 'argon2';
+import { startFrontend } from './frontend.js';
 import { createApp } from '../../../src/app.js';
 import { createPool } from '../../../src/shared/db/pool.js';
 
-export const ORIGIN='http://localhost:3000';
+export const ORIGIN=process.env.TEST_FRONTEND_ORIGIN ?? 'http://localhost:3000';
 export const PASSWORD='ReviewOnly#2026';
 export async function locked<T>(pool: Pool, work:(c:PoolClient)=>Promise<T>):Promise<T> {
   const c=await pool.connect();
@@ -47,7 +48,16 @@ export async function world() {
   assert.equal(app.locals.pool,pool,'Pool must be supplied by createApp, never patched in a fixture');
   const server=app.listen(0,'127.0.0.1');
   await new Promise<void>(r=>server.once('listening',r));
-  const base=`http://127.0.0.1:${(server.address() as AddressInfo).port}/api/v1`;
+  const backendOrigin=`http://127.0.0.1:${(server.address() as AddressInfo).port}`;
+  let frontend: Awaited<ReturnType<typeof startFrontend>> | undefined;
+  try { if (process.env.TEST_FRONTEND_ORIGIN) frontend=await startFrontend(backendOrigin, ORIGIN); }
+  catch(error) { server.close(); store.close(); await pool.end(); throw error; }
+  const base=(frontend ? ORIGIN : backendOrigin)+'/api/v1';
+  const covered=new Set<string>();
+  const contract=JSON.parse(readFileSync(new URL('../../../../API Endpoint/openapi.json',import.meta.url),'utf8'));
+  const operations=Object.entries(contract.paths).flatMap(([path,methods])=>Object.entries(methods as Record<string,any>)
+    .filter(([,op])=>op.operationId).map(([method,op])=>({method:method.toUpperCase(),id:op.operationId,
+      pattern:new RegExp('^'+path.replace(/\{[^}]+\}/g,'[^/]+')+'$')})));
   class Browser {
     cookie=''; csrf='';
     async request(method:string,path:string,body?:unknown,headers:Record<string,string>={}) {
@@ -57,6 +67,10 @@ export async function world() {
       const cookie=response.headers.get('set-cookie');
       if(cookie) this.cookie=cookie.split(';')[0];
       const text=await response.text();
+      if(response.ok) { const pathOnly='/api/v1'+path.split('?')[0];
+        const operation=operations.find(op=>op.method===method && op.pattern.test(pathOnly));
+        if(operation) covered.add(operation.id);
+      }
       return {status:response.status,json:text?JSON.parse(text):null,text,headers:response.headers};
     }
     async token() { const r=await this.request('GET','/auth/csrf'); assert.equal(r.status,200); this.csrf=r.json.data.csrfToken; return r; }
@@ -67,7 +81,8 @@ export async function world() {
     }
   }
   return {pool,tag,...data,browser:()=>new Browser(),
-    close:async()=>{await new Promise<void>((r,j)=>server.close(e=>e?j(e):r())); store.close(); await pool.end();}};
+    assertApiCoverage:()=>{assert.equal(operations.length,51);assert.deepEqual(operations.filter(op=>!covered.has(op.id)).map(op=>op.id),[],'Every API must succeed through the frontend proxy');},
+    close:async()=>{await frontend?.close(); await new Promise<void>((r,j)=>server.close(e=>e?j(e):r())); store.close(); await pool.end();}};
 }
 const schemas=JSON.parse(readFileSync(new URL('../../../../API Endpoint/Shared/schemas.json',import.meta.url),'utf8')).schemas;
 export function assertDto(name:string,data:Record<string,unknown>) {

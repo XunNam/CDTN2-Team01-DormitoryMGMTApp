@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { world,assertDto,locked,PASSWORD } from '../integration/shared/harness.js';
 import type { Pool,PoolClient } from 'pg';
+import { verifyBrowserLogins } from '../integration/shared/frontend.js';
 
 // A gate proves transactions really overlap on PostgreSQL, instead of just invoking
 // two fast operations sequentially. The fixture owns the same lock as every writer.
@@ -142,4 +143,18 @@ test('All three roles: complete business HTTP flow, ownership, retries and gated
   const readers=await Promise.all(Array.from({length:20},()=>manager.request('GET','/management/rooms')));
   assert.ok(readers.every(r=>r.status===200));
   t.diagnostic(`20 parallel authenticated GETs completed in ${Math.round(performance.now()-start)} ms on local PostgreSQL.`);
+  await call(admin,'POST','/auth/change-password',{currentPassword:PASSWORD,newPassword:PASSWORD+'Changed'},204);
+  await admin.token();
+  await call(admin,'POST','/auth/logout',{},204);
+  await admin.login('STAFF',w.admin.username,PASSWORD+'Changed');
+  w.assertApiCoverage();
+  t.diagnostic('51/51 OpenAPI operations returned successful responses'+(process.env.TEST_FRONTEND_ORIGIN?' through the real Next.js frontend proxy.':'.'));
+  if(process.env.TEST_FRONTEND_ORIGIN) {
+    await verifyBrowserLogins(process.env.TEST_FRONTEND_ORIGIN,[
+      {kind:'STAFF',identifier:w.admin.username,password:PASSWORD+'Changed',path:'/admin',heading:'Tài khoản người dùng'},
+      {kind:'STAFF',identifier:w.bql.username,password:PASSWORD,path:'/management',heading:'Tổng quan'},
+      {kind:'STUDENT',identifier:profile.studentCode,password:PASSWORD,path:'/student',heading:'Xin chào, Sinh viên qua HTTP'},
+    ]);
+    t.diagnostic('Real browser logins and protected pages passed for ADMIN, BQL and SV. No API mocking.');
+  }
 });

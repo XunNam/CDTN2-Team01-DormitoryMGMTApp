@@ -46,6 +46,8 @@ System test kiểm HTTP xuyên role, ownership, các cuộc đua có khóa DB th
 
 ## Luồng frontend
 
+Đã kiểm chứng ngày 05/11/2026: 51/51 API thành công qua Next.js thật tới Express/PostgreSQL; Chrome đăng nhập ADMIN/BQL/SV đạt. Chạy lại bằng `npm run test:frontend` với `.env.test` riêng và frontend đã cài dependency; để trống cổng 3200. Nếu dùng Chrome có sẵn, đặt `$env:PLAYWRIGHT_CHANNEL = 'chrome'`. Không chạy song song các suite cùng schema test. Xem [báo cáo tích hợp](../Coordination/reports/2026-11-05-backend-frontend-integration.md) về phạm vi và giới hạn.
+
 Next.js proxy /api/v1 qua cùng origin (APP_ORIGIN mặc định http://localhost:3000); backend mặc định cổng 3001, không bật CORS riêng.
 
 1. GET /api/v1/auth/csrf với cookie, giữ data.csrfToken.

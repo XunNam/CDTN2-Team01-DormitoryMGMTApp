@@ -1,5 +1,7 @@
 # DormFlow · Frontend
 
+Cập nhật tích hợp 05/11/2026: code hiện có cả ADMIN/BQL/SV. Đã kiểm 51/51 API qua Next.js thật tới backend/PostgreSQL và đăng nhập Chrome cho ba role; các đoạn kết quả task cũ bên dưới được giữ làm lịch sử. Xem [báo cáo hiện hành](../Coordination/reports/2026-11-05-backend-frontend-integration.md). Chạy lại kiểm thử thật từ backend bằng `npm run test:frontend`; suite `test:e2e` dưới đây vẫn dùng API giả.
+
 Ứng dụng Next.js 16.4.4/React 19.3.0, TypeScript/App Router/CSS Modules. Đã hiện thực đăng nhập, luồng ADMIN và frontend Management (BQL) theo prototype Campus Modern được duyệt. Dependency chính xác giữ trong package-lock.json; dùng Node.js 24+ và npm 11+.
 
 ## Chạy ứng dụng
