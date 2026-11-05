@@ -9,6 +9,7 @@ if (!["http:", "https:"].includes(backend.protocol)
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  turbopack: { root: process.cwd() },
   async rewrites() {
     return [{
       source: "/api/v1/:path*",

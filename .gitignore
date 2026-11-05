@@ -1,4 +1,5 @@
 .qa/
+/node_modules/
 __pycache__/
 *.pyc
 designs/**/history/
