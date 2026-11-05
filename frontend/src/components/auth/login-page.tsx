@@ -71,6 +71,11 @@ export default function LoginPage({ reauthenticate = false, signedOut = false }:
   const requestController = useRef<AbortController | null>(null);
   const inFlight = useRef(false);
 
+  // Keep the Student redirect independent of the staff redirects maintained by the Management branch.
+  useEffect(() => {
+    if (identity?.actorKind === "STUDENT" && identity.role === "SV") router.replace("/student");
+  }, [identity, router]);
+
   useEffect(() => {
     const controller = new AbortController();
     requestController.current = controller;
