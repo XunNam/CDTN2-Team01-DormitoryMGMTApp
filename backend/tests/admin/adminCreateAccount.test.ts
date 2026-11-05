@@ -43,6 +43,7 @@ test('adminCreateAccount STUDENT: 201, Argon2id hash of the untrimmed password, 
     const [studentId, hash] = s.inserted[0] as [string, string];
     assert.equal(studentId, PROFILE_ID);
     assert.match(hash, /^\$argon2id\$v=19\$m=65536,t=3,p=1\$/);
+    assert.equal(Buffer.from(hash.split('$')[5], 'base64').length, 64, 'new password digest is 64 bytes');
     assert.ok(await argon2.verify(hash, '  DemoOnly#2026  '), 'password is not trimmed');
     assert.ok(!(await argon2.verify(hash, 'DemoOnly#2026')));
     const lock = h.db.calls.indexOf('SELECT pg_advisory_xact_lock(724006, 1)');

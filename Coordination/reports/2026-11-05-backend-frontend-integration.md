@@ -29,7 +29,13 @@ Trên baseline main 872d1b817da5b9ce0ce79248092ef960daa96883, cả 51 operation 
 
 Không cộng test mock vào bằng chứng DB thật. Kiểm qua proxy dùng Next.js dev; production build được kiểm riêng. Không chứng nhận mọi form/mọi tình huống UI với DB thật hoặc production/HTTPS/Docker/NFR-03. Không thay đổi dữ liệu public; fixture chỉ dùng namespace codex_review_* được xác nhận trước khi chạy. Dữ liệu test được giữ lại theo quy trình repo.
 
-## Chạy lại
+## Bổ sung: Argon2id 64 byte
+
+Theo yêu cầu tiếp theo của chủ dự án cùng ngày, mật khẩu mới dùng hashLength 64 byte trong cấp tài khoản SV/BQL/ADMIN, đổi mật khẩu, bootstrap và chuẩn bị DB test. Giữ memoryCost 65536 KiB, timeCost 3, parallelism 1. Không đổi hash tài khoản hiện có; kiểm thực tế fixture 32 byte vẫn login được, sau đổi mật khẩu tạo digest 64 byte và login bằng mật khẩu mới thành công.
+
+Kiểm lại sau thay đổi: backend build + 100 unit PASS; PostgreSQL integration **28/28 PASS**, có bootstrap thật trên schema test mới và kiểm digest đủ 64 byte cho SV/BQL/ADMIN/đổi mật khẩu; **51/51 API qua Next.js thật và Chrome login ADMIN/BQL/SV PASS**. Frontend không thay đổi trong lượt bổ sung này; các kết quả frontend build/unit/browser ở bảng trên thuộc lượt tích hợp trước.
+
+## Chạy lại sau cập nhật
 
 Cài thư viện backend và frontend bằng npm ci. Dùng Node 24/npm 11 theo chuẩn nhóm. Lần kiểm này máy có Node 24.18.0/npm 12.1.0; không thay lockfile/dependency. Cần PostgreSQL chạy và backend/.env.test trỏ tới vùng test riêng. Nếu chưa có, làm theo backend/README.md để chuẩn bị schema codex_review_*; không dùng DB nghiệp vụ.
 

@@ -10,7 +10,7 @@ if (!DATABASE_URL || !DORMFLOW_ADMIN_USERNAME || !DORMFLOW_ADMIN_PASSWORD || !DO
 const username=DORMFLOW_ADMIN_USERNAME.trim().toLowerCase();const displayName=DORMFLOW_ADMIN_NAME.trim();
 if (!/^[a-z0-9][a-z0-9._-]{2,49}$/.test(username) || [...displayName].length<1 || [...displayName].length>150
     || [...DORMFLOW_ADMIN_PASSWORD].length<8 || [...DORMFLOW_ADMIN_PASSWORD].length>128) throw new Error('Invalid bootstrap account fields.');
-const hash=await argon2.hash(DORMFLOW_ADMIN_PASSWORD,{type:argon2.argon2id,memoryCost:65536,timeCost:3,parallelism:1,hashLength:32});
+const hash=await argon2.hash(DORMFLOW_ADMIN_PASSWORD,{type:argon2.argon2id,memoryCost:65536,timeCost:3,parallelism:1,hashLength:64});
 const pool=new pg.Pool({connectionString:DATABASE_URL,connectionTimeoutMillis:5000});
 try {
   const c=await pool.connect();

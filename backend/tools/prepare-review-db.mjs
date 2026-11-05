@@ -27,7 +27,7 @@ try {
       await client.query(await readFile(new URL('../../SQL/schema.sql', import.meta.url), 'utf8'));
       await client.query('BEGIN ISOLATION LEVEL READ COMMITTED');
       await client.query('SELECT pg_advisory_xact_lock(724006,1)');
-      const hash = await argon2.hash(randomBytes(32), { type: argon2.argon2id, memoryCost:65536, timeCost:3, parallelism:1 });
+      const hash = await argon2.hash(randomBytes(32), { type: argon2.argon2id, memoryCost:65536, timeCost:3, parallelism:1, hashLength:64 });
       const result = await client.query("INSERT INTO staff_accounts(username,display_name,role,password_hash) VALUES ('review.bql','Nhân sự kiểm thử','BQL',$1) RETURNING id",[hash]);
       bqlId = result.rows[0].id;
       await client.query('COMMIT');

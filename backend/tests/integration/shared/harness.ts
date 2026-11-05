@@ -24,7 +24,8 @@ export async function world() {
   const namespace=(await pool.query('SELECT current_schema() AS schema,current_database() AS db')).rows[0];
   assert.ok(namespace.schema.startsWith('codex_review_') || /test/i.test(namespace.db),'Refusing fixtures in application namespace.');
   const tag='rv'+randomBytes(5).toString('hex');
-  const hash=await argon2.hash(PASSWORD,{type:argon2.argon2id,memoryCost:65536,timeCost:3,parallelism:1});
+  // Keep legacy 32-byte fixtures to prove existing accounts still authenticate.
+  const hash=await argon2.hash(PASSWORD,{type:argon2.argon2id,memoryCost:65536,timeCost:3,parallelism:1,hashLength:32});
   const data=await locked(pool,async c=>{
     const staff=async(role:'BQL'|'ADMIN') => (await c.query(
       'INSERT INTO staff_accounts(username,display_name,role,password_hash) VALUES($1,$2,$3,$4) RETURNING id,username',

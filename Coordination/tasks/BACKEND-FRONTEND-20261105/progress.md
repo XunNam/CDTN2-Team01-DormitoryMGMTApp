@@ -15,3 +15,9 @@ Môi trường: Node 24.18.0, npm 12.1.0 (khác chuẩn nhóm npm 11), PostgreSQ
 Giới hạn: 51 API được kiểm qua HTTP proxy với payload/status thật và DTO; không đồng nghĩa từng form GUI đã chạy đầu cuối với DB thật. Chrome kiểm login, redirect, tải trang và cookie của ba role. Không chứng nhận production/HTTPS/Docker/NFR-03. Một lần browser smoke thất bại do tên heading SV mong đợi sai; đã sửa selector theo giao diện thực tế và chạy lại đạt.
 
 Kiểm tra cuối: npm test frontend sau khi bổ sung Student đạt 92/92. npm test:e2e đạt 41/41. Thay đổi sẵn sàng commit/push nhánh được giao; chủ dự án review trước merge.
+
+## Bổ sung theo yêu cầu hash length 64 byte
+
+Chủ dự án giao đổi Argon2id hashLength từ 32 lên 64 byte và commit/push tiếp cùng nhánh. Phạm vi: service ADMIN cấp mọi loại tài khoản, Shared đổi mật khẩu/dummy hash, bootstrap ADMIN và công cụ chuẩn bị DB test. Giữ thông số memory/time/parallelism và khả năng verify hash cũ. Cập nhật contract và baseline theo nguồn OWNER_CONFIRMED; không sửa public hay mật khẩu đang lưu.
+
+Đã thêm kiểm tra digest decode đủ 64 byte cho tài khoản SV/BQL/ADMIN và đổi mật khẩu; fixture 32 byte được giữ rõ ràng để kiểm tương thích đăng nhập. Test bootstrap mới dùng namespace codex_review_bootstrap_* riêng, kiểm hash 64 byte và từ chối ghi đè staff. Backend build/100 unit và PostgreSQL 28 integration PASS; kiểm lại 51/51 API qua frontend thật và Chrome login cả ba role PASS. Sẵn sàng commit/push bổ sung cùng nhánh.

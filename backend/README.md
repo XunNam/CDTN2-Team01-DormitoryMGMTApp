@@ -14,6 +14,8 @@ check chạy build và unit, không kết nối DB. Test integration/system đư
 
 ## Chạy local
 
+Mật khẩu mới (cấp ADMIN/BQL/SV, đổi mật khẩu, bootstrap) dùng Argon2id với memoryCost 65536 KiB, timeCost 3, parallelism 1, hashLength **64 byte**. Hash 32 byte đã lưu vẫn đăng nhập được; không cần chuyển dữ liệu DB. Nếu tạo hash thủ công để demo, chọn Hash Length 64 và lưu toàn bộ chuỗi Encoded vào password_hash.
+
 Sao chép .env.example thành .env rồi điền DATABASE_URL, SESSION_SECRET ít nhất 32 ký tự ngẫu nhiên, APP_ORIGIN. Cấu hình local ở máy chủ dự án đã có trong .env và không được commit. Schema phải có trước; không chạy schema.sql lần nữa trên DB đã có bảng. Nếu account kết nối thiếu quyền, chủ sở hữu bảng xem [script cấp quyền local](../SQL/grant-local-app-access.sql).
 
 ```powershell
