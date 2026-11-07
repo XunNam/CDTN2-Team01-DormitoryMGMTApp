@@ -12,8 +12,8 @@ import type { AccountCreateInput, AccountListInput, AccountLockInput, AccountRef
 
 export interface Page<T> { data: T[]; meta: PageMeta }
 
-// Shared/03-data-contracts.md: Argon2id memoryCost 65536 KiB, timeCost 3, parallelism 1, hashLength 32.
-const ARGON2_OPTIONS = { type: argon2.argon2id, memoryCost: 65536, timeCost: 3, parallelism: 1, hashLength: 32 } as const;
+// Shared/03-data-contracts.md: Argon2id memoryCost 65536 KiB, timeCost 3, parallelism 1, hashLength 64.
+const ARGON2_OPTIONS = { type: argon2.argon2id, memoryCost: 65536, timeCost: 3, parallelism: 1, hashLength: 64 } as const;
 
 export interface AdminServiceDeps { hashPassword: (password: string) => Promise<string> }
 export const defaultDeps: AdminServiceDeps = { hashPassword: password => argon2.hash(password, ARGON2_OPTIONS) };

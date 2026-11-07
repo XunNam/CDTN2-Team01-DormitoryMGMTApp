@@ -23,7 +23,7 @@ ProfileCreate: thiếu các field nullable tự lưu null; không tự sinh dữ
 
 AccountCreate là oneOf phân biệt accountType. STUDENT gồm accountType,studentId,role=SV,password. STAFF gồm accountType,username,displayName,role=BQL|ADMIN,password. Cả hai server sinh id/isLocked=false/sessionVersion=1. Không gửi mật khẩu lại trong response.
 
-Mật khẩu8..128 code points, không bắt buộc tổ hợp ký tự ngoài giới hạn này, không trim. newPassword phải khác currentPassword. Chọn Argon2id memoryCost65536KiB,timeCost3,parallelism1,hashLength32; library tự salt. Không dùng dữ liệu password minh họa làm secret triển khai.
+Mật khẩu8..128 code points, không bắt buộc tổ hợp ký tự ngoài giới hạn này, không trim. newPassword phải khác currentPassword. Chọn Argon2id memoryCost65536KiB,timeCost3,parallelism1,hashLength64 (64 byte); library tự salt. Áp dụng cho mật khẩu mới/cập nhật; hash 32 byte đã lưu vẫn được xác minh bình thường. Không dùng dữ liệu password minh họa làm secret triển khai.
 
 Tất cả mutation trạng thái đi qua action chuyên biệt; không PATCH status tổng quát trừ period và phòng/accountlock đã chỉ định. Không sinh viên tự hủy đơn; không đổi role/reset-password/delete.
 

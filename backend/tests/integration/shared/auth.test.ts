@@ -5,6 +5,8 @@ import { world,locked,assertDto,PASSWORD } from './harness.js';
 
 test('Shared auth uses real PostgreSQL sessions for all roles, rotation, CSRF and password revocation',async t=>{
   const w=await world(); t.after(()=>w.close());
+  const legacy=(await w.pool.query('SELECT password_hash FROM student_accounts WHERE id=$1',[w.students[0].accountId])).rows[0].password_hash;
+  assert.equal(Buffer.from(legacy.split('$')[5],'base64').length,32,'legacy account fixture');
   const admin=w.browser(), bql=w.browser(), sv=w.browser();
   for(const [browser,kind,identifier,role] of [[admin,'STAFF',w.admin.username,'ADMIN'],[bql,'STAFF',w.bql.username,'BQL'],[sv,'STUDENT',w.students[0].code,'SV']] as const) {
     const anonymous=await browser.token(); const oldCookie=browser.cookie,oldToken=browser.csrf;
@@ -28,6 +30,9 @@ test('Shared auth uses real PostgreSQL sessions for all roles, rotation, CSRF an
   const cookie=sv.cookie,csrf=sv.csrf;
   const changed=await sv.request('POST','/auth/change-password',{currentPassword:PASSWORD,newPassword:'Changed#2026'});
   assert.equal(changed.status,204); assert.equal(changed.text,''); assert.notEqual(sv.cookie,cookie);
+  const updated=(await w.pool.query('SELECT password_hash FROM student_accounts WHERE id=$1',[w.students[0].accountId])).rows[0].password_hash;
+  assert.equal(Buffer.from(updated.split('$')[5],'base64').length,64,'password change generates a 64-byte digest');
+  assert.ok(await argon2.verify(updated,'Changed#2026'));
   assert.equal((await second.request('GET','/auth/me')).json.error.code,'SESSION_EXPIRED');
   assert.equal((await sv.request('POST','/auth/logout',{}, {'X-CSRF-Token':csrf})).status,403);
   await sv.token(); assert.equal((await sv.request('GET','/auth/me')).status,200);

@@ -14,6 +14,8 @@ check chạy build và unit, không kết nối DB. Test integration/system đư
 
 ## Chạy local
 
+Mật khẩu mới (cấp ADMIN/BQL/SV, đổi mật khẩu, bootstrap) dùng Argon2id với memoryCost 65536 KiB, timeCost 3, parallelism 1, hashLength **64 byte**. Hash 32 byte đã lưu vẫn đăng nhập được; không cần chuyển dữ liệu DB. Nếu tạo hash thủ công để demo, chọn Hash Length 64 và lưu toàn bộ chuỗi Encoded vào password_hash.
+
 Sao chép .env.example thành .env rồi điền DATABASE_URL, SESSION_SECRET ít nhất 32 ký tự ngẫu nhiên, APP_ORIGIN. Cấu hình local ở máy chủ dự án đã có trong .env và không được commit. Schema phải có trước; không chạy schema.sql lần nữa trên DB đã có bảng. Nếu account kết nối thiếu quyền, chủ sở hữu bảng xem [script cấp quyền local](../SQL/grant-local-app-access.sql).
 
 ```powershell
@@ -45,6 +47,8 @@ npm run test:system
 System test kiểm HTTP xuyên role, ownership, các cuộc đua có khóa DB thật và benchmark NFR-02. Không chạy system trên một nhánh chưa có các module còn lại. Integration files chạy nối tiếp vì cùng singleton kỳ đăng ký; các ca concurrency tạo các request đồng thời bên trong test.
 
 ## Luồng frontend
+
+Đã kiểm chứng ngày 05/11/2026: 51/51 API thành công qua Next.js thật tới Express/PostgreSQL; Chrome đăng nhập ADMIN/BQL/SV đạt. Chạy lại bằng `npm run test:frontend` với `.env.test` riêng và frontend đã cài dependency; để trống cổng 3200. Nếu dùng Chrome có sẵn, đặt `$env:PLAYWRIGHT_CHANNEL = 'chrome'`. Không chạy song song các suite cùng schema test. Xem [báo cáo tích hợp](../Coordination/reports/2026-11-05-backend-frontend-integration.md) về phạm vi và giới hạn.
 
 Next.js proxy /api/v1 qua cùng origin (APP_ORIGIN mặc định http://localhost:3000); backend mặc định cổng 3001, không bật CORS riêng.
 

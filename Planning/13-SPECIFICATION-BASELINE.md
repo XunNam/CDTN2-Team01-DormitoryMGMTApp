@@ -27,6 +27,10 @@ Thống nhất biểu diễn timestamp UTC có ba chữ số mili giây (`YYYY-M
 
 Kiểm chứng: unit về transaction cleanup và timestamp precision; PostgreSQL snapshot với writer đồng thời; DTO HTTP so thời gian DB và bản ghép ba role. Chi tiết/trạng thái thực tế tại `Coordination/tasks/SHARED-SV-FOLLOWUP-20261102/progress.md` và báo cáo bổ sung cùng ngày. Chủ dự án đã cho phép commit ký/push cho task; không merge hoặc approve PR.
 
+## Cập nhật độ dài Argon2id ngày 05/11/2026
+
+**OWNER_CONFIRMED:** chủ dự án yêu cầu trên nhánh `config/backend-frontend` đổi hash length sang **64 byte** và commit/push bổ sung. Áp dụng cho cấp tài khoản ADMIN/BQL/SV, đổi mật khẩu và bootstrap ADMIN; giữ Argon2id, memoryCost 65536 KiB, timeCost 3, parallelism 1 và salt ngẫu nhiên. Thay lựa chọn hashLength 32 trước đây tại Shared/03-data-contracts.md. Hash cũ 32 byte vẫn được xác minh bằng thông số trong chuỗi Encoded; không reset mật khẩu hoặc sửa dữ liệu tài khoản hiện có. Chỉ mật khẩu được tạo/đổi sau cập nhật sinh digest 64 byte. Không đổi độ dài token CSRF, session secret hoặc yêu cầu mật khẩu.
+
 ## Nguồn triển khai
 
 - [Danh mục API](<../API Endpoint/README.md>) và [schemas](<../API Endpoint/Shared/schemas.json>).

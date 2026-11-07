@@ -24,6 +24,26 @@ Bộ kế hoạch cộng tác xây dựng ứng dụng web đăng ký lưu trú,
 
 ## Bắt đầu
 
+### Chạy backend và frontend cùng lúc
+
+Chuẩn bị Node.js 24, PostgreSQL và `backend/.env` theo [hướng dẫn backend](backend/README.md). Cài thư viện một lần từ thư mục gốc:
+
+```powershell
+npm ci
+npm --prefix backend ci
+npm --prefix frontend ci
+```
+
+Sau đó, mỗi lần chạy chỉ cần:
+
+```powershell
+npm run dev
+```
+
+Mở [trang đăng nhập](http://localhost:3000/login). Backend mặc định chạy cổng 3001, frontend cổng 3000; giữ hai cổng này trống. Nhấn **Ctrl+C** để dừng cả hai. Nếu một tiến trình kết thúc, lệnh chung cũng dừng tiến trình còn lại. Lệnh không tự khởi động PostgreSQL hay tạo dữ liệu/tài khoản; cần chuẩn bị DB trước. `APP_ORIGIN` ở backend phải khớp `http://localhost:3000`.
+
+### Tài liệu cộng tác
+
 1. AI đọc [AGENTS gốc](AGENTS.md), xác định role và task với chính người giao việc.
 2. Đọc [hướng dẫn cộng tác](Coordination/README.md) và [baseline đặc tả](Planning/13-SPECIFICATION-BASELINE.md).
 3. Tra [danh mục API](<API Endpoint/README.md>), [chuẩn Shared](<API Endpoint/Shared/00-conventions.md>), [schema](SQL/schema.sql) và contract role.

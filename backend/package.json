@@ -18,6 +18,7 @@
     "db:check": "node --env-file-if-exists=.env tools/check-db.mjs",
     "db:prepare-test": "node --env-file-if-exists=.env tools/prepare-review-db.mjs",
     "test:system": "node tools/run-tests.mjs system",
+    "test:frontend": "node tools/verify-frontend.mjs",
     "db:bootstrap-admin": "node --env-file-if-exists=.env tools/bootstrap-admin.mjs",
     "db:verify": "node --env-file-if-exists=.env tools/verify-schema.mjs"
   },

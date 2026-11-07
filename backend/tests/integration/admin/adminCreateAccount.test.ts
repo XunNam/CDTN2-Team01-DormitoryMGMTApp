@@ -25,6 +25,7 @@ test('TC-01.1 STUDENT: profile must exist, one account per profile, Argon2id sto
   assertNoSecrets(res.text);
   const { rows } = await env.pool.query('SELECT password_hash, session_version, role FROM student_accounts WHERE id = $1', [res.json.data.id]);
   assert.match(rows[0].password_hash, /^\$argon2id\$v=19\$m=65536,t=3,p=1\$/);
+  assert.equal(Buffer.from(rows[0].password_hash.split('$')[5], 'base64').length, 64, 'new password digest is 64 bytes');
   assert.ok(await argon2.verify(rows[0].password_hash, password), 'password stored untrimmed');
   assert.deepEqual([rows[0].session_version, rows[0].role], [1, 'SV']);
 
@@ -47,6 +48,11 @@ test('TC-01.1 STAFF: BQL and ADMIN created, username normalized and unique withi
   const adm = await api(env, admin, 'POST', '/admin/accounts', { accountType: 'STAFF', username: `${env.tag}.adm1`, displayName: 'Admin mẫu', role: 'ADMIN', password: 'DemoOnly#2026' });
   assert.equal(adm.status, 201);
   assert.equal(adm.json.data.role, 'ADMIN');
+  for (const account of [bql, adm]) {
+    const hash=(await env.pool.query('SELECT password_hash FROM staff_accounts WHERE id=$1',[account.json.data.id])).rows[0].password_hash;
+    assert.equal(Buffer.from(hash.split('$')[5],'base64').length,64,'new STAFF password digest is 64 bytes');
+    assert.ok(await argon2.verify(hash,'DemoOnly#2026'));
+  }
   const dup = await api(env, admin, 'POST', '/admin/accounts', { accountType: 'STAFF', username: `${env.tag}.BQL1`, displayName: 'Trùng', role: 'ADMIN', password: 'DemoOnly#2026' });
   assert.equal(dup.status, 409);
   assert.equal(dup.json.error.code, 'DUPLICATE_USERNAME');

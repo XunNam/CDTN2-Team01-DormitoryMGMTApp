@@ -6,7 +6,7 @@ import { AppError } from '../http/errors.js';
 import { withBusinessTransaction } from '../db/transaction.js';
 import * as repo from './repository.js';
 
-export const passwordOptions = { type: argon2.argon2id, memoryCost: 65536, timeCost: 3, parallelism: 1, hashLength: 32 } as const;
+export const passwordOptions = { type: argon2.argon2id, memoryCost: 65536, timeCost: 3, parallelism: 1, hashLength: 64 } as const;
 let dummyHash: Promise<string> | undefined;
 const dummy = () => dummyHash ??= argon2.hash(randomBytes(32), passwordOptions);
 export function identityDto(kind: ActorKind, account: repo.Credential) {
