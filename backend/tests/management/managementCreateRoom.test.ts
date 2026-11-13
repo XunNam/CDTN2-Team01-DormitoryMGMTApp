@@ -49,3 +49,9 @@ test('managementCreateRoom rejects noncanonical or out-of-range BIGINT prices', 
     (error: unknown) => error instanceof AppError && error.status === 422,
   );
 });
+
+test('room codes accept dotted floor/room names but reject invalid codes', () => {
+  const base = { buildingId: '00000000-0000-4000-8000-000000000001', capacity: 6, gender: 'MALE', feeVnd: '0', status: 'ACTIVE' };
+  assert.equal(parseRoomCreate({ ...base, code: ' i.01.01 ' }).code, 'I.01.01');
+  for (const code of ['.I.01', 'I/01/01', 'I 01 01', 'I'.repeat(33)]) assert.throws(() => parseRoomCreate({ ...base, code }), (error: unknown) => error instanceof AppError && error.status === 422);
+});

@@ -84,7 +84,7 @@ Phòng thuộc tòa; BQL quản lý, SV chỉ đọc phòng ACTIVE. Chỗ còn l
 |---|---|---|---|
 | `id` | `id` | `uuid PRIMARY KEY DEFAULT gen_random_uuid()` | Server sinh UUID, bất biến; registration_period.id là smallint cố định 1. |
 | `building_id` | `buildingId` | `uuid NOT NULL REFERENCES buildings(id) ON DELETE RESTRICT` | Theo tên field và trạng thái/allowlist của operation; xem DDL và API schema chuẩn. |
-| `code` | `code` | `varchar(32) NOT NULL CHECK (code ~ '^[A-Z0-9][A-Z0-9_-]{0,31}$')` | Theo tên field và trạng thái/allowlist của operation; xem DDL và API schema chuẩn. |
+| `code` | `code` | `varchar(32) NOT NULL CHECK (code ~ '^[A-Z0-9][A-Z0-9_.-]{0,31}$')` | Theo tên field và trạng thái/allowlist của operation; xem DDL và API schema chuẩn. |
 | `capacity` | `capacity` | `integer NOT NULL CHECK (capacity BETWEEN 1 AND 10000)` | Theo tên field và trạng thái/allowlist của operation; xem DDL và API schema chuẩn. |
 | `gender` | `gender` | `varchar(6) NOT NULL CHECK (gender IN ('MALE','FEMALE'))` | Theo tên field và trạng thái/allowlist của operation; xem DDL và API schema chuẩn. |
 | `fee_vnd` | `feeVnd` | `bigint NOT NULL CHECK (fee_vnd >= 0)` | Input/output API feeVnd là chuỗi số nguyên canonical 0..9223372036854775807. |

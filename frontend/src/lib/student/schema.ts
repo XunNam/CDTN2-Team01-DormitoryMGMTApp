@@ -159,7 +159,7 @@ export const schemas = {
       },
       "code": {
         "type": "string",
-        "pattern": "^[A-Z0-9][A-Z0-9_-]{0,31}$"
+        "pattern": "^[A-Z0-9][A-Z0-9_.-]{0,31}$"
       },
       "capacity": {
         "type": "integer",

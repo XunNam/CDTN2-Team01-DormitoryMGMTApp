@@ -52,7 +52,7 @@ CREATE TABLE buildings (
 CREATE TABLE rooms (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     building_id uuid NOT NULL REFERENCES buildings(id) ON DELETE RESTRICT,
-    code varchar(32) NOT NULL CHECK (code ~ '^[A-Z0-9][A-Z0-9_-]{0,31}$'),
+    code varchar(32) NOT NULL CHECK (code ~ '^[A-Z0-9][A-Z0-9_.-]{0,31}$'),
     capacity integer NOT NULL CHECK (capacity BETWEEN 1 AND 10000),
     gender varchar(6) NOT NULL CHECK (gender IN ('MALE','FEMALE')),
     fee_vnd bigint NOT NULL CHECK (fee_vnd >= 0),

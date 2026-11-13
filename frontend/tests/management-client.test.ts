@@ -45,3 +45,10 @@ test('exact money beyond safe integer is preserved and database maximum enforced
 test('nullable clearing, immutable identifiers, real calendar dates and empty patch rules', () => { assert.deepEqual(inputErrors('ProfilePatch', { phone: null, email: null }), {}); assert.ok(inputErrors('ProfilePatch', { studentCode: 'NEW' }).studentCode); assert.ok(Object.keys(inputErrors('ProfilePatch', {})).length); assert.equal(validDate('2026-02-30'), false); assert.ok(inputErrors('CheckIn', { checkInDate: '2999-01-01' }).checkInDate); assert.ok(inputErrors('ApplicationReject', { rejectionReason: 'wrong key' }).reason); assert.ok(inputErrors('ReceiptCreate', { residenceId: residence.id, amountVnd: '1' }).amountVnd); });
 test('room count invariants, wrong identifiers and missing statistics are rejected', async () => { assert.throws(() => decode('Room', { ...room, availablePlaces: 7 }), ApiError); const m = mock(() => data({ ...room, id: uuid(999) })); await assert.rejects(m.client.get('rooms', room.id), { code: 'UNEXPECTED_RESPONSE' }); assert.throws(() => decode('Statistics', { totalRooms: 0, availablePlaces: 0, currentResidents: 0 }), ApiError); });
 test('statistics and period use independent protected GET endpoints', async () => { const m = mock(url => url.endsWith('/statistics') ? data({ totalRooms: 0, availablePlaces: 0, currentResidents: 0, unpaidReceipts: 0 }) : data({ id: 1, status: 'OPEN', updatedBy: null, updatedAt: '2026-10-28T00:00:00.000Z' })); assert.equal((await m.client.statistics()).unpaidReceipts, 0); assert.equal((await m.client.period()).status, 'OPEN'); });
+
+test('dotted room code works in requests and DTOs without widening building codes', () => {
+  const dotted = { ...room, code: 'I.01.01' };
+  assert.deepEqual(inputErrors('RoomCreate', { buildingId: room.buildingId, code: 'I.01.01', capacity: 6, gender: 'MALE', feeVnd: '0', status: 'ACTIVE' }), {});
+  assert.deepEqual(decode('Room', dotted), dotted);
+  assert.ok(Object.keys(inputErrors('BuildingCreate', { code: 'I.01', name: 'Tower I' })).length > 0);
+});

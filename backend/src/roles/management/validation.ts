@@ -6,6 +6,9 @@ const businessCode = z.string()
   .transform((value) => value.toUpperCase())
   .pipe(z.string().regex(/^[A-Z0-9][A-Z0-9_-]{0,31}$/));
 
+const roomCode = z.string().trim().transform((value) => value.toUpperCase())
+  .pipe(z.string().regex(/^[A-Z0-9][A-Z0-9_.-]{0,31}$/));
+
 const nonEmptyTrimmed = (max: number) => z.string()
   .trim()
   .refine((value) => [...value].length > 0, 'Không được để trống.')
@@ -154,7 +157,7 @@ const feeVnd = z.string()
 
 export const roomCreateSchema = z.object({
   buildingId: uuidString,
-  code: businessCode,
+  code: roomCode,
   capacity: z.number().int().min(1).max(10000),
   gender: genderEnum,
   feeVnd,

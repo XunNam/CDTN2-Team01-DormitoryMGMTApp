@@ -30,3 +30,5 @@ Tất cả mutation trạng thái đi qua action chuyên biệt; không PATCH st
 Query schemas trong schemas.json thể hiện superset cho BQL. SV loại status khỏi RoomQuery (server luônACTIVE); ApplicationQuery SV chỉpage/pageSize/status; ResidenceQuery SV chỉpage/pageSize/status; ReceiptQuery SV chỉpage/pageSize/status; Student buildings chỉ PageQuery. BQL dùng đầy đủ schema. Không nhận filter không nêu.
 
 Schema tiền có pattern tối đa19digits nhưng cần semantic check <=BIGINT_MAX; date phải kiểm chứng lịch+today ngoài format. Query wire là chuỗi, parser kiểm tra trước đổi thành typed values. examples.json chỉ minh họa, không là bản định nghĩa độc lập.
+
+Mã phòng cho phép dấu chấm sau ký tự đầu tiên, ví dụ `I.01.01`, tối đa 32 ký tự. Giữ chuẩn trim/uppercase và duy nhất trong tòa. Không mở rộng quy tắc mã sinh viên hoặc mã tòa. Nguồn OWNER_CONFIRMED: yêu cầu ngày 14/11/2026.

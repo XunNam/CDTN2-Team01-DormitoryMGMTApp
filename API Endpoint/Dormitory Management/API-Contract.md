@@ -1060,7 +1060,7 @@ Schema **RoomCreate**; allowlist đóng (`additionalProperties:false`). Bảng s
 | Trường | Bắt buộc | Kiểu và giới hạn |
 |---|---|---|
 | `buildingId` | Có | string; format="uuid" |
-| `code` | Có | string; pattern="^[A-Z0-9][A-Z0-9_-]{0,31}$" |
+| `code` | Có | string; pattern="^[A-Z0-9][A-Z0-9_.-]{0,31}$" |
 | `capacity` | Có | integer; minimum=1; maximum=10000 |
 | `gender` | Có | string; enum=["MALE", "FEMALE"] |
 | `feeVnd` | Có | string; pattern="^(0\|[1-9][0-9]{0,18})$"; VND nguyên đồng, giá trị <=9223372036854775807; không ép sang Number. |
