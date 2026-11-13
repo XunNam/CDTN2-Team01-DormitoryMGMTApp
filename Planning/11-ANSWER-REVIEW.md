@@ -74,3 +74,8 @@ Câu hỏi: Có thể hiểu yêu cầu "không kiểm tra lỗi ROLE" và "khó
 4. Không đánh dấu TC-N1 đạt nếu chưa có mật khẩu băm và test quyền/ownership; hiện chưa có runtime để test.
 5. Không tự đổi role của tài khoản sau tạo hoặc thêm bảo vệ Admin cuối trái quyết định Q-07/Q-17.
 6. Không biến phiên bản PostgreSQL đã chọn thành yêu cầu tự nâng cấp database trên máy ngoài repo.
+# Yêu cầu môi trường ngày 13/11/2026
+
+**OWNER_CONFIRMED**, nguyên văn chủ dự án: “Hãy điều chỉnh lại để dự án chạy ở NodeJS 26. Chỉnh sửa lại denpendency nếu có lỗi.”
+
+Thay chuẩn Node 24 bằng Node 26. Giữ npm 11 đang cài. Không thay quyết định nghiệp vụ hoặc công nghệ Express/Next.js/PostgreSQL.
