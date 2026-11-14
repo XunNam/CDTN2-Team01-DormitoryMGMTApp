@@ -1,5 +1,7 @@
 # Hướng dẫn cho mọi AI và người cộng tác
 
+**Môi trường hiện hành, OWNER_CONFIRMED ngày 13/11/2026:** dùng Node.js 26 và npm 11 theo yêu cầu mới của chủ dự án, thay chỉ dẫn Node.js 24 trong tài liệu cũ. Xem `Planning/13-SPECIFICATION-BASELINE.md`. Giữ nguyên phạm vi nghiệp vụ, phân công DB và giới hạn Git.
+
 ## 1. Phạm vi được phép
 
 - Chỉ tạo, sửa, di chuyển hoặc xóa file bên trong repository `D:\Đồ án\CĐTN2\CDTN2-Team01-DormitoryMGMTApp` trên máy hiện tại. Khi clone trên máy khác, áp dụng giới hạn tương đương tại thư mục gốc của bản clone đó.

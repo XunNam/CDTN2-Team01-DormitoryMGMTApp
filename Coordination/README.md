@@ -29,7 +29,7 @@ Thông tin role chưa rõ chỉ chặn code nghiệp vụ. AI vẫn có thể đ
 
 ## Môi trường thành viên và kiểm thử tập trung
 
-Thành viên chuẩn bị Node.js 24/npm 11, không cần PostgreSQL. AI triển khai và chạy build/unit tại máy thành viên; viết test tích hợp để Anh chạy trên DB test riêng sau bàn giao. Đọc [phân công và lệnh test](testing-responsibilities.md). Thiếu DB tại máy thành viên không chặn toàn bộ role; ghi NOT_RUN_PENDING_OWNER cho các ca bàn giao.
+Thành viên chuẩn bị Node.js 26/npm 11, không cần PostgreSQL. AI triển khai và chạy build/unit tại máy thành viên; viết test tích hợp để Anh chạy trên DB test riêng sau bàn giao. Đọc [phân công và lệnh test](testing-responsibilities.md). Thiếu DB tại máy thành viên không chặn toàn bộ role; ghi NOT_RUN_PENDING_OWNER cho các ca bàn giao.
 
 ## GitHub và tích hợp
 

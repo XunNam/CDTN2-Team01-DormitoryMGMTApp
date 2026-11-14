@@ -26,7 +26,18 @@ Bộ kế hoạch cộng tác xây dựng ứng dụng web đăng ký lưu trú,
 
 ### Chạy backend và frontend cùng lúc
 
-Chuẩn bị Node.js 24, PostgreSQL và `backend/.env` theo [hướng dẫn backend](backend/README.md). Cài thư viện một lần từ thư mục gốc:
+Môi trường hiện hành dùng Node.js 26 và npm 11 theo yêu cầu ngày 13/11/2026. Với fnm, kích hoạt Node trong phiên PowerShell trước khi chạy npm:
+
+```powershell
+fnm env --shell powershell | Out-String | Invoke-Expression
+fnm use
+node --version
+npm.cmd --version
+```
+
+File `.node-version` ghim Node 26.13.1. Nếu PowerShell chặn `npm.ps1`, dùng `npm.cmd` cho các lệnh bên dưới.
+
+Chuẩn bị Node.js 26, PostgreSQL và `backend/.env` theo [hướng dẫn backend](backend/README.md). Cài thư viện một lần từ thư mục gốc:
 
 ```powershell
 npm ci
@@ -77,4 +88,4 @@ Chỉ sửa file trong repo. **AI không tự commit/push/merge; chủ dự án 
 
 ## Môi trường cộng tác
 
-Ba thành viên chỉ cần Node.js 24/npm 11 để viết backend, chạy build/unit và bàn giao test tích hợp. Bùi Thế Anh chuẩn bị PostgreSQL và chạy test DB/tích hợp sau bàn giao. Đọc [phân công kiểm thử](Coordination/testing-responsibilities.md); không cần cài DB trên máy thành viên.
+Ba thành viên chỉ cần Node.js 26/npm 11 để viết backend, chạy build/unit và bàn giao test tích hợp. Bùi Thế Anh chuẩn bị PostgreSQL và chạy test DB/tích hợp sau bàn giao. Đọc [phân công kiểm thử](Coordination/testing-responsibilities.md); không cần cài DB trên máy thành viên.

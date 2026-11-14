@@ -1,6 +1,6 @@
 # Backend DormFlow
 
-Contract revision 1.0.0; Express/TypeScript ESM, Node 24, PostgreSQL 18.6, một Pool và PostgreSQL session store. Dependency chính xác theo package.json/package-lock.json; môi trường chuẩn npm 11. Backend sau khi tích hợp cả ba nhánh gồm 51 operation (5 Shared, 5 ADMIN, 28 BQL, 13 SV). Mỗi nhánh PR chỉ mang module của role tương ứng và các sửa Shared; xem [kết quả review](../Coordination/reports/2026-11-02-backend-readiness.md).
+Contract revision 1.0.0; Express/TypeScript ESM, Node 26, PostgreSQL 18.6, một Pool và PostgreSQL session store. Dependency chính xác theo package.json/package-lock.json; môi trường chuẩn npm 11. Backend sau khi tích hợp cả ba nhánh gồm 51 operation (5 Shared, 5 ADMIN, 28 BQL, 13 SV). Mỗi nhánh PR chỉ mang module của role tương ứng và các sửa Shared; xem [kết quả review](../Coordination/reports/2026-11-02-backend-readiness.md).
 
 ## Cài và kiểm tra độc lập
 

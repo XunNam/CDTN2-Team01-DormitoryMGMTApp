@@ -38,3 +38,7 @@ Kiểm chứng: unit về transaction cleanup và timestamp precision; PostgreSQ
 - [Điều phối](../Coordination/README.md), [khung code](../backend/README.md).
 
 Không thay SRS PDF. Không coi health/compile/static checks là kiểm chứng businessAPI hoặc NFR. Agent phải dùng taskboard và handoff; con người tự commit/pushbranch/PR, Anh review/merge thủ công.
+
+## Cập nhật môi trường ngày 13/11/2026
+
+**OWNER_CONFIRMED:** chủ dự án yêu cầu chuyển dự án sang Node.js 26 trên máy mới và điều chỉnh dependency nếu có lỗi tương thích. Cập nhật engines của root/backend/frontend thành >=26 <27, backend/.node-version thành 26.13.1 và packageManager backend thành npm@11.20.0 theo phiên bản đã cài. Quyết định này thay yêu cầu Node 24 trong DEC-023 và các hướng dẫn cũ. Không thay framework, API, schema hoặc phân công kiểm thử. Kết quả kiểm chứng và phần còn chờ ghi tại Coordination/tasks/ENV-NODE26-20261113/progress.md.

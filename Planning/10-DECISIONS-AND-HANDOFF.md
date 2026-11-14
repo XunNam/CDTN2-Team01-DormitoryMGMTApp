@@ -111,3 +111,6 @@ Không xóa quyết định cũ; dùng SUPERSEDED và link bản mới. Khi sau 
 - Đã rà chéo API/DB/rules/cộng tác/backlog với file 12 và sửa các ghi chú cũ về ngày/unique mã phòng/PATCH/envelope/request lặp/phiên. Không còn câu hỏi chặn kế hoạch; các phần ghi PROPOSED là việc thiết kế hoặc phân công ở task tiếp theo.
 - Không có API/DDL/code để kiểm thử runtime; không báo TC-N1/TC-N2/TC-N3 đã đạt chỉ vì kế hoạch mô tả chúng.
 - Không commit/push/merge/tag hoặc sửa cấu hình Git; chủ dự án tự kiểm tra thủ công.
+## Quyết định môi trường ngày 13/11/2026
+
+**OWNER_CONFIRMED:** chuyển root/backend/frontend sang Node.js 26 theo yêu cầu nguyên văn tại file 11, thay phần Node24 trong DEC-023. Tác động: engines và lockfile của ba package, backend/.node-version, packageManager và hướng dẫn chạy. API, schema và trách nhiệm kiểm thử giữ nguyên. Kết quả tại `../Coordination/tasks/ENV-NODE26-20261113/progress.md`.
